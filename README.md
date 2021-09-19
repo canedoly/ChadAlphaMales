@@ -2,6 +2,7 @@
 
 I'm not gonna bother writing anything here other than these:
 
+Also pls use Visual Studio 2022 preview for C++20 :)
 ```cpp
 // I know this might sound dumb but here are the rules before messing with the menu
 // Before you add stuff here please tell me first what you're going to add and we'll discuss about it
