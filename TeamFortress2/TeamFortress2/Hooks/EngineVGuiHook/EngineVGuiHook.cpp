@@ -8,6 +8,7 @@
 #include "../../Features/Misc/Misc.h"
 #include "../../Features/Radar/Radar.h"
 #include "../../Features/Visuals/Visuals.h"
+#include "../../Features/Playerlist/Playerlist.h"
 
 int ticksChoked = 0;
 std::time_t CurzTime = std::time(nullptr);
@@ -134,6 +135,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_Misc.BypassPure();
 			g_SpyWarning.Run();
 			g_SpectatorList.Run();
+			//g_Playerlist.DrawPlayers();
 			g_Radar.Run();
 			//g_Menu.Run(); // Goodbye old menu :wave:
 

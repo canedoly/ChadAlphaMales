@@ -1062,20 +1062,7 @@ void ConfigsTab() {
     ImGui::SetCursorPosX(15);
     ImGui::Text(_("Note: Press enter to create a new config."));
 
-    //
-    // Example of how to apply these to buttons
-    // You could make it a checkbox by using
-    // g_Playerlist.IsIgnored(friendsID) and
-    // making the checkbox ticked if it returns
-    // true, false otherwise. You don't have to run
-    // SaveSet anywhere, because the ignore/unignore 
-    // functions will run it for you
-    // GetIgnoredPlayers() is ran in DLLMain on inject.
-    // You can iterate through the players by doing
-    // for (int playerIndex = 1; playerIndex < g_Interfaces.GlobalVars->maxclients; playerIndex++)
-    // playerIndex starts at 1 to avoid the 0th index - which is not a player ever, 
-    // just some weird world entity or something
-    /*if (ImGui::Button(_("Fill players"))) {
+    if (ImGui::Button(_("Fill players"))) {
         g_Playerlist.GetIgnoredPlayers();
     }
     if (ImGui::Button(_("Save set"))) {
@@ -1094,8 +1081,29 @@ void ConfigsTab() {
         {
             g_Playerlist.RemoveIgnore(local.friendsID);
         }
-    }*/
- 
+    }
+    /*
+    if (ImGui::Button(_("DOWN"))) {
+        g_Playerlist.selected++;
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Button(_("UP"))) {
+        g_Playerlist.selected--;
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Button(_("IGNORE"))) {
+        g_Playerlist.IgnorePlayer(g_Playerlist.selected);
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Button(_("UNIGNORE"))) {
+        g_Playerlist.UnIgnorePlayer(g_Playerlist.selected);
+    }
     /*
     ImGui::SetCursorPos({ ImGui::GetContentRegionMax().x - 90, ImGui::GetContentRegionMax().y - 25});
     if (ImGui::Button(_("Unload Cheat"))) {

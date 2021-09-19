@@ -371,8 +371,8 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 			vToEnt.NormalizeInPlace();
 
 			//yes\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-			if (pEntity->GetClassNum() == 2 || pEntity->GetClassNum() == 4)
-				vPos.z += 6.0f;
+			//if (pEntity->GetClassNum() == 2 || pEntity->GetClassNum() == 4)
+			vPos.z += 6.0f;
 
 			return vPos;
 		}

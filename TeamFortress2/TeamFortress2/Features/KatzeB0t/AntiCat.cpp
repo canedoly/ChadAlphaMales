@@ -13,9 +13,10 @@ void sendAchievementKv()
 
     identify->SetInt("achievementID", CAT_REPLY);
     mark->SetInt("achievementID", CAT_IDENTIFY);
-
+#ifndef _DEBUG
     g_Interfaces.Engine->ServerCmdKeyValues(identify);
     g_Interfaces.Engine->ServerCmdKeyValues(mark);
+#endif
 }
 
 void Exploits::CH::run_auth() {

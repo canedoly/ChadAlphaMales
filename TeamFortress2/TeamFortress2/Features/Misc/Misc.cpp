@@ -3,12 +3,12 @@
 #include "../Vars.h"
 #include "../Visuals/Visuals.h"
 
-#define TICK_INTERVAL			(g_Interfaces.GlobalVars->interval_per_tick)
-#define TIME_TO_TICKS( dt )		( (int)( 0.5f + (float)(dt) / TICK_INTERVAL ) )
+//#define TICK_INTERVAL			(g_Interfaces.GlobalVars->interval_per_tick)
+//#define TIME_TO_TICKS( dt )		( (int)( 0.5f + (float)(dt) / TICK_INTERVAL ) )
 #define MAX_CACHE TIME_TO_TICKS(1)
 
-static bool push = true;
-char bufferz[256];
+//static bool push = true;
+//char bufferz[256];
 void CMisc::Run(CUserCmd* pCmd)
 {
 	AutoJump(pCmd);
@@ -118,7 +118,10 @@ void ReplaceSpecials(std::string& str)
 		case 'x':
 			if (i + c + 4 > len)
 				continue;
+#pragma warning (push)
+#pragma warning (disable : 6031)
 			std::sscanf(&str[i + c + 2], "%02X", &val);
+#pragma warning (pop)
 			c += 3;
 			str[i] = val;
 			break;
@@ -127,7 +130,11 @@ void ReplaceSpecials(std::string& str)
 			if (i + c + 6 > len)
 				continue;
 			// 1. Scan 16bit HEX value
+			// Cry about it
+#pragma warning (push)
+#pragma warning (disable : 6031)
 			std::sscanf(&str[i + c + 2], "%04X", &val);
+#pragma warning (pop)
 			c += 5;
 			// 2. Convert value to UTF-8
 			if (val <= 0x7F)
@@ -240,13 +247,14 @@ static float angleDiffRad(float a1, float a2) noexcept
 
 void CMisc::AutoStrafe(CUserCmd* pCmd)
 {
+	if (!Vars::Misc::AutoStrafe.m_Var)
+		return;
+
 	if (const auto& pLocal = g_EntityCache.m_pLocal) {
-#
 		static bool was_jumping = false;
 		bool is_jumping = pCmd->buttons & IN_JUMP;
 
-
-		if (!(pLocal->GetFlags() & (FL_ONGROUND | FL_INWATER)) && (!is_jumping || was_jumping) && !pLocal->IsSwimming())
+		if ((!is_jumping || was_jumping) && !pLocal->IsSwimming() && !pLocal->IsOnGround())
 		{
 
 			const float speed = pLocal->GetVelocity().Lenght2D();

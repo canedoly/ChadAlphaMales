@@ -37,7 +37,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 			}
 			
 			if (uNameHash == FNV1A::HashConst(_("achievement_earned"))) {
-				int nPlayer = pEvent->GetInt(_("player", 0xDEAD));
+				int nPlayer = pEvent->GetInt(_("player"), 0xDEAD);
 				int achievement = pEvent->GetInt(_("achievement"), 0xDEAD);
 				PlayerInfo_t info;
 				if (nPlayer != 0xDEAD && (achievement == CAT_IDENTIFY || achievement == CAT_REPLY))
@@ -131,7 +131,6 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 				if (!g_Interfaces.Engine->GetPlayerInfo(pVictim->GetIndex(), &player_info))
 					return;
 				const auto crit = pEvent->GetBool(_("crit"));
-				char buffer[256];
 
 				if (crit) {
 					g_Visuals.AddToEventLog(_("Hurt %s for %i (%i health remaining) (crit)\n"), player_info.name, pEvent->GetInt(_("damageamount")), pEvent->GetInt(_("health")));
