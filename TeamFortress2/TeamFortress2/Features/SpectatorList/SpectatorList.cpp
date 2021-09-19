@@ -78,54 +78,7 @@ void CSpectatorList::DragSpecList(int& x, int& y, int w, int h, int offsety)
 		move = false;
 	}
 }
-/*
-void CSpectatorList::DrawDefault()
-{
-	DragSpecList(
-		m_nSpecListX,
-		m_nSpecListY,
-		m_nSpecListW,
-		m_nSpecListTitleBarH,
-		0);
 
-	g_Draw.Rect(m_nSpecListX, m_nSpecListY, m_nSpecListW, m_nSpecListTitleBarH, Vars::Menu::Colors::TitleBar);
-
-	g_Draw.String(FONT_MENU,
-		m_nSpecListX + (m_nSpecListW / 2),
-		m_nSpecListY + (m_nSpecListTitleBarH / 2),
-		Vars::Menu::Colors::Text,
-		ALIGN_CENTER,
-		"%hs", _("Spectators"));
-
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
-	{
-		if (!pLocal->IsAlive() || !GetSpectators(pLocal))
-			return;
-
-		int nFontTall = g_Draw.m_vecFonts[FONT_MENU].nTall;
-		int nSpacing = 5;
-		int nModeX = m_nSpecListX + nSpacing;
-		int nModeW = 15;
-		int nNameX = nModeX + nModeW + (nSpacing * 2);
-		int y = m_nSpecListY + m_nSpecListTitleBarH;
-		int h = nFontTall * m_vecSpectators.size();
-
-		g_Draw.Rect(m_nSpecListX, y, m_nSpecListW, h, Vars::Menu::Colors::WindowBackground);
-		g_Draw.Line(nModeX + nSpacing + nModeW, y, nModeX + nSpacing + nModeW, y + h - 1, Vars::Menu::Colors::Text);
-
-		for (size_t n = 0; n < m_vecSpectators.size(); n++)
-		{
-			if (m_vecSpectators[n].m_sName.length() > 20)
-				m_vecSpectators[n].m_sName.replace(20, m_vecSpectators[n].m_sName.length(), _(L"..."));
-
-			y = m_nSpecListY + m_nSpecListTitleBarH + (nFontTall * n);
-
-			g_Draw.String(FONT_MENU, nModeX, y, Vars::Menu::Colors::Text, ALIGN_DEFAULT, m_vecSpectators[n].m_sMode.data());
-			g_Draw.String(FONT_MENU, nNameX, y, Vars::Menu::Colors::Text, ALIGN_DEFAULT, m_vecSpectators[n].m_sName.data());
-		}
-	}
-}
-*/
 void CSpectatorList::DrawClassic()
 {
 	if (const auto &pLocal = g_EntityCache.m_pLocal)
@@ -136,17 +89,17 @@ void CSpectatorList::DrawClassic()
 		int nDrawY = 363;
 
 		g_Draw.Rect(25, 338, 175, 2, Vars::Menu::Colors::WidgetActive);
-		g_Draw.Rect(25, 340, 175, g_Draw.m_vecFonts[FONT_ESP_NAME_OUTLINED].nTall + 5, { 0,0,0,150 });
-		g_Draw.String(FONT_ESP_NAME_OUTLINED, 90, 341, { 255,255,255,255 }, ALIGN_DEFAULT, _("spectators"));
+		g_Draw.Rect(25, 340, 175, g_Draw.m_vecFonts[FONT_MENU].nTall + 5, { 0,0,0,150 });
+		g_Draw.String(FONT_MENU, 90, 341, { 255,255,255,255 }, ALIGN_DEFAULT, _("spectators"));
 
 		for (const auto& Spectator : m_vecSpectators)
 		{
 			int nDrawX = g_ScreenSize.c;
 
 			int w, h;
-			g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_ESP_NAME_OUTLINED].dwFont, (Spectator.m_sMode + Spectator.m_sName).c_str(), w, h);
+			g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_MENU].dwFont, (Spectator.m_sMode + Spectator.m_sName).c_str(), w, h);
 
-			int nAddX = 0, nAddY = g_Draw.m_vecFonts[FONT_ESP_NAME_OUTLINED].nTall;
+			int nAddX = 0, nAddY = g_Draw.m_vecFonts[FONT_MENU].nTall;
 
 			if (Vars::Visuals::SpectatorList.m_Var)
 			{
@@ -163,20 +116,12 @@ void CSpectatorList::DrawClassic()
 				nAddY = 14;
 			}
 
-			if (Spectator.m_sMode.data() == _(L"1st")) { //  I could honestly do this better lol
-				g_Draw.String(FONT_ESP_NAME_OUTLINED, 50, nDrawY - 8, { 255,0,0,255 }, ALIGN_DEFAULT, _(L"[%ls] %ls"), Spectator.m_sMode.data(), Spectator.m_sName.data());
+			if (Spectator.m_sMode.data() == _(L"1st")) { //  There's definitely a better way to do this lol
+				g_Draw.String(FONT_MENU, 50, nDrawY - 6, { 255,0,0,255 }, ALIGN_DEFAULT, _(L"[%ls] %ls"), Spectator.m_sMode.data(), Spectator.m_sName.data());
 			}
 			else {
-				g_Draw.String(FONT_ESP_NAME_OUTLINED, 50, nDrawY - 8, { 255,255,255,255 }, ALIGN_DEFAULT, _(L"[%ls] %ls"), Spectator.m_sMode.data(), Spectator.m_sName.data());
+				g_Draw.String(FONT_MENU, 50, nDrawY - 6, { 255,255,255,255 }, ALIGN_DEFAULT, _(L"[%ls] %ls"), Spectator.m_sMode.data(), Spectator.m_sName.data());
 			}
-			/*
-			g_Draw.String(
-				FONT_ESP_NAME_OUTLINED,
-				nDrawX + nAddX, nDrawY,
-				Spectator.m_bIsFriend ? Colors::Friend : Utils::GetTeamColor(Spectator.m_nTeam),
-				ALIGN_DEFAULT,
-				L"[%ls] %ls", Spectator.m_sMode.data(), Spectator.m_sName.data());
-				*/
 			nDrawY += nAddY;
 		}
 	}

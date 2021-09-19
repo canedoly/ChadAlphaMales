@@ -190,10 +190,6 @@ void CAimbotMelee::Aim(CUserCmd* pCmd, Vec3& vAngle)
 
 bool CAimbotMelee::ShouldSwing(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, const Target_t& Target)
 {
-	//if (!Vars::Aimbot::Global::AutoShoot.m_Var)
-		//return false;
-
-	//There's a reason for running this even if range check is enabled (it calls this too), trust me :)
 	if (!CanMeleeHit(pLocal, pWeapon, Vars::Aimbot::Melee::AimMethod.m_Var == 2 ? Target.m_vAngleTo : g_Interfaces.Engine->GetViewAngles(), Target.m_pEntity->GetIndex()))
 		return false;
 
@@ -226,6 +222,7 @@ void CAimbotMelee::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd
 
 		if (ShouldSwing(pLocal, pWeapon, pCmd, Target))
 			pCmd->buttons |= IN_ATTACK;
+		// I didn't really see an use for dt on meele, m-fed you probably had a reason why you added this lol
 		/*
 		if (Vars::Misc::CL_Move::Enabled.m_Var && Vars::Misc::CL_Move::Doubletap.m_Var && (pCmd->buttons & IN_ATTACK) && !g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_nWaitForShift)
 		{

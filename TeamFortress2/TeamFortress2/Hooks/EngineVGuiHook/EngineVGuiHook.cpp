@@ -7,10 +7,18 @@
 #include "../../Features/ESP/ESP.h"
 #include "../../Features/Misc/Misc.h"
 #include "../../Features/Radar/Radar.h"
-#include "../../Features/Aimbot/AimbotMelee/AimbotMelee.h"
 #include "../../Features/Visuals/Visuals.h"
 
 int ticksChoked = 0;
+std::time_t CurzTime = std::time(nullptr);
+
+std::string comp_name() {
+
+	char buff[MAX_PATH];
+	GetEnvironmentVariableA("USERNAME", buff, MAX_PATH);
+
+	return std::string(buff);
+}
 
 void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 {
@@ -59,56 +67,6 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 				if (g_Interfaces.EngineVGui->IsGameUIVisible())
 					return;
 
-				//Projectile Aim's Predicted Position
-				if (!g_GlobalInfo.m_vPredictedPos.IsZero())
-				{
-					if (Vars::Visuals::CrosshairAimPos.m_Var ? g_GlobalInfo.m_vAimPos.IsZero() : true)
-					{
-						static const int size = 10;
-						Vec3 vecScreen = Vec3();
-
-						if (Utils::W2S(g_GlobalInfo.m_vPredictedPos, vecScreen))
-						{
-							g_Draw.OutlinedCircle(static_cast<int>(vecScreen.x - (size / 2)) - 1, static_cast<int>(vecScreen.y - (size / 2)) - 1, 4, 15, {0,0,0,255});
-							g_Draw.OutlinedCircle(static_cast<int>(vecScreen.x - (size / 2)) - 1, static_cast<int>(vecScreen.y - (size / 2)) - 1, 3, 15, Colors::Target);
-							g_Draw.OutlinedCircle(static_cast<int>(vecScreen.x - (size / 2)) - 1, static_cast<int>(vecScreen.y - (size / 2)) - 1, 2, 15, { 0,0,0,255 });
-							/*
-							g_Draw.OutlinedRect(
-								static_cast<int>(vecScreen.x - (size / 2)) - 1,
-								static_cast<int>(vecScreen.y - (size / 2)) - 1,
-								size + 2, size + 2,
-								Colors::OutlineESP);
-								*/
-						}
-					}
-				}
-
-				//Tickbase info
-				/*
-				if (Vars::Misc::CL_Move::Enabled.m_Var)
-				{
-					const auto& pLocal  = g_EntityCache.m_pLocal;
-					const auto& pWeapon = g_EntityCache.m_pLocalWeapon;
-
-					if (pLocal && pWeapon)
-					{
-						if (pLocal->GetLifeState() == LIFE_ALIVE)
-						{
-							const int nY = (g_ScreenSize.h / 2) + 20;
-
-							if (g_GlobalInfo.m_nShifted)
-								g_Draw.String(FONT_ESP_NAME_OUTLINED, g_ScreenSize.c, nY, { 255, 64, 64, 255 }, ALIGN_CENTERHORIZONTAL, _(L"Recharge! (%i / %i)"), g_GlobalInfo.m_nShifted, MAX_NEW_COMMANDS);
-							else if (!g_GlobalInfo.m_nShifted && g_GlobalInfo.m_nWaitForShift)
-								g_Draw.String(FONT_ESP_NAME_OUTLINED, g_ScreenSize.c, nY, { 255, 178, 0, 255 }, ALIGN_CENTERHORIZONTAL, _(L"Wait! (%i / %i)"), g_GlobalInfo.m_nWaitForShift, DT_WAIT_CALLS);
-							else if (!g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_nWaitForShift && pLocal->GetClassNum() == CLASS_HEAVY && pWeapon->GetSlot() == SLOT_PRIMARY && !pLocal->GetVecVelocity().IsZero())
-								g_Draw.String(FONT_ESP_NAME_OUTLINED, g_ScreenSize.c, nY, { 255, 178, 0, 255 }, ALIGN_CENTERHORIZONTAL, _(L"Stop!"));
-							else
-								g_Draw.String(FONT_ESP_NAME_OUTLINED, g_ScreenSize.c, nY, { 153, 255, 153, 255 }, ALIGN_CENTERHORIZONTAL, _(L"Shift ready!"));
-						}
-					}
-				}
-				*/
-
 				//Tickbase info
 				if (Vars::Misc::CL_Move::Enabled.m_Var)
 				{
@@ -147,18 +105,6 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 								}
 								ticks = MAX_NEW_COMMANDS;
 							}
-							
-							//g_AimbotProjectile.DrawTrace(Trace);
-							/*
-							if (g_GlobalInfo.m_nShifted)
-								g_Draw.String(FONT_MENU, g_ScreenSize.c, nY + 60, { 255, 64, 64, 255 }, ALIGN_CENTERHORIZONTAL, _(L"Recharging (%i / %i)"), g_GlobalInfo.m_nShifted, MAX_NEW_COMMANDS);
-							else if (!g_GlobalInfo.m_nShifted && g_GlobalInfo.m_nWaitForShift)
-								g_Draw.String(FONT_MENU, g_ScreenSize.c, nY + 60, { 255, 178, 0, 255 }, ALIGN_CENTERHORIZONTAL, _(L"Not ready (%i / %i)"), g_GlobalInfo.m_nWaitForShift, DT_WAIT_CALLS);
-							else
-								g_Draw.String(FONT_MENU, g_ScreenSize.c, nY + 60, { 153, 255, 153, 255 }, ALIGN_CENTERHORIZONTAL, _(L"Ready"));
-							*/
-							//g_Draw.String(FONT_MENU, g_ScreenSize.c, nY - 60, { 255, 64, 64, 255 }, ALIGN_CENTERHORIZONTAL, _(L"Ticks Choked: %i "), ticksChoked);
-							//g_Draw.String(FONT_MENU, g_ScreenSize.c, nY - 100, { 255, 64, 64, 255 }, ALIGN_CENTERHORIZONTAL, Vars::Skybox::SkyboxName.c_str());
 							int tickWidth = 5;
 							int barWidth = (tickWidth * ticks) + 2;
 
@@ -189,20 +135,43 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			g_SpyWarning.Run();
 			g_SpectatorList.Run();
 			g_Radar.Run();
-			g_Menu.Run();
-			//int label_w, label_h;
-			int ms = std::max(0, (int)std::round(g_GlobalInfo.m_Latency * 1000.f));
-			//g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_MENU].dwFont, _(L"CAM.club"), label_w, label_h);
-			/*
-			if (g_EntityCache.m_pLocal) {
-			//g_Draw.GradientRect(g_ScreenSize.w - label_w - 10, 0, g_ScreenSize.w, label_h + 10, { 0,0,0,0 }, { 0,0,0,255 }, true);
-				g_Draw.String(FONT_MENU, g_ScreenSize.w - 120, 5, { 255, 255, 255, 255 }, ALIGN_DEFAULT, _("CAM.club | %ims"), ms);
-			//g_Draw.String(FONT_MENU, g_ScreenSize.w - label_w - 10, 5, Vars::Menu::Colors::WidgetActive, ALIGN_DEFAULT, ".club");
+			//g_Menu.Run(); // Goodbye old menu :wave:
+
+			int width = g_ScreenSize.w;
+			int	height = g_ScreenSize.h;
+			static wchar_t buff[512];
+			int label_w, label_h;
+			static int nignog = 0;
+			auto fps = 0;
+
+			if (nignog == 100) { // I tried to make it slower, I failed so hard. How unfortunate :(
+				fps = static_cast<int>(1.f / g_Interfaces.GlobalVars->frametime);
 			}
 			else {
-				g_Draw.String(FONT_MENU, g_ScreenSize.w - 80, 5, { 255, 255, 255, 255 }, ALIGN_DEFAULT, _("CAM.club"));
+				nignog++;
 			}
-			*/
+			int ms = std::max(0, (int)std::round(g_GlobalInfo.m_Latency * 1000.f));
+
+			_snwprintf(buff, sizeof(buff), _(L"CAM [v1.0] | fps: %i | delay: %ims"), fps, ms);
+
+			g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_MENU].dwFont, buff, label_w, label_h);
+
+			int boxw = label_w + 10;
+
+			if (g_Interfaces.Engine->IsInGame())
+			{
+				auto nci = g_Interfaces.Engine->GetNetChannelInfo();
+
+				if (nci)
+				{
+					//ms = 1.f / nci->GetLatency(FLOW_INCOMING);
+					//ms = std::max(0, (int)std::round(g_GlobalInfo.m_Latency * 1000.f));
+
+					g_Draw.Rect(width - 10 - boxw, 11, boxw, 18, { 0, 0, 0, 200 });
+					g_Draw.Rect(width - 10 - boxw, 10, boxw, 2, Vars::Menu::Colors::WidgetActive);
+					g_Draw.String(FONT_MENU, width - 10 - boxw + 5, 20, { 255,255,255,255 }, ALIGN_CENTERVERTICAL, buff);
+				}
+			}
 		}	
 		FinishDrawing(g_Interfaces.Surface);
 	}

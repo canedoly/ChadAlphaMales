@@ -48,7 +48,6 @@ namespace Vars
 
 		namespace Colors
 		{
-			inline bool CMColor = false;
 			//inline Color_t WindowBackground = { 30, 30, 30, 255 };
 			inline Color_t TitleBar = { 60, 60, 60, 255 };
 			inline Color_t Text = { 255, 255, 255, 190 };
@@ -287,7 +286,7 @@ namespace Vars
 	{
 		namespace Main
 		{
-			inline CVar<bool> Active{ false, L"Active" };
+			//inline CVar<bool> Active{ false, L"Active" };
 			inline CVar<int> Scale{ 5, L"Scale" };
 		}
 
@@ -397,6 +396,7 @@ namespace Vars
 		inline CVar<bool> ThirdPersonInstantYaw		{ true, L"Instant Yaw" };
 
 		inline CVar<bool> WorldModulation			{ false, L"World Modulation" };
+		inline CVar<bool> SkyboxChanger				{ true, L"Skybox changer" };
 
 		namespace Skins
 		{
@@ -407,6 +407,12 @@ namespace Vars
 			inline CVar<bool> Acient				{ false, L"Ancient" };
 			inline CVar<bool> Override				{ false, L"Style Override" };
 		}
+	}
+
+	namespace Skybox
+	{
+		inline int skyboxnum = 0;
+		inline std::string SkyboxName = "";
 	}
 
 	namespace Misc
@@ -423,8 +429,9 @@ namespace Vars
 		inline CVar<bool> ChatSpam              { false, L"Chat Spam" };
 		inline CVar<bool> NoPush				{ false, L"No Push" };
 		inline CVar<bool> EdgeJump				{ false, L"Edge Jump" };
-
-
+		inline CVar<bool> AntiAFK{ false, L"Anti AFK" };
+		inline CVar<bool> VoteRevealer			{ false, L"Reveal votes" };
+		inline CVar<bool> VotesInChat			{ false, L"Reveal votes to party" };
 		namespace CL_Move
 		{
 			inline CVar<bool> Enabled{ true, L"Enabled" };

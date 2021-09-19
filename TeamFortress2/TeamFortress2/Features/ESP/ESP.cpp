@@ -1,5 +1,6 @@
 #include "ESP.h"
 #include "../Vars.h"
+#include "../ChatInfo/ChatInfo.h"
 
 bool CESP::ShouldRun()
 {
@@ -260,6 +261,11 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 			PlayerInfo_t pi;
 			if (g_Interfaces.Engine->GetPlayerInfo(nIndex, &pi))
 			{
+				if (g_ChatInfo.m_known_bots.find(pi.friendsID) != g_ChatInfo.m_known_bots.end()) {
+					g_Draw.String(FONT_ESP_COND, nTextX, (y + nTextOffset), { 255,0,0,255 }, ALIGN_DEFAULT, L"CAT", nHealth);
+					nTextOffset += g_Draw.m_vecFonts[FONT_ESP_COND].nTall;
+				}
+
 				if (Vars::ESP::Players::Name.m_Var)
 				{
 					int offset = (g_Draw.m_vecFonts[FONT_NAME].nTall + (g_Draw.m_vecFonts[FONT_NAME].nTall / 4));
@@ -504,7 +510,7 @@ void CESP::DrawBuildings(CBaseEntity *pLocal)
 				if (!cond_str.empty())
 				{
 					cond_str.erase((cond_str.end() - 1), cond_str.end());
-					g_Draw.String(FONT_COND, (x + (w / 2)), (y + h) + offset, Colors::Cond, ALIGN_CENTERHORIZONTAL, cond_str.data());
+					g_Draw.String(FONT_COND, (x + (w / 2)), (y + h) + offset, Colors::CondBuildings, ALIGN_CENTERHORIZONTAL, cond_str.data());
 				}
 			}
 
@@ -524,8 +530,8 @@ void CESP::DrawBuildings(CBaseEntity *pLocal)
 
 				float ratio = (flHealth / flMaxHealth);
 
-				g_Draw.Rect(((x - nWidth) - 2), (y + nHeight - (nHeight * ratio)), nWidth, (nHeight * ratio), HealthColor);
-
+				//g_Draw.Rect(((x - nWidth) - 2), (y + nHeight - (nHeight * ratio)), nWidth, (nHeight * ratio), HealthColor);
+				g_Draw.GradientRect(((x - nWidth) - 2), (y + nHeight - (nHeight * ratio)), ((x - nWidth) - 2) + nWidth, (y + nHeight - (nHeight * ratio)) + (nHeight * ratio), HealthColor, { 255,0,0,255 }, false);
 				if (Vars::ESP::Main::Outline.m_Var == 2)
 					g_Draw.OutlinedRect(((x - nWidth) - 2) - 1, (y + nHeight - (nHeight * ratio)) - 1, nWidth + 2, (nHeight * ratio) + 2, Colors::OutlineESP);
 

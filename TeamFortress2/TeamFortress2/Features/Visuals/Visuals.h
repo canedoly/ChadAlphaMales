@@ -1,6 +1,5 @@
 #pragma once
 #include "../../SDK/SDK.h"
-#include "../../Utils/FNV/fnv1a.h"
 
 struct EventLogging_t {
 	EventLogging_t(std::string _string) {
@@ -28,10 +27,12 @@ private:
 
 public:
 	std::vector<EventLogging_t> vecEventVector;
+	void AddToEventLog(const char* string, ...);
+	void SkyboxChanger();
 	void RunEventLogs();
 	bool RemoveScope(int nPanel);
 	void FOV(CViewSetup *pView);
-	void Fullbright();
+	//void Fullbright();
 	void ARatio();
 	void ViewmodelXYZ();
 	void ThirdPerson();

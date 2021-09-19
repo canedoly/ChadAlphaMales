@@ -12,7 +12,7 @@
 class CBaseEntity
 {
 public: //Netvars & conditions
-	M_DYNVARGET(NextNoiseMakerTime, float, this, _("DT_TFPlayer"), _("m_Shared"), _("m_flNextNoiseMakerTime"))
+		M_DYNVARGET(NextNoiseMakerTime, float, this, _("DT_TFPlayer"), _("m_Shared"), _("m_flNextNoiseMakerTime"))
 		M_DYNVARGET(FeignDeathReady, bool, this, _("DT_TFPlayer"), _("m_Shared"), _("m_bFeignDeathReady"))
 		M_DYNVARGET(StepSize, float, this, _("DT_BasePlayer"), _("localdata"), _("m_flStepSize"))
 		M_DYNVARGET(ConveyorSpeed, float, this, _("DT_FuncConveyor"), _("m_flConveyorSpeed"))
@@ -20,6 +20,7 @@ public: //Netvars & conditions
 		M_DYNVARGET(MaxSpeed, float, this, _("DT_BasePlayer"), _("m_flMaxspeed"))
 		M_DYNVARGET(State, int, this, _("DT_TFPlayer"), _("m_Shared"), _("m_nPlayerState"))
 		M_DYNVARGET(ViewOffset, Vec3, this, _("DT_BasePlayer"), _("localdata"), _("m_vecViewOffset[0]"))
+		M_DYNVARGET(vecVelocity, Vec3, this,  _("DT_BasePlayer"), _("localdata"), _("m_vecVelocity[0]"))
 		M_DYNVARGET(CurrentCommand, CUserCmd*, (this - 0x4), _("DT_BasePlayer"), _("localdata"), _("m_hConstraintEntity"))
 		M_DYNVARGET(VecOrigin, Vec3, this, _("DT_BaseEntity"), _("m_vecOrigin"))
 		M_DYNVARGET(Ammo, int, (this + 0x4), _("DT_BasePlayer"), _("localdata"), _("m_iAmmo"))

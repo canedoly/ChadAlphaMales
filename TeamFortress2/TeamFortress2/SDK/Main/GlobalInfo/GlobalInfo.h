@@ -9,6 +9,7 @@
 
 struct GlobalInfo_t
 {
+	int m_net_sendto					= 0;
 	int m_nCurrentTargetIdx				= 0;
 	int m_nCurItemDefIndex              = 0;
 	int m_nWaitForShift                 = 0;

@@ -1092,12 +1092,12 @@ bool ImGui::tab(const char* label, bool selected)
         t = selected ? (t_anim) : (0);
     }
     int a = int(t * 255);
-    auto nigger = ImGui::GetStyle().Colors[ImGuiCol_MenuBarBg];
+    auto MenuBarCol = ImGui::GetStyle().Colors[ImGuiCol_MenuBarBg];
     auto text_color = ImGui::GetColorU32(ImLerp(ImVec4(180 / 255.f, 180 / 255.f, 180 / 255.f, 180 / 255.f), ImVec4(230 / 255.f, 230 / 255.f, 230 / 255.f, 230 / 255.f), t));
-    //auto text_color = ImGui::GetColorU32(ImLerp(ImVec4(180 / 255.f, 180 / 255.f, 180 / 255.f, 180 / 255.f), ImColor(nigger.x, nigger.y, nigger.z), t));
+    //auto text_color = ImGui::GetColorU32(ImLerp(ImVec4(180 / 255.f, 180 / 255.f, 180 / 255.f, 180 / 255.f), ImColor(MenuBarCol.x, MenuBarCol.y, MenuBarCol.z), t));
     //ImGui::ColorConvertFloat4ToU32(ImGui::GetStyle().Colors[ImGuiCol_MenuBarBg])
-    draw->AddRectFilledMultiColor(ImVec2(bb.Min.x, bb.Min.y - 2), ImVec2(bb.Max.x, bb.Max.y), ImColor(0,0,0,0), ImColor(0, 0, 0, 0), ImColor(nigger.x / 2, nigger.y / 2, nigger.z / 2, a / 255.f), ImColor(nigger.x / 2, nigger.y / 2, nigger.z / 2, a / 255.f));
-    draw->AddRectFilled(ImVec2(bb.Min.x, bb.Max.y - 2), bb.Max, ImColor(nigger.x, nigger.y, nigger.z, (float)a));
+    draw->AddRectFilledMultiColor(ImVec2(bb.Min.x, bb.Min.y - 2), ImVec2(bb.Max.x, bb.Max.y), ImColor(0,0,0,0), ImColor(0, 0, 0, 0), ImColor(MenuBarCol.x / 2, MenuBarCol.y / 2, MenuBarCol.z / 2, a / 255.f), ImColor(MenuBarCol.x / 2, MenuBarCol.y / 2, MenuBarCol.z / 2, a / 255.f));
+    draw->AddRectFilled(ImVec2(bb.Min.x, bb.Max.y - 2), bb.Max, ImColor(MenuBarCol.x, MenuBarCol.y, MenuBarCol.z, (float)a));
     draw->AddText(ImVec2(pos.x + 75 / 2 - label_size.x / 2, pos.y + 22 - label_size.y / 2), text_color, label);
     IMGUI_TEST_ENGINE_ITEM_INFO(id, label, window->DC.LastItemStatusFlags);
     return pressed;
@@ -1144,12 +1144,12 @@ bool ImGui::Checkbox(const char* label, bool* v)
     ImU32 check_col = GetColorU32(ImGuiCol_CheckMark);
     bool mixed_value = (window->DC.ItemFlags & ImGuiItemFlags_MixedValue) != 0;
     const float pad = ImMax(1.0f, IM_FLOOR(square_sz / 6.0f));
-    auto nigger = ImGui::GetStyle().Colors[ImGuiCol_MenuBarBg];
+    auto MenuBarCol = ImGui::GetStyle().Colors[ImGuiCol_MenuBarBg];
 
     window->DrawList->AddRect(ImVec2(check_bb.Min.x + pad - 1, check_bb.Min.y + pad - 1), ImVec2(check_bb.Max.x - pad + 1, check_bb.Max.y - pad + 1), ImColor(60, 60, 60, alpha), 2);
     if (*v)
     {
-        window->DrawList->AddRectFilled(ImVec2(check_bb.Min.x + pad, check_bb.Min.y + pad), ImVec2(check_bb.Max.x - pad, check_bb.Max.y - pad), ImColor(nigger.x, nigger.y, nigger.z, float(t * 205) / 255.f), 2);
+        window->DrawList->AddRectFilled(ImVec2(check_bb.Min.x + pad, check_bb.Min.y + pad), ImVec2(check_bb.Max.x - pad, check_bb.Max.y - pad), ImColor(MenuBarCol.x, MenuBarCol.y, MenuBarCol.z, float(t * 205) / 255.f), 2);
         ImGui::RenderCheckMark(window->DrawList, ImVec2(check_bb.Min.x + 4, check_bb.Min.y + 4), ImColor(0, 0, 0, int(t * 205)), 10);
     }
 
@@ -3112,7 +3112,7 @@ bool ImGui::SliderScalar(const char* label, ImGuiDataType data_type, void* p_dat
     }
 
     // Draw frame
-    auto nigger = ImGui::GetStyle().Colors[ImGuiCol_MenuBarBg];
+    auto MenuBarCol = ImGui::GetStyle().Colors[ImGuiCol_MenuBarBg];
 
     const ImU32 frame_col = GetColorU32(g.ActiveId == id ? ImGuiCol_FrameBgActive : g.HoveredId == id ? ImGuiCol_FrameBgHovered : ImGuiCol_FrameBg);
     RenderNavHighlight(frame_bb, id);
@@ -3126,10 +3126,10 @@ bool ImGui::SliderScalar(const char* label, ImGuiDataType data_type, void* p_dat
 
     // Render grab
     if (grab_bb.Max.x > grab_bb.Min.x) {
-        window->DrawList->AddRectFilled(ImVec2(frame_bb.Min.x, frame_bb.Min.y + 9), ImVec2(grab_bb.Max.x , grab_bb.Max.y - 3 - 8), ImColor(nigger.x, nigger.y, nigger.z, 255.f), style.GrabRounding);
-        window->DrawList->AddCircleFilled(ImVec2(grab_bb.Max.x - 5, grab_bb.Max.y - 5 - 8), 5, ImColor(nigger.x, nigger.y, nigger.z, 255.f), 24);
+        window->DrawList->AddRectFilled(ImVec2(frame_bb.Min.x, frame_bb.Min.y + 9), ImVec2(grab_bb.Max.x , grab_bb.Max.y - 3 - 8), ImColor(MenuBarCol.x, MenuBarCol.y, MenuBarCol.z, 255.f), style.GrabRounding);
+        window->DrawList->AddCircleFilled(ImVec2(grab_bb.Max.x - 5, grab_bb.Max.y - 5 - 8), 5, ImColor(MenuBarCol.x, MenuBarCol.y, MenuBarCol.z, 255.f), 24);
         if (IsItemActive() || IsItemHovered())
-            window->DrawList->AddCircleFilled(ImVec2(grab_bb.Max.x - 5, grab_bb.Max.y - 5 - 8), 7, ImColor(nigger.x, nigger.y, nigger.z, 0.21f), 24);
+            window->DrawList->AddCircleFilled(ImVec2(grab_bb.Max.x - 5, grab_bb.Max.y - 5 - 8), 7, ImColor(MenuBarCol.x, MenuBarCol.y, MenuBarCol.z, 0.21f), 24);
     }
     // Display value using user-provided display format so user can add prefix/suffix/decorations to the value.
     char value_buf[64];
@@ -6264,11 +6264,11 @@ bool ImGui::Selectable(const char* label, bool selected, ImGuiSelectableFlags fl
     if (held && (flags & ImGuiSelectableFlags_DrawHoveredWhenHeld))
         hovered = true;
 
-    auto nigger = ImGui::GetStyle().Colors[ImGuiCol_MenuBarBg];
+    auto MenuBarCol = ImGui::GetStyle().Colors[ImGuiCol_MenuBarBg];
     if (hovered || selected)
     {
         
-        RenderFrame(bb.Min, ImVec2(bb.Min.x + 5, bb.Max.y), ImColor(nigger.x, nigger.y, nigger.z, 255.f), false, 0.0f);
+        RenderFrame(bb.Min, ImVec2(bb.Min.x + 5, bb.Max.y), ImColor(MenuBarCol.x, MenuBarCol.y, MenuBarCol.z, 255.f), false, 0.0f);
         RenderNavHighlight(bb, id, ImGuiNavHighlightFlags_TypeThin | ImGuiNavHighlightFlags_NoRounding);
     }
 
@@ -6276,7 +6276,7 @@ bool ImGui::Selectable(const char* label, bool selected, ImGuiSelectableFlags fl
         PopColumnsBackground();
     else if (span_all_columns && g.CurrentTable)
         TablePopBackgroundChannel();
-    ImColor t_col = ((selected && hovered) ? ImColor(nigger.x / 1.5f, nigger.y / 1.5f, nigger.z / 1.5f, 255.f) : hovered ? ImColor(177 / 255.f, 177 / 255.f, 177 / 255.f, 0.7f) : selected ? ImColor(nigger.x, nigger.y, nigger.z, 255.f) : ImColor(170, 170, 170, 170));
+    ImColor t_col = ((selected && hovered) ? ImColor(MenuBarCol.x / 1.5f, MenuBarCol.y / 1.5f, MenuBarCol.z / 1.5f, 255.f) : hovered ? ImColor(177 / 255.f, 177 / 255.f, 177 / 255.f, 0.7f) : selected ? ImColor(MenuBarCol.x, MenuBarCol.y, MenuBarCol.z, 255.f) : ImColor(170, 170, 170, 170));
 
     
     window->DrawList->AddText(text_min + ImVec2(5,0), ImColor(t_col), label);

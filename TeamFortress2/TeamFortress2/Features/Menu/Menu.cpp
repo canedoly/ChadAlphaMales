@@ -868,51 +868,6 @@ int GradientTextureB = 0;
 static std::unique_ptr<Color_t[]> Gradient = nullptr;
 static std::unique_ptr<Color_t[]> GradientB = nullptr;
 
-Color_t GetColorFromPenPosition(Vector pen)
-{
-	int div = Width / 6;
-	int phase = pen.x / div;
-	float t = ((int)pen.x % div) / (float)div;
-	int r, g, b;
-
-	switch (phase)
-	{
-	case(0):
-		r = 255;
-		g = 255 * t;
-		b = 0;
-		break;
-	case(1):
-		r = 255 * (1.f - t);
-		g = 255;
-		b = 0;
-		break;
-	case(2):
-		r = 0;
-		g = 255;
-		b = 255 * t;
-		break;
-	case(3):
-		r = 0;
-		g = 255 * (1.f - t);
-		b = 255;
-		break;
-	case(4):
-		r = 255 * t;
-		g = 0;
-		b = 255;
-		break;
-	case(5):
-		r = 255;
-		g = 0;
-		b = 255 * (1.f - t);
-		break;
-	}
-
-	float sat = pen.y / Height;
-	return Color_t(r + sat * (0 - r), g + sat * (0 - g), b + sat * (0 - b), 255);
-}
-
 void InitColorPicker() {
 	//static int GradientTexture = 0;
 	if (!Gradient)
@@ -1675,7 +1630,7 @@ void CMenu::Run()
 				{
 					GroupBoxStart();
 					{
-						CheckBox(Vars::Glow::Main::Active, _(L"Glow master switch"));
+						//CheckBox(Vars::Glow::Main::Active, _(L"Glow master switch"));
 						InputInt(Vars::Glow::Main::Scale, 1, 10);
 					}
 					GroupBoxEnd(_(L"Main"), 200);

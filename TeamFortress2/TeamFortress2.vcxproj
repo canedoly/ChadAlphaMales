@@ -218,6 +218,7 @@
     <ClCompile Include="TeamFortress2\Hooks\PerformScreenSpaceEffectsHook\PerformScreenSpaceEffectsHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\PredictionHook\PredictionHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Reset\Reset.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\SurfaceHook\SurfaceHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\UniformRandomStreamHook\UniformRandomStreamHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\WndProcHook\WndProcHook.cpp" />
@@ -239,8 +240,8 @@
     <ClCompile Include="TeamFortress2\Utils\DiscordRPC\src\rpc_connection.cpp" />
     <ClCompile Include="TeamFortress2\Utils\DiscordRPC\src\serialization.cpp" />
     <ClCompile Include="TeamFortress2\Utils\Easings\easing.cpp" />
+    <ClCompile Include="TeamFortress2\Utils\Events\Events.cpp" />
     <ClCompile Include="TeamFortress2\Utils\Hash\Hash.cpp" />
-    <ClCompile Include="TeamFortress2\Utils\lodepng\lodepng.cpp" />
     <ClCompile Include="TeamFortress2\Utils\MinHook\buffer.c" />
     <ClCompile Include="TeamFortress2\Utils\MinHook\hde\hde32.c" />
     <ClCompile Include="TeamFortress2\Utils\MinHook\hde\hde64.c" />
@@ -249,7 +250,6 @@
     <ClCompile Include="TeamFortress2\Utils\Pattern\Pattern.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="resource.h" />
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
     <ClInclude Include="TeamFortress2\Features\Aimbot\AimbotGlobal\AimbotGlobal.h" />
     <ClInclude Include="TeamFortress2\Features\Aimbot\AimbotHitscan\AimbotHitscan.h" />
@@ -270,7 +270,7 @@
     <ClInclude Include="TeamFortress2\Features\Misc\Misc.h" />
     <ClInclude Include="TeamFortress2\Features\Chams\Chams.h" />
     <ClInclude Include="TeamFortress2\Features\NewMenu\ImGui\imgui_stdlib.h" />
-    <ClInclude Include="TeamFortress2\Features\NewMenu\lolwhat.h" />
+    <ClInclude Include="TeamFortress2\Features\NewMenu\Fonts.h" />
     <ClInclude Include="TeamFortress2\Features\NewMenu\ImGui\imconfig.h" />
     <ClInclude Include="TeamFortress2\Features\NewMenu\ImGui\imgui.h" />
     <ClInclude Include="TeamFortress2\Features\NewMenu\ImGui\imgui_impl_dx9.h" />
@@ -307,6 +307,7 @@
     <ClInclude Include="TeamFortress2\Hooks\PerformScreenSpaceEffectsHook\PerformScreenSpaceEffectsHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\PredictionHook\PredictionHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\Reset\Reset.h" />
+    <ClInclude Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.h" />
     <ClInclude Include="TeamFortress2\Hooks\SurfaceHook\SurfaceHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\UniformRandomStreamHook\UniformRandomStreamHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\WndProcHook\WndProcHook.h" />
@@ -698,6 +699,7 @@
     <ClInclude Include="TeamFortress2\SDK\Main\TraceFilters\TraceFilters.h" />
     <ClInclude Include="TeamFortress2\SDK\NetVars\NetVars.h" />
     <ClInclude Include="TeamFortress2\SDK\SDK.h" />
+    <ClInclude Include="TeamFortress2\SDK\Timer.h" />
     <ClInclude Include="TeamFortress2\Utils\Color\Color.h" />
     <ClInclude Include="TeamFortress2\Utils\CRC\CRC.h" />
     <ClInclude Include="TeamFortress2\Utils\DiscordRPC\Discord.h" />
@@ -709,10 +711,10 @@
     <ClInclude Include="TeamFortress2\Utils\DiscordRPC\src\rpc_connection.h" />
     <ClInclude Include="TeamFortress2\Utils\DiscordRPC\src\serialization.h" />
     <ClInclude Include="TeamFortress2\Utils\Easings\easing.h" />
-    <ClInclude Include="TeamFortress2\Utils\FNV\fnv1a.h" />
+    <ClInclude Include="TeamFortress2\Utils\Events\Events.h" />
+    <ClInclude Include="TeamFortress2\Utils\Hash\FNV1A.h" />
     <ClInclude Include="TeamFortress2\Utils\Hash\Hash.h" />
     <ClInclude Include="TeamFortress2\Utils\Interface\Interface.h" />
-    <ClInclude Include="TeamFortress2\Utils\lodepng\lodepng.h" />
     <ClInclude Include="TeamFortress2\Utils\Math\Math.h" />
     <ClInclude Include="TeamFortress2\Utils\MinHook\buffer.h" />
     <ClInclude Include="TeamFortress2\Utils\MinHook\hde\hde32.h" />
@@ -761,14 +763,12 @@
     <ClInclude Include="TeamFortress2\Utils\rapidjson\stringbuffer.h" />
     <ClInclude Include="TeamFortress2\Utils\rapidjson\writer.h" />
     <ClInclude Include="TeamFortress2\Utils\SEOHook\SEOHook.h" />
+    <ClInclude Include="TeamFortress2\Utils\TFM\tfm.h" />
     <ClInclude Include="TeamFortress2\Utils\Utils.h" />
     <ClInclude Include="TeamFortress2\Utils\UtlVector\UtlVector.h" />
     <ClInclude Include="TeamFortress2\Utils\VFunc\VFunc.h" />
     <ClInclude Include="TeamFortress2\Utils\WinAPI\WinAPI.h" />
     <ClInclude Include="TeamFortress2\Utils\XorStr\XorStr.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="CAM.rc" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\d3dx9math.inl" />

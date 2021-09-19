@@ -65,36 +65,40 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 			dtTicks = MAX_NEW_COMMANDS;
 		}
 
+		CUserCmd* pCmd;
+
 		if (GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) {
 			if (g_GlobalInfo.m_nShifted < dtTicks) { // do not try shifting without being charged
-				
-				CUserCmd* future_cmd = &g_tf2.m_input->m_pCommands[i % MULTIPLAYER_BACKUP];
-				if (future_cmd)
-					memcpy(future_cmd, v1, sizeof(CUserCmd)); // copy current command as default data
+				for (int i = pCmd->command_number + 1; i < pCmd->command_number + 22 + 1; i++) {
+					CUserCmd* future_cmd = g_Interfaces.Input->GetUserCmd(i % MULTIPLAYER_BACKUP);
+					if (future_cmd)
+						memcpy(future_cmd, pCmd, sizeof(CUserCmd)); // copy current command as default data
 
-				// set up the command
-				future_cmd->command_number = i;
-				future_cmd->hasbeenpredicted = true;
+					// set up the command
+					future_cmd->command_number = i;
+					future_cmd->hasbeenpredicted = true;
 
-				// verify the command
-				CInput::CVerifiedUserCmd* verified_cmd = &g_tf2.m_input->m_pVerifiedCommands[i % MULTIPLAYER_BACKUP];
-				if (verified_cmd)
-					memcpy(&verified_cmd->m_cmd, future_cmd, sizeof(CUserCmd));
+					// verify the command
+					CVerifiedUserCmd* verified_cmd = GetVerifiedCmds(i % MULTIPLAYER_BACKUP);
+					if (verified_cmd)
+						memcpy(&verified_cmd->m_cmd, future_cmd, sizeof(CUserCmd));
 
-				// CNetChan::SetChoked, magic netchannel values hit p
-				//INetChannelInfo* nci = g_tf2.m_engine_client->GetNetChannelInfo();
-				INetChannelInfo* nci = g_Interfaces.Engine->GetNetChannelInfo();
-				if (nci) {
-					Func.Original<fn>()(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == (dtTicks - 1))); //this doubletaps
-					vfunc::get<void(__thiscall*)(void*)>(nci, 45)(nci);
+					// CNetChan::SetChoked, magic netchannel values hit p
+					//INetChannelInfo* nci = g_tf2.m_engine_client->GetNetChannelInfo();
+					INetChannelInfo* nci = g_Interfaces.Engine->GetNetChannelInfo();
+					if (nci) {
+						//Func.Original<fn>()(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == (dtTicks - 1))); //this doubletaps
+						GetVFunc<void(__thiscall*)(void*)>(nci, 45)(nci);
+					}
+					// manual offset for cl.chokedcommands, can be found reversing CL_SendMove
+					++* (int*)((int)L"engine.dll" + 0x469438);
+
+					verified_cmd->m_crc = future_cmd->GetChecksum();
 				}
-				// manual offset for cl.chokedcommands, can be found reversing CL_SendMove
-				++* (int*)((int)g_tf2.m_engine_dll + 0x469438);
-
-				verified_cmd->m_crc = future_cmd->GetChecksum();
 			}
+			g_GlobalInfo.fast_stop = false;
 
-			g_aimbot.m_recharged = false;
+			g_GlobalInfo.m_bShouldShift = false;
 		}
 	}
 	*/

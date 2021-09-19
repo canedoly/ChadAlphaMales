@@ -39,9 +39,6 @@ class CMisc
 {
 private:
 	void AutoJump(CUserCmd *pCmd);
-    void StopFast(CUserCmd* pCmd);
-    void StoreData(CUserCmd* cmd);
-    void FixMove(CUserCmd* cmd, Vec3 wish_angles);
 	void AutoStrafe(CUserCmd* pCmd);
 	void NoiseMakerSpam();
 	void InitSpamKV(void* pKV);
@@ -54,10 +51,10 @@ public:
 
 	void Run(CUserCmd *pCmd);
     Vector predPosAt(float flTime, CBaseEntity* target);
-	void EdgeJump(CUserCmd* pCmd, const int nOldFlags);
+    void ChangeName(std::string name);
+    void EdgeJump(CUserCmd* pCmd, const int nOldFlags);
 	void BypassPure();
 	void AutoRocketJump(CUserCmd *pCmd);
-    void CatIgnore();
     void nopush();
 };
 

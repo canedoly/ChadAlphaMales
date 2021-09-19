@@ -3,10 +3,10 @@
 #include "../../SDK/SDK.h"
 
 namespace Exploits {
-	class Cathook {
+	class CH {
 	public:
 		void sendDrawlineKv(float x_value, float y_value);
 		void run_auth();
 	};
-	inline Cathook cathook;
+	inline CH cathook;
 }

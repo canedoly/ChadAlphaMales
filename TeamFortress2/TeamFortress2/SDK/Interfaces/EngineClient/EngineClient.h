@@ -138,10 +138,10 @@ public:
 		return GetVFunc<FN>(this, 106)(this, szCommandString);
 	}
 
-	void ServerCmdKeyValues(void* pKV)
+	void ServerCmdKeyValues(PVOID kv)
 	{
-		typedef void(__thiscall* FN)(void*, void*);
-		GetVFunc<FN>(this, 127)(this, pKV);
+		typedef void(__thiscall* FN)(PVOID, PVOID);
+		GetVFunc<FN>(this, 127)(this, kv);
 	}
 
 	ISpatialQuery *GetBSPTreeQuery()

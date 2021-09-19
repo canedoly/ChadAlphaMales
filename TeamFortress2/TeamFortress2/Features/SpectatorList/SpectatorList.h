@@ -9,7 +9,6 @@ private:
 	bool GetSpectators(CBaseEntity *pLocal);
 	bool ShouldRun();
 	void DragSpecList(int &x, int &y, int w, int h, int offsety);
-	void DrawDefault();
 	void DrawClassic();
 
 private:

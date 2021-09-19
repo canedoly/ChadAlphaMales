@@ -8,6 +8,9 @@
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/AntiHack/AntiAim.h"
 #include "../../Features/KatzeB0t/AntiCat.h"
+#include "../../SDK/Timer.h"
+
+//#include "../../Features/KatzeB0t/AntiCat.h"
 
 void __stdcall ClientModeHook::OverrideView::Hook(CViewSetup* pView)
 {
@@ -26,6 +29,29 @@ bool __stdcall ClientModeHook::ShouldDrawViewModel::Hook()
 	return Table.Original<fn>(index)(g_Interfaces.ClientMode);
 }
 
+Timer AntiAfkTimer{  };
+int last_buttons{ 0 };
+
+static void updateAntiAfk(CUserCmd* pCmd)
+{
+	if (pCmd->buttons != last_buttons) {
+		AntiAfkTimer.update();
+		last_buttons = pCmd->buttons;
+	}
+	else {
+		if (g_ConVars.afkTimer->GetInt() != 0 && AntiAfkTimer.check(g_ConVars.afkTimer->GetInt() * 60 * 1000 - 10000)) {
+			bool flip = false;
+			pCmd->buttons |= flip ? IN_FORWARD : IN_BACK;
+			flip = !flip;
+			if (AntiAfkTimer.check(g_ConVars.afkTimer->GetInt() * 60 * 1000 + 1000))
+			{
+				AntiAfkTimer.update();
+			}
+		}
+		last_buttons = pCmd->buttons;
+	}
+}
+int badcode = 0;
 bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CUserCmd* pCmd)
 {
 	g_GlobalInfo.m_bSilentTime = false;
@@ -47,18 +73,16 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	float fOldSide = pCmd->sidemove;
 	float fOldForward = pCmd->forwardmove;
 
-	//Bless your beautiful soul reestart/kris
-
 	auto AntiWarp = [](CUserCmd* cmd) -> void
 	{
-		int shiftcheck = g_GlobalInfo.m_nShifted; //grab shifted.
+		int shiftcheck = g_GlobalInfo.m_nShifted;
 
 		if (shiftcheck < 19)
 		{
-			if (shiftcheck < 5)
+			if (shiftcheck < 6)
 			{
-				cmd->forwardmove = -cmd->forwardmove;
-				cmd->sidemove = -cmd->sidemove;
+				cmd->forwardmove *= -1;
+				cmd->sidemove *= -1;
 			}
 			else
 			{
@@ -70,6 +94,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			g_GlobalInfo.fast_stop = false;
 		}
 	};
+
 
 	if (g_GlobalInfo.fast_stop) {
 		AntiWarp(pCmd);
@@ -107,7 +132,19 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		}
 	}
 
-	Exploits::cathook.run_auth();
+	if (Vars::Misc::AntiAFK.m_Var) {
+		updateAntiAfk(pCmd);
+	}
+
+	if (badcode == 100) { // very inefficient
+		//g_Visuals.AddToEventLog(_("video james!"));
+		Exploits::cathook.run_auth();
+		badcode = 0;
+	}
+	else {
+		badcode++;
+	}
+
 	g_Misc.Run(pCmd);
 	g_EnginePrediction.Start(pCmd);
 	{

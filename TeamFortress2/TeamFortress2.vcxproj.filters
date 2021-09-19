@@ -63,8 +63,6 @@
     <ClCompile Include="TeamFortress2\Hooks\DrawStaticPropsHook\DrawStaticPropsHook.cpp" />
     <ClCompile Include="TeamFortress2\Features\AttributeChanger\AttributeChanger.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\EngineHook\EngineHook.cpp" />
-    <ClCompile Include="TeamFortress2\Features\KatzeB0t\AntiCat.cpp" />
-    <ClCompile Include="TeamFortress2\Utils\lodepng\lodepng.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\Menu.cpp" />
     <ClCompile Include="TeamFortress2\Features\RichPresence\RichPresence.cpp" />
     <ClCompile Include="TeamFortress2\Utils\Easings\easing.cpp" />
@@ -85,6 +83,9 @@
     <ClCompile Include="TeamFortress2\Features\NewMenu\NewMenu.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Reset\Reset.cpp" />
     <ClCompile Include="TeamFortress2\Features\NewMenu\ImGui\imgui_stdlib.cpp" />
+    <ClCompile Include="TeamFortress2\Utils\Events\Events.cpp" />
+    <ClCompile Include="TeamFortress2\Features\KatzeB0t\AntiCat.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -454,12 +455,8 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineEffects\EngineEffects.h" />
     <ClInclude Include="TeamFortress2\Features\AttributeChanger\AttributeChanger.h" />
     <ClInclude Include="TeamFortress2\Hooks\EngineHook\EngineHook.h" />
-    <ClInclude Include="TeamFortress2\Utils\FNV\fnv1a.h" />
-    <ClInclude Include="TeamFortress2\Features\KatzeB0t\AntiCat.h" />
-    <ClInclude Include="TeamFortress2\Utils\lodepng\lodepng.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\Menu.h" />
     <ClInclude Include="TeamFortress2\Features\RichPresence\RichPresence.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="TeamFortress2\Utils\Easings\easing.h" />
     <ClInclude Include="TeamFortress2\Utils\DiscordRPC\Include\discord_register.h" />
     <ClInclude Include="TeamFortress2\Utils\DiscordRPC\Include\discord_rpc.h" />
@@ -515,7 +512,7 @@
     <ClInclude Include="TeamFortress2\Features\NewMenu\ImGui\imstb_rectpack.h" />
     <ClInclude Include="TeamFortress2\Features\NewMenu\ImGui\imstb_textedit.h" />
     <ClInclude Include="TeamFortress2\Features\NewMenu\ImGui\imstb_truetype.h" />
-    <ClInclude Include="TeamFortress2\Features\NewMenu\lolwhat.h" />
+    <ClInclude Include="TeamFortress2\Features\NewMenu\Fonts.h" />
     <ClInclude Include="TeamFortress2\Features\NewMenu\NewMenu.h" />
     <ClInclude Include="TeamFortress2\Hooks\Reset\Reset.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\Include\audiodefs.h" />
@@ -604,9 +601,12 @@
     <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9xof.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\DirectX.h" />
     <ClInclude Include="TeamFortress2\Features\NewMenu\ImGui\imgui_stdlib.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="CAM.rc" />
+    <ClInclude Include="TeamFortress2\Utils\TFM\tfm.h" />
+    <ClInclude Include="TeamFortress2\Utils\Events\Events.h" />
+    <ClInclude Include="TeamFortress2\Utils\Hash\FNV1A.h" />
+    <ClInclude Include="TeamFortress2\Features\KatzeB0t\AntiCat.h" />
+    <ClInclude Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.h" />
+    <ClInclude Include="TeamFortress2\SDK\Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\Include\D3DX_DXGIFormatConvert.inl" />

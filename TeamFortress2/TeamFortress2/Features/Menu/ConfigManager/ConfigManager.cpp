@@ -333,7 +333,7 @@ void CConfigManager::Save(const wchar_t *name)
 		{
 			//Main
 			{
-				SAVE_VAR(Vars::Glow::Main::Active);
+				//SAVE_VAR(Vars::Glow::Main::Active);
 				SAVE_VAR(Vars::Glow::Main::Scale);
 			}
 
@@ -457,6 +457,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Misc::NoPush);
 			SAVE_VAR(Vars::Misc::AutoStrafe);
 			SAVE_VAR(Vars::Misc::EdgeJump);
+			SAVE_VAR(Vars::Misc::AntiAFK);
 			// CL_Move
 			{
 				SAVE_VAR(Vars::Misc::CL_Move::Enabled);//Enabled
@@ -747,7 +748,7 @@ void CConfigManager::Load(const wchar_t *name)
 		{
 			//Main
 			{
-				LOAD_VAR(Vars::Glow::Main::Active);
+				//LOAD_VAR(Vars::Glow::Main::Active);
 				LOAD_VAR(Vars::Glow::Main::Scale);
 			}
 
@@ -869,9 +870,9 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Misc::AutoRocketJump);
 			LOAD_VAR(Vars::Misc::ChatSpam);
 			LOAD_VAR(Vars::Misc::NoPush);
-			LOAD_VAR(Vars::Misc::EdgeJump);
 			LOAD_VAR(Vars::Misc::AutoStrafe);
-
+			LOAD_VAR(Vars::Misc::EdgeJump);
+			LOAD_VAR(Vars::Misc::AntiAFK);
 			// CL_Move
 			{
 				LOAD_VAR(Vars::Misc::CL_Move::Enabled);//Enabled

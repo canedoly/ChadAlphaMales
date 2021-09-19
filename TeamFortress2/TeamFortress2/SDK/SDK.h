@@ -102,6 +102,7 @@ namespace Colors
 	inline Color_t White = { 255, 255, 255, 255 };
 	inline Color_t OutlineESP = { 0, 0, 0, 220 };
 	inline Color_t Cond = { 254, 202, 87, 255 };
+	inline Color_t CondBuildings = { 254, 202, 87, 255 };
 	inline Color_t Target = { 240, 147, 43, 255 };
 	inline Color_t Invuln = { 120, 111, 166, 255 };
 	inline Color_t Cloak = { 165, 177, 194, 255 };

@@ -8,17 +8,13 @@
 #define MAX_CACHE TIME_TO_TICKS(1)
 
 static bool push = true;
-
+char bufferz[256];
 void CMisc::Run(CUserCmd* pCmd)
 {
 	AutoJump(pCmd);
 	AutoStrafe(pCmd);
-	//StoreData(pCmd);
-	//FixMove(pCmd, g_Misc.m_strafe_angles);
-	StopFast(pCmd);
 	NoiseMakerSpam();
 	ChatSpam();
-	//CatIgnore();
 	nopush();
 }
 
@@ -68,89 +64,117 @@ QAngle VectorToQAngle(Vector in)
 	return *(QAngle*)&in;
 }
 
-void FastStop(CUserCmd* pCmd) {
-	Vector vel;
-	if (const auto& pLocal = g_EntityCache.m_pLocal) {
-		vel = pLocal->GetVecVelocity();
-
-		static auto sv_friction = g_Interfaces.CVars->FindVar("sv_friction");
-		static auto sv_stopspeed = g_Interfaces.CVars->FindVar("sv_stopspeed");
-
-		auto speed = vel.Lenght2D();
-		auto friction = sv_friction->GetFloat() * (DWORD)pLocal + 0x12b8;
-		auto control = (speed < sv_stopspeed->GetFloat()) ? sv_stopspeed->GetFloat() : speed;
-		auto drop = control * friction * g_Interfaces.GlobalVars->interval_per_tick;
-
-		if (speed > drop - 1.0f)
+void ReplaceSpecials(std::string& str)
+{
+	int val;
+	size_t c = 0, len = str.size();
+	for (int i = 0; i + c < len; ++i)
+	{
+		str[i] = str[i + c];
+		if (str[i] != '\\')
+			continue;
+		if (i + c + 1 == len)
+			break;
+		switch (str[i + c + 1])
 		{
-			Vector velocity = vel;
-			Vector direction;
-			VectorAngles(vel, direction);
-			float speed = velocity.Lenght();
-
-			direction.y = pCmd->viewangles.y - direction.y;
-
-			Vector forward;
-			AngleVectors2(VectorToQAngle(direction), &forward);
-			Vector negated_direction = forward * -speed;
-
-			pCmd->forwardmove = negated_direction.x;
-			pCmd->sidemove = negated_direction.y;
-		}
-		else {
-			pCmd->forwardmove = pCmd->sidemove = 0.0f;
+			// Several control characters
+		case 'b':
+			++c;
+			str[i] = '\b';
+			break;
+		case 'n':
+			++c;
+			str[i] = '\n';
+			break;
+		case 'v':
+			++c;
+			str[i] = '\v';
+			break;
+		case 'r':
+			++c;
+			str[i] = '\r';
+			break;
+		case 't':
+			++c;
+			str[i] = '\t';
+			break;
+		case 'f':
+			++c;
+			str[i] = '\f';
+			break;
+		case 'a':
+			++c;
+			str[i] = '\a';
+			break;
+		case 'e':
+			++c;
+			str[i] = '\e';
+			break;
+			// Write escaped escape character as is
+		case '\\':
+			++c;
+			break;
+			// Convert specified value from HEX
+		case 'x':
+			if (i + c + 4 > len)
+				continue;
+			std::sscanf(&str[i + c + 2], "%02X", &val);
+			c += 3;
+			str[i] = val;
+			break;
+			// Convert from unicode
+		case 'u':
+			if (i + c + 6 > len)
+				continue;
+			// 1. Scan 16bit HEX value
+			std::sscanf(&str[i + c + 2], "%04X", &val);
+			c += 5;
+			// 2. Convert value to UTF-8
+			if (val <= 0x7F)
+			{
+				str[i] = val;
+			}
+			else if (val <= 0x7FF)
+			{
+				str[i] = 0xC0 | ((val >> 6) & 0x1F);
+				str[i + 1] = 0x80 | (val & 0x3F);
+				++i;
+				--c;
+			}
+			else
+			{
+				str[i] = 0xE0 | ((val >> 12) & 0xF);
+				str[i + 1] = 0x80 | ((val >> 6) & 0x3F);
+				str[i + 2] = 0x80 | (val & 0x3F);
+				i += 2;
+				c -= 2;
+			}
+			break;
 		}
 	}
+	str.resize(len - c);
 }
 
-/*
-Vector CMisc::predPosAt(float flTime, CBaseEntity* target)
+/* // This made me feel like killing myself because of SEOwned shit source...
+void CMisc::ChangeName(std::string name)
 {
-	if (!flTime)
-		return target->GetAbsOrigin();
+	auto custom_name = settings::Manager::instance().lookup("name.custom");
+	if (custom_name != nullptr)
+		custom_name->fromString(name);
 
-	static ConVar* sv_gravity = g_Interfaces.CVars->FindVar(_("sv_gravity"));
-
-	Vector startPos = target->GetAbsOrigin(), velocity = target->GetVecVelocity();
-	float zdrop;
-	if (target->GetFlags() & FL_ONGROUND)
-		zdrop = velocity.z * flTime;
-	else
-		zdrop = 0.5 * -sv_gravity->GetInt() * pow(flTime, 2) + velocity.z * flTime;
-
-	Vector result(
-		startPos.x + (velocity.x * flTime),
-		startPos.y + (velocity.y * flTime),
-		startPos.z + zdrop);
-
-	//if (paths.value == 2)
-	//{
-		float angleY = 0;
-		CBaseEntity* cache = g_Interfaces.EntityList->GetClientEntity(target);
-		if (cache && cache->Full()) // Determine player strafe by averaging cache data
-		{
-			// A = Last, B = Mid, C = Current (startPos)
-			int last = (MAX_CACHE - 1) / 3, mid = (MAX_CACHE - 1) / 6;
-			Vector vLast, vMid;
-			if (HitboxData* data = cache->FindTick(g_Interfaces.GlobalVars->tickcount - last))
-			{
-				vLast = data->vCenter;
-				if (data = cache->FindTick(g_Interfaces.GlobalVars->tickcount - mid))
-					vMid = data->vCenter;
-			}
-			// Approximate angle
-			Vector forward, strafe;
-			Math::VectorAngles(vMid - vLast, forward);
-			Math::VectorAngles(startPos - vMid, strafe);
-			// Divide our angle to measure by distance
-			angleY = (strafe.y - forward.y) / ((vMid - vLast).Lenght2D() + (startPos - vMid).Lenght2D());
-		}
-		gEsp.rotate_vec2(*(Vec2*)&result, *(Vec2*)&startPos, DEG2RAD(angleY * (result - startPos).Lenght2D()));
-	//}
-
-	return result;
+	ReplaceSpecials(name);
+	//ConVar setname("name", name.c_str());
+	NET_SetConVar setname("name", name.c_str());
+	INetChannel* ch = (INetChannel*)g_Interfaces.Engine->GetNetChannelInfo();
+	if (ch)
+	{
+		setname.SetNetChannel(ch);
+		setname.SetReliable(false);
+		ch->SendNetMsg(setname, false);
+	}
 }
 */
+
 void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 {
 	if ((nOldFlags & FL_ONGROUND) && Vars::Misc::EdgeJump.m_Var)
@@ -190,73 +214,6 @@ void CMisc::AutoJump(CUserCmd *pCmd)
 	}
 }
 bool AutoStrafeFlip = false;
-/*
-void CMisc::AutoStrafe(CUserCmd* pCmd)
-{
-	if (Vars::Misc::AutoStrafe.m_Var)
-	{
-		if (const auto& pLocal = g_EntityCache.m_pLocal)
-		{
-			
-			if (pLocal->IsAlive() && !pLocal->IsSwimming() && !pLocal->IsOnGround() && (pCmd->mousedx > 1 || pCmd->mousedx < -1)) {
-				pCmd->sidemove = pCmd->mousedx > 1 ? 450.f : -450.f;
-
-			}
-		}
-	}
-}
-*/
-
-
-bool pda = false;
-bool pda2 = false;
-bool pda3 = false;
-
-void CMisc::StopFast(CUserCmd* pCmd) {
-
-	if (Vars::Misc::CL_Move::Enabled.m_Var && Vars::Misc::CL_Move::Doubletap.m_Var && Vars::Misc::CL_Move::DoubletapKey.m_Var && (pCmd->buttons & IN_ATTACK) && !g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_nWaitForShift)
-	{
-		g_GlobalInfo.m_bShouldShift = true;
-	}
-
-
-	if (const auto& pLocal = g_EntityCache.m_pLocal) {
-		if (pLocal->IsOnGround()) {
-			float speed = pLocal->GetVelocity().Lenght2D();
-
-			if (g_GlobalInfo.fast_stop == true && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) {
-				if (speed > 1.f) {
-					if (!pda) {
-						g_Interfaces.Engine->ClientCmd_Unrestricted("cyoa_pda_open 1");
-						pda = true;
-					}
-					if (pLocal->GetMaxSpeed() < 240)
-					{
-						pCmd->forwardmove = 0.f;
-
-					}
-					else {
-						pCmd->forwardmove = -pCmd->forwardmove / 4;
-					}
-					pCmd->sidemove = 0.f;
-					if (!pda2) {
-						g_Interfaces.Engine->ClientCmd_Unrestricted("cyoa_pda_open 0");
-						pda2 = true;
-					}
-				}
-				else {
-					if (!pda3) {
-						g_Interfaces.Engine->ClientCmd_Unrestricted("cyoa_pda_open 0");
-						pda3 = true;
-					}
-					pda = false;
-					pda2 = false;
-					g_GlobalInfo.fast_stop = false;
-				}
-			}
-		}
-	}
-}
 
 static float normalizeRad(float a) noexcept
 {
@@ -281,71 +238,56 @@ static float angleDiffRad(float a1, float a2) noexcept
 	return delta;
 }
 
-
 void CMisc::AutoStrafe(CUserCmd* pCmd)
 {
-	if (Vars::Misc::AutoStrafe.m_Var)
-	{
-		if (const auto& pLocal = g_EntityCache.m_pLocal)
-		{
-			if (!pLocal)
-				return;
+	if (const auto& pLocal = g_EntityCache.m_pLocal) {
 #
-			static bool was_jumping = false;
-			bool is_jumping = pCmd->buttons & IN_JUMP;
+		static bool was_jumping = false;
+		bool is_jumping = pCmd->buttons & IN_JUMP;
 
 
-			if (!(pLocal->GetFlags() & (FL_ONGROUND | FL_INWATER)) && (!is_jumping || was_jumping))
+		if (!(pLocal->GetFlags() & (FL_ONGROUND | FL_INWATER)) && (!is_jumping || was_jumping) && !pLocal->IsSwimming())
+		{
+
+			const float speed = pLocal->GetVelocity().Lenght2D();
+			auto vel = pLocal->GetVelocity();
+
+			if (speed < 2.0f)
+				return;
+
+			constexpr auto perfectDelta = [](float speed) noexcept
 			{
-				if (!pLocal || !pLocal->IsAlive())
-					return;
+				if (const auto& pLocal = g_EntityCache.m_pLocal) {
+					static auto speedVar = pLocal->GetMaxSpeed();
+					static auto airVar = g_Interfaces.CVars->FindVar(_("sv_airaccelerate"));
 
-				if (pLocal->GetMoveType() & (MOVETYPE_LADDER | MOVETYPE_NOCLIP))
-					return;
+					static auto wishSpeed = 30.0f;
 
-				const float speed = pLocal->GetVelocity().Lenght2D();
-				auto vel = pLocal->GetVelocity();
+					const auto term = wishSpeed / airVar->GetFloat() / speedVar * 100.f / speed;
 
-				if (speed < 2.0f)
-					return;
-
-				constexpr auto perfectDelta = [](float speed) noexcept
-				{
-					if (const auto& pLocal = g_EntityCache.m_pLocal) {
-						static auto speedVar = pLocal->GetMaxSpeed();
-						static auto airVar = g_Interfaces.CVars->FindVar(_("sv_airaccelerate"));
-
-						static auto wishSpeed = 30.0f;
-
-						const auto term = wishSpeed / airVar->GetFloat() / speedVar * 100.f / speed;
-
-						if (term < 1.0f && term > -1.0f)
-							return acosf(term);
-					}
-					return 0.0f;
-				};
-
-				const float pDelta = perfectDelta(speed);
-				if (pDelta)
-				{
-					const float yaw = DEG2RAD(pCmd->viewangles.y);
-					const float velDir = atan2f(vel.y, vel.x) - yaw;
-					const float wishAng = atan2f(-pCmd->sidemove, pCmd->forwardmove);
-					const float delta = angleDiffRad(velDir, wishAng);
-
-					g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) - 50, { 255, 64, 64, 255 }, ALIGN_CENTERHORIZONTAL, _(L"Was jumping: %i"), (int)was_jumping);
-					g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) - 70, { 255, 64, 64, 255 }, ALIGN_CENTERHORIZONTAL, _(L"Is jumping: %i"), (int)is_jumping);
-
-					float moveDir = delta < 0.0f ? velDir + pDelta : velDir - pDelta;
-
-					pCmd->forwardmove = cosf(moveDir) * 450.f;
-					pCmd->sidemove = -sinf(moveDir) * 450.f;
+					if (term < 1.0f && term > -1.0f)
+						return acosf(term);
 				}
+				return 0.0f;
+			};
 
+			const float pDelta = perfectDelta(speed);
+			if (pDelta)
+			{
+				const float yaw = DEG2RAD(pCmd->viewangles.y);
+				const float velDir = atan2f(vel.y, vel.x) - yaw;
+				const float wishAng = atan2f(-pCmd->sidemove, pCmd->forwardmove);
+				const float delta = angleDiffRad(velDir, wishAng);
 
+				float moveDir = delta < 0.0f ? velDir + pDelta : velDir - pDelta;
+
+				pCmd->forwardmove = cosf(moveDir) * 450.f;
+				pCmd->sidemove = -sinf(moveDir) * 450.f;
 			}
-			was_jumping = is_jumping;
+
+
 		}
+		was_jumping = is_jumping;
 	}
 }
 
@@ -425,11 +367,11 @@ std::string GetSpam(const int nIndex) {
 
 	switch (nIndex)
 	{
-		case 0: str = XorStr("say CAM | Get g00d get CAM (ChadAlphaMales.club)").str(); break;
-		case 1: str = XorStr("say SEOwned - Better than 20$ Darkstorm!").str(); break;
-		case 2: str = XorStr("say SEOwned - Go get yours now from unknowncheats.me!").str(); break;
-		case 3: str = XorStr("say SEOwned - Premium cheat by spook953 and Lak3, but it's free!").str(); break;
-		default: str = XorStr("say SEOwned - See you @ unknowncheats.me!").str(); break;
+		case 0: str = XorStr("say CAM | Get good get ChadAlphaMales.club").str(); break;
+		case 1: str = XorStr("say CAM | Way to the top!").str(); break;
+		case 2: str = XorStr("say CAM | Co-op with fuk0ff.com").str(); break;
+		case 3: str = XorStr("say CAM | Owning casual with ease").str(); break;
+		default: str = XorStr("say CAM | ChadAlphaMales.club").str(); break;
 	}
 
 	return str;
@@ -503,40 +445,6 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd)
 	}
 }
 
-/*
-void CMisc::CatIgnore() {
-	auto CathookMessage = []() -> void
-	{
-		void* CathookMessage = nullptr;
-
-		CathookMessage = Utils::CreateKeyVals({
-				_("\"cl_drawline\"\
-				\n{\
-				\n\t\"panel\" \"1\"\
-				\n\t\"line\" \"0\"\
-				\n\t\"x\" \"0xCA7\"\
-				\n\t\"y\" \"1234567.f\"\
-				\n}\n")
-			}
-		);
-
-		g_Interfaces.Engine->ServerCmdKeyValues(CathookMessage);
-
-		CathookMessage = Utils::CreateKeyVals({
-				_("\"cl_drawline\"\
-				\n{\
-				\n\t\"panel\" \"1\"\
-				\n\t\"line\" \"0\"\
-				\n\t\"x\" \"0xCA8\"\
-				\n\t\"y\" \"1234567.f\"\
-				\n}\n")
-			}
-		);
-
-		g_Interfaces.Engine->ServerCmdKeyValues(CathookMessage);
-	};
-}
-*/
 void CMisc::nopush() {
 	ConVar* noPush = g_Interfaces.CVars->FindVar(_("tf_avoidteammates_pushaway"));
 	if (Vars::Misc::NoPush.m_Var) {

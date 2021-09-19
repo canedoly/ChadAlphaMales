@@ -83,8 +83,8 @@ void CGlowEffect::Render()
 		int w = g_ScreenSize.w;
 		int h = g_ScreenSize.h;
 
-		if (!Vars::Glow::Main::Active.m_Var || w < 1 || h < 1 || w > 4096 || h > 2160)
-			return;
+		//if (!Vars::Glow::Main::Active.m_Var || w < 1 || h < 1 || w > 4096 || h > 2160)
+			//return;
 
 		if (g_Interfaces.EngineVGui->IsGameUIVisible())
 			return;

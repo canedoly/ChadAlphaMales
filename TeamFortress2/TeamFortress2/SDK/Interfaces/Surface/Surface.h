@@ -91,6 +91,14 @@ public:
 		return GetVFunc<FN>(this, 53)(this);
 	}
 
+	/*
+	bool ResetInputState()
+	{
+		typedef bool(__thiscall* FN)(PVOID);
+		return GetVFunc<FN>(this, 25)(this);
+	}
+	*/
+
 	void DrawFilledRectFade(int x0, int y0, int x1, int y1, unsigned int alpha0, unsigned int alpha1, bool horizontal)
 	{
 		typedef void(__thiscall* FN)(PVOID, int, int, int, int, unsigned int, unsigned int, bool);

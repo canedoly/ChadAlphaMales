@@ -42,9 +42,10 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 				}
 			}
 			g_Visuals.ViewmodelXYZ();
-			g_Visuals.Fullbright();
+			//g_Visuals.Fullbright();
 			g_Visuals.ARatio();
 			g_Visuals.ThirdPerson();
+			g_Visuals.SkyboxChanger();
 			break;
 		}
 

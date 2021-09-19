@@ -516,7 +516,7 @@ bool CAimbotProjectile::GetTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 	if (!GetTargets(pLocal, pWeapon))
 		return false;
 
-	{ // PerformanceMode
+	{ // PerformanceMode forced on, probably not the best idea...? idk honestly
 		Target_t Target = g_AimbotGlobal.GetBestTarget(GetSortMethod());
 
 		if (!VerifyTarget(pLocal, pWeapon, pCmd, Target))
@@ -525,6 +525,7 @@ bool CAimbotProjectile::GetTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 		Out = Target;
 		return true;
 	}
+
 	/*
 	if (Vars::Aimbot::Projectile::PerformanceMode.m_Var)
 	{

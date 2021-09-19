@@ -6,6 +6,11 @@
 #define MAX_OS_PATH 260
 #define SUBCHANNEL_FREE 0
 
+#define net_Tick 3        // send last world tick
+#define net_StringCmd 4   // a string command
+#define net_SetConVar 5   // sends one/multiple convar settings
+#define net_SignonState 6 // signals current signon state
+
 class INetMessage;
 class CNetMessage;
 
@@ -322,8 +327,39 @@ public:
 class CNetMessage : public INetMessage
 {
 public:
-	bool m_bReliable;
-	INetChannel *m_NetChannel;
+	CNetMessage()
+	{
+		m_bReliable = true;
+		m_NetChannel = 0;
+	}
+
+	virtual ~CNetMessage() {};
+
+	virtual int GetGroup() const
+	{
+		return INetChannelInfo::GENERIC;
+	}
+
+	virtual void SetReliable(bool state)
+	{
+		m_bReliable = state;
+	};
+	virtual bool IsReliable() const
+	{
+		return m_bReliable;
+	};
+	virtual void SetNetChannel(INetChannel* netchan)
+	{
+		m_NetChannel = netchan;
+	}
+	virtual bool Process()
+	{
+		return false;
+	}; // no handler set
+
+protected:
+	bool m_bReliable;          // true if message should be send reliable
+	INetChannel* m_NetChannel; // netchannel this message is from/for
 };
 
 class CLC_Move : public CNetMessage

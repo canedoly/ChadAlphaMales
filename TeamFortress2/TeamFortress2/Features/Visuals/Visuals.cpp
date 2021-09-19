@@ -2,6 +2,67 @@
 #include "../Vars.h"
 #include "../Menu/Menu.h"
 #include <format>
+char buffer[256];
+
+
+typedef bool(_cdecl* LoadNamedSkiesFn)(const char*);
+static LoadNamedSkiesFn LoadSkies = (LoadNamedSkiesFn)g_Pattern.Find(_(L"engine.dll"), _(L"55 8B EC 81 EC ? ? ? ? 8B 0D ? ? ? ? 53 56 57 8B 01 C7 45"));
+
+void CVisuals::SkyboxChanger() {
+	const char* skybNames[] = {
+		"Custom",
+		"sky_tf2_04",
+		"sky_upward",
+		"sky_dustbowl_01",
+		"sky_goldrush_01",
+		"sky_granary_01",
+		"sky_well_01",
+		"sky_gravel_01",
+		"sky_badlands_01",
+		"sky_hydro_01",
+		"sky_night_01",
+		"sky_nightfall_01",
+		"sky_trainyard_01",
+		"sky_stormfront_01",
+		"sky_morningsnow_01",
+		"sky_alpinestorm_01",
+		"sky_harvest_01",
+		"sky_harvest_night_01",
+		"sky_halloween",
+		"sky_halloween_night_01",
+		"sky_halloween_night2014_01",
+		"sky_island_01",
+		"sky_rainbow_01"
+	};
+	if (Vars::Visuals::SkyboxChanger.m_Var) {
+		if (Vars::Skybox::skyboxnum == 0) {
+			if (Vars::Misc::BypassPure.m_Var) {
+				LoadSkies(Vars::Skybox::SkyboxName.c_str());
+			}
+			else {
+				LoadSkies(g_Interfaces.CVars->FindVar(_("sv_skyname"))->GetString());
+			}
+		}
+		else {
+			LoadSkies(skybNames[Vars::Skybox::skyboxnum]);
+		}
+	}
+	else {
+		LoadSkies(g_Interfaces.CVars->FindVar(_("sv_skyname"))->GetString());
+	}
+}
+
+void CVisuals::AddToEventLog(const char* string...) {
+	va_list va_alist;
+	char cbuffer[1024] = { '\0' };
+
+	va_start(va_alist, string);
+	vsprintf_s(cbuffer, string, va_alist);
+	va_end(va_alist);
+
+	g_Visuals.vecEventVector.emplace_back(EventLogging_t{ cbuffer });
+}
+
 void CVisuals::RunEventLogs()
 {
 	for (auto i = 0; i < vecEventVector.size(); i++) {
@@ -13,7 +74,7 @@ void CVisuals::RunEventLogs()
 			continue;
 		}
 
-		auto height = flIdealHeight + (14 * i),
+		 auto height = flIdealHeight + (14 * i),
 			width = flIdealWidth;
 
 		if (time_delta < flTextFadeInTime) {
@@ -54,12 +115,12 @@ void CVisuals::FOV(CViewSetup *pView)
 	}
 }
 
-
+/*
 void CVisuals::Fullbright() {
 	static ConVar* fullbright = g_Interfaces.CVars->FindVar(_("mat_fullbright"));
 	fullbright->SetValue(Vars::Visuals::Fullbright.m_Var); // Probably isn't the best idea to set it like 500x a second :woozy_face:
 }
-
+*/
 
 void CVisuals::ARatio() {
 	float ratio = (Vars::Visuals::AspectRatioValue.m_Var * 0.1) / 2;
