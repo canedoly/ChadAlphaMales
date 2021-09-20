@@ -7,9 +7,9 @@
 // I want a playerlist that will show
 // Name - Kick - Checkbox with ignore - Profile?
 
-// File will consist of pi.guid on each newline
-// If the guid is in the file - they are ignored
-// If checkbox && guid is in file - remove it from file
+// File will consist of pi.friendsID on each newline
+// If not checkbox the friendsID is in the file - they are ignored
+// If checkbox && friendsID is in file - remove it from file
 
 // Kick = callvote kick pi.userID
 
