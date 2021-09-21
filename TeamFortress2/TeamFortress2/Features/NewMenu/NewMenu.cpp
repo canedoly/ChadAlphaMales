@@ -903,7 +903,7 @@ void MiscTab() {
         ImGui::MenuChild(_("General"), ImVec2(300, 250), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Instant Respawn MvM"), &Vars::Misc::InstantRespawn.m_Var);
-            ImGui::Checkbox(_("Anti AFK"), &Vars::Misc::AntiAFK.m_Var);
+            //ImGui::Checkbox(_("Anti AFK"), &Vars::Misc::AntiAFK.m_Var); Didn't realize it was broken itself
             ImGui::Checkbox(_("Taunt Slide"), &Vars::Misc::TauntSlide.m_Var);
             ImGui::Checkbox(_("Taunt Control"), &Vars::Misc::TauntControl.m_Var);
             ImGui::Checkbox(_("Bypass sv_pure"), &Vars::Misc::BypassPure.m_Var);

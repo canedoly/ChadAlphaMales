@@ -2,10 +2,10 @@
 
 #include "../../SDK/SDK.h"
 
-class CInstanceRespawn
+class CInstantRespawn
 {
 public:
 	void InstantRespawn();
 };
 
-inline CInstanceRespawn g_InstantRespawn;
+inline CInstantRespawn g_InstantRespawn;
