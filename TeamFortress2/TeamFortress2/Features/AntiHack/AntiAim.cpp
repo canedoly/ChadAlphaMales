@@ -77,7 +77,6 @@ void CAntiAim::Run(CUserCmd *pCmd, bool *pSendPacket)
 
 		static bool b = false;
 
-		static bool Change = false;
 		float SpinSpeed = fmod(g_Interfaces.GlobalVars->realtime * Vars::AntiHack::AntiAim::SpinSpeed.m_Var / 10.0f * 360.0f, 360.0f);
 
 		if (b)
@@ -87,21 +86,6 @@ void CAntiAim::Run(CUserCmd *pCmd, bool *pSendPacket)
 				case 2: { pCmd->viewangles.y -= 90.0f; break; }
 				case 3: { pCmd->viewangles.y += 180.0f; break; }
 				case 4: { pCmd->viewangles.y = SpinSpeed; break; }//Spin
-				case 5://Jitter Spin
-				{
-					if (Change)
-						pCmd->viewangles.y += 180;
-
-					static int Spin = 0;
-
-					Spin += 3;
-
-					if (Spin > 180)
-						Spin = -180;
-
-					pCmd->viewangles.y += Spin;
-					break;
-				}
 				default: { bYawSet = false; break; }
 			}
 
@@ -115,21 +99,6 @@ void CAntiAim::Run(CUserCmd *pCmd, bool *pSendPacket)
 				case 2: { pCmd->viewangles.y -= 90.0f; break; }
 				case 3: { pCmd->viewangles.y += 180.0f; break; }
 				case 4: { pCmd->viewangles.y = SpinSpeed; break; }//Spin
-				case 5://Jitter Spin
-				{
-					if (Change)
-						pCmd->viewangles.y += 180;
-
-					static int Spin = 0;
-
-					Spin += 3;
-
-					if (Spin > 180)
-						Spin = -180;
-
-					pCmd->viewangles.y += Spin;
-					break;
-				}
 				default: { bYawSet = false; break; }
 			}
 
