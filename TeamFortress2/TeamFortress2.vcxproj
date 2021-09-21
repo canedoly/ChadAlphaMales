@@ -282,6 +282,7 @@
     <ClInclude Include="TeamFortress2\Features\NewMenu\ImGui\imstb_textedit.h" />
     <ClInclude Include="TeamFortress2\Features\NewMenu\ImGui\imstb_truetype.h" />
     <ClInclude Include="TeamFortress2\Features\NewMenu\NewMenu.h" />
+    <ClInclude Include="TeamFortress2\Features\Playerlist\Playerlist.h" />
     <ClInclude Include="TeamFortress2\Features\Prediction\Prediction.h" />
     <ClInclude Include="TeamFortress2\Features\Radar\Radar.h" />
     <ClInclude Include="TeamFortress2\Features\AttributeChanger\AttributeChanger.h" />

@@ -9,6 +9,7 @@
 #include "Utils/Events/Events.h"
 #include "Features/Menu/Menu.h"
 #include "Features/NewMenu/NewMenu.h"
+#include "Features/Playerlist/Playerlist.h"
 
 Discord* g_DiscordRPC;
 
@@ -68,7 +69,8 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		//FONT_DEBUG
 		{ 0x0, _("Arial"), 16, 0, FONTFLAG_OUTLINE }
 	});
-
+	//Initialize ignored set
+	g_Playerlist.GetIgnoredPlayers();
 	g_Events.Setup({ "vote_cast", "player_changeclass", "player_connect", "player_hurt", "localplayer_respawn", "achievement_earned" });
 	if (!source::features::steamrichpresence.Update())
 		return false;

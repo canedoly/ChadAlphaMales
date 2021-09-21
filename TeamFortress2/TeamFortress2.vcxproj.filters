@@ -608,6 +608,7 @@
     <ClInclude Include="TeamFortress2\Features\KatzeB0t\AntiCat.h" />
     <ClInclude Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.h" />
     <ClInclude Include="TeamFortress2\SDK\Timer.h" />
+    <ClInclude Include="TeamFortress2\Features\Playerlist\Playerlist.h" />
     <ClInclude Include="TeamFortress2\Features\InstantRespawn\InstantRespawn.h" />
   </ItemGroup>
   <ItemGroup>
