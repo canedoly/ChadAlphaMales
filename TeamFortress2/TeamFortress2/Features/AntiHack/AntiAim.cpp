@@ -77,7 +77,7 @@ void CAntiAim::Run(CUserCmd *pCmd, bool *pSendPacket)
 
 		static bool b = false;
 
-		float SpinSpeed = fmod(g_Interfaces.GlobalVars->realtime * 5 / 10.0f * 360.0f, 360.0f);
+		float SpinSpeed = fmod(g_Interfaces.GlobalVars->realtime * Vars::AntiHack::AntiAim::SpinSpeed.m_Var / 10.0f * 360.0f, 360.0f);
 
 		if (b)
 		{
