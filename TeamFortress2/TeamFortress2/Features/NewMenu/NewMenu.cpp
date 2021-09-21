@@ -903,7 +903,8 @@ void MiscTab() {
         ImGui::SetCursorPosX(15);
         ImGui::MenuChild(_("General"), ImVec2(300, 250), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
-            ImGui::Checkbox(_("Anti AFK"), &Vars::Misc::NoPush.m_Var);
+            ImGui::Checkbox(_("Instant Respawn MvM"), &Vars::Misc::InstantRespawn.m_Var);
+            //ImGui::Checkbox(_("Anti AFK"), &Vars::Misc::AntiAFK.m_Var); Didn't realize it was broken itself
             ImGui::Checkbox(_("Taunt Slide"), &Vars::Misc::TauntSlide.m_Var);
             ImGui::Checkbox(_("Taunt Control"), &Vars::Misc::TauntControl.m_Var);
             ImGui::Checkbox(_("Bypass sv_pure"), &Vars::Misc::BypassPure.m_Var);
@@ -936,9 +937,10 @@ void MiscTab() {
         ImGui::MenuChild(_("HvH (autism)"), ImVec2(300, 280), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("AntiAim"), &Vars::AntiHack::AntiAim::Active.m_Var);
-            const char* pitch[]{ "None", "Up", "Down", "Fake up", "Fake down" }; ImGui::Combo(_("Pitch"), &Vars::AntiHack::AntiAim::Pitch.m_Var, pitch, IM_ARRAYSIZE(pitch));
-            const char* realYaw[]{ "None", "Left", "Right", "Backwards" }; ImGui::Combo(_("Real yaw"), &Vars::AntiHack::AntiAim::YawReal.m_Var, realYaw, IM_ARRAYSIZE(realYaw));
-            const char* fakeYaw[]{ "None", "Left", "Right", "Backwards" }; ImGui::Combo(_("Fake yaw"), &Vars::AntiHack::AntiAim::YawFake.m_Var, fakeYaw, IM_ARRAYSIZE(fakeYaw));
+            const char* pitch[]{ "None", "Up", "Down", "Fake up", "Fake down", "Center"}; ImGui::Combo(_("Pitch"), &Vars::AntiHack::AntiAim::Pitch.m_Var, pitch, IM_ARRAYSIZE(pitch));
+            const char* realYaw[]{ "None", "Left", "Right", "Backwards", "Spin", "Random"}; ImGui::Combo(_("Real yaw"), &Vars::AntiHack::AntiAim::YawReal.m_Var, realYaw, IM_ARRAYSIZE(realYaw));
+            const char* fakeYaw[]{ "None", "Left", "Right", "Backwards", "Spin", "Random"}; ImGui::Combo(_("Fake yaw"), &Vars::AntiHack::AntiAim::YawFake.m_Var, fakeYaw, IM_ARRAYSIZE(fakeYaw));
+            ImGui::SliderInt(_("Spin Speed"), &Vars::AntiHack::AntiAim::SpinSpeed.m_Var, 1, 20, _("%d"), ImGuiSliderFlags_AlwaysClamp);
 
             ImGui::Checkbox(_("Fakelag"), &Vars::Misc::CL_Move::Fakelag.m_Var);
             plsfix(50);

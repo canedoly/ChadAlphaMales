@@ -144,6 +144,14 @@ namespace Utils
 		return pCreated;
 	}
 
+	static std::random_device RandomDevice;
+	static std::mt19937 Engine{ RandomDevice() };
+	__inline float RandFloatRange(float min, float max)
+	{
+		std::uniform_real_distribution<float> Random(min, max);
+		return Random(Engine);
+	}
+
 	__inline void* CreateKeyVals(const char* szVars)
 	{
 		static int nCreatedKeyVals = 0;

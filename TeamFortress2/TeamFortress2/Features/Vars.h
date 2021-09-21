@@ -428,6 +428,7 @@ namespace Vars
 		inline CVar<bool> AutoRocketJump		{ false, L"Auto RocketJump" };
 		inline CVar<bool> ChatSpam              { false, L"Chat Spam" };
 		inline CVar<bool> NoPush				{ false, L"No Push" };
+		inline CVar<bool> InstantRespawn		{ false, L"MvM Instant Respawn" };
 		inline CVar<bool> EdgeJump				{ false, L"Edge Jump" };
 		inline CVar<bool> AntiAFK{ false, L"Anti AFK" };
 		inline CVar<bool> VoteRevealer			{ false, L"Reveal votes" };
@@ -456,6 +457,7 @@ namespace Vars
 		{
 			inline CVar<bool> Active	{ false, L"Active" };
 			inline CVar<int> Pitch		{ 0, L"Pitch" };		//0 - None, 1 - Up, 2 - Down, 3 - Fake Up, 4 - Fake Down
+			inline CVar<int> SpinSpeed	{ 0, L"Spin Speed" };
 			inline CVar<int> YawReal	{ 0, L"Yaw Real" };	//0 - None, 1 - Left, 2 - Right, 3 - Backwards
 			inline CVar<int> YawFake	{ 0, L"Yaw Fake" };	//0 - None, 1 - Left, 2 - Right, 3 - Backwards
 		}
