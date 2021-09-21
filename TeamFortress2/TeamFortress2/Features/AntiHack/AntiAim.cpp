@@ -86,6 +86,7 @@ void CAntiAim::Run(CUserCmd *pCmd, bool *pSendPacket)
 				case 2: { pCmd->viewangles.y -= 90.0f; break; }
 				case 3: { pCmd->viewangles.y += 180.0f; break; }
 				case 4: { pCmd->viewangles.y = SpinSpeed; break; }//Spin
+				case 5: { pCmd->viewangles.y = Utils::RandFloatRange(-65536.0f, 65536.0f); break; }//Random
 				default: { bYawSet = false; break; }
 			}
 
@@ -99,6 +100,7 @@ void CAntiAim::Run(CUserCmd *pCmd, bool *pSendPacket)
 				case 2: { pCmd->viewangles.y -= 90.0f; break; }
 				case 3: { pCmd->viewangles.y += 180.0f; break; }
 				case 4: { pCmd->viewangles.y = SpinSpeed; break; }//Spin
+				case 5: { pCmd->viewangles.y = Utils::RandFloatRange(-65536.0f, 65536.0f); break; }//Random
 				default: { bYawSet = false; break; }
 			}
 
