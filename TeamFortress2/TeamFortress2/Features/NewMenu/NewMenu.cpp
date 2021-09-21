@@ -938,7 +938,7 @@ void MiscTab() {
             ImGui::Checkbox(_("AntiAim"), &Vars::AntiHack::AntiAim::Active.m_Var);
             const char* pitch[]{ "None", "Up", "Down", "Fake up", "Fake down", "Center"}; ImGui::Combo(_("Pitch"), &Vars::AntiHack::AntiAim::Pitch.m_Var, pitch, IM_ARRAYSIZE(pitch));
             const char* realYaw[]{ "None", "Left", "Right", "Backwards", "Spin"}; ImGui::Combo(_("Real yaw"), &Vars::AntiHack::AntiAim::YawReal.m_Var, realYaw, IM_ARRAYSIZE(realYaw));
-            const char* fakeYaw[]{ "None", "Left", "Right", "Backwards" }; ImGui::Combo(_("Fake yaw"), &Vars::AntiHack::AntiAim::YawFake.m_Var, fakeYaw, IM_ARRAYSIZE(fakeYaw));
+            const char* fakeYaw[]{ "None", "Left", "Right", "Backwards", "Spin"}; ImGui::Combo(_("Fake yaw"), &Vars::AntiHack::AntiAim::YawFake.m_Var, fakeYaw, IM_ARRAYSIZE(fakeYaw));
 
             ImGui::Checkbox(_("Fakelag"), &Vars::Misc::CL_Move::Fakelag.m_Var);
             plsfix(50);
