@@ -428,6 +428,7 @@ namespace Vars
 		inline CVar<bool> AutoRocketJump		{ false, L"Auto RocketJump" };
 		inline CVar<bool> ChatSpam              { false, L"Chat Spam" };
 		inline CVar<bool> NoPush				{ false, L"No Push" };
+		inline CVar<bool> InstantRespawn		{ false, L"MvM Instant Respawn" };
 		inline CVar<bool> EdgeJump				{ false, L"Edge Jump" };
 		inline CVar<bool> AntiAFK{ false, L"Anti AFK" };
 		inline CVar<bool> VoteRevealer			{ false, L"Reveal votes" };

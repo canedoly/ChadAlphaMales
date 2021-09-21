@@ -446,6 +446,7 @@ void CConfigManager::Save(const wchar_t *name)
 		//Misc
 		{
 			SAVE_VAR(Vars::Misc::AutoJump);
+			SAVE_VAR(Vars::Misc::InstantRespawn);
 			SAVE_VAR(Vars::Misc::TauntSlide);
 			SAVE_VAR(Vars::Misc::TauntControl);
 			SAVE_VAR(Vars::Misc::BypassPure);
@@ -861,6 +862,7 @@ void CConfigManager::Load(const wchar_t *name)
 		//Misc
 		{
 			LOAD_VAR(Vars::Misc::AutoJump);
+			LOAD_VAR(Vars::Misc::InstantRespawn);
 			LOAD_VAR(Vars::Misc::TauntSlide);
 			LOAD_VAR(Vars::Misc::TauntControl);
 			LOAD_VAR(Vars::Misc::BypassPure);
