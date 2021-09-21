@@ -77,12 +77,15 @@ void CAntiAim::Run(CUserCmd *pCmd, bool *pSendPacket)
 
 		static bool b = false;
 
+		float SpinSpeed = fmod(g_Interfaces.GlobalVars->realtime * 5 / 10.0f * 360.0f, 360.0f);
+
 		if (b)
 		{
 			switch (Vars::AntiHack::AntiAim::YawReal.m_Var) {
 				case 1: { pCmd->viewangles.y += 90.0f;  break; }
 				case 2: { pCmd->viewangles.y -= 90.0f; break; }
 				case 3: { pCmd->viewangles.y += 180.0f; break; }
+				case 4: { pCmd->viewangles.y = SpinSpeed; break; }//Spin
 				default: { bYawSet = false; break; }
 			}
 
@@ -95,6 +98,7 @@ void CAntiAim::Run(CUserCmd *pCmd, bool *pSendPacket)
 				case 1: { pCmd->viewangles.y += 90.0f; break; }
 				case 2: { pCmd->viewangles.y -= 90.0f; break; }
 				case 3: { pCmd->viewangles.y += 180.0f; break; }
+				case 4: { pCmd->viewangles.y = SpinSpeed; break; }//Spin
 				default: { bYawSet = false; break; }
 			}
 
