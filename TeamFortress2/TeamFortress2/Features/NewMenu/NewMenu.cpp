@@ -937,7 +937,7 @@ void MiscTab() {
         ImGui::MenuChild(_("HvH (autism)"), ImVec2(300, 280), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("AntiAim"), &Vars::AntiHack::AntiAim::Active.m_Var);
-            const char* pitch[]{ "None", "Up", "Down", "Fake up", "Fake down", "Center"}; ImGui::Combo(_("Pitch"), &Vars::AntiHack::AntiAim::Pitch.m_Var, pitch, IM_ARRAYSIZE(pitch));
+            const char* pitch[]{ "None", "Up", "Down", "Fake up", "Fake down", "Center", "Half Up"}; ImGui::Combo(_("Pitch"), &Vars::AntiHack::AntiAim::Pitch.m_Var, pitch, IM_ARRAYSIZE(pitch));
             const char* realYaw[]{ "None", "Left", "Right", "Backwards", "Spin", "Random"}; ImGui::Combo(_("Real yaw"), &Vars::AntiHack::AntiAim::YawReal.m_Var, realYaw, IM_ARRAYSIZE(realYaw));
             const char* fakeYaw[]{ "None", "Left", "Right", "Backwards", "Spin", "Random"}; ImGui::Combo(_("Fake yaw"), &Vars::AntiHack::AntiAim::YawFake.m_Var, fakeYaw, IM_ARRAYSIZE(fakeYaw));
             ImGui::SliderInt(_("Spin Speed"), &Vars::AntiHack::AntiAim::SpinSpeed.m_Var, 1, 20, _("%d"), ImGuiSliderFlags_AlwaysClamp);
