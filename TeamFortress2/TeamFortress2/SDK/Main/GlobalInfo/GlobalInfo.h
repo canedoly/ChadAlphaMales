@@ -2,18 +2,19 @@
 
 #include "../BaseEntity/BaseEntity.h"
 
-#define MAX_NEW_COMMANDS 15
+//#define MAX_NEW_COMMANDS 20
 #define MAX_NEW_COMMANDS_HEAVY 24
 #define DT_WAIT_CALLS 24
 #define MULTIPLAYER_BACKUP 90
 
 struct GlobalInfo_t
 {
+	int MaxNewCommands					= 20;
 	int m_net_sendto					= 0;
 	int m_nCurrentTargetIdx				= 0;
 	int m_nCurItemDefIndex              = 0;
 	int m_nWaitForShift                 = 0;
-	int m_nShifted                      = MAX_NEW_COMMANDS;
+	int m_nShifted                      = MaxNewCommands;
 	float m_Latency						= 0;
 	bool m_bWeaponCanHeadShot			= false;
 	bool m_bWeaponCanAttack				= false;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../SDK/SDK.h"
-
+#include "../Features/Playerlist/Playerlist.h"
 template <class T>
 class CVar
 {
@@ -59,6 +59,15 @@ namespace Vars
 
 	namespace Aimbot
 	{
+		namespace CritHack
+		{
+			inline CVar<bool> Active{ true, L"Active" };
+			inline CVar<int> CritKey{ VK_LSHIFT, L"Crit Key" };
+			inline CVar<bool> SaveBucket{ false, L"Save Bucket" };
+			inline CVar<bool> MeeleCrits{ false, L"Meele Crits" };
+			inline CVar<bool> CritBar{ false, L"Crit Bar" };
+		}
+
 		namespace Global
 		{
 			inline CVar<bool> Active				{ true, L"Active" };
@@ -323,7 +332,7 @@ namespace Vars
 	{
 		namespace Main
 		{
-			inline CVar<bool> Active{ true, L"Active" };
+			inline CVar<bool> Active{ false, L"Active" };
 			inline CVar<int>  BackAlpha{ 200, L"Back Alpha" };
 			inline CVar<int>  Size{ 100, L"Size" };
 			inline CVar<int>  Range{ 1500, L"Range" };
@@ -397,6 +406,8 @@ namespace Vars
 
 		inline CVar<bool> WorldModulation			{ false, L"World Modulation" };
 		inline CVar<bool> SkyboxChanger				{ true, L"Skybox changer" };
+
+		inline CVar<bool> PlayerList				{ false, L"Playerlist" };
 
 		namespace Skins
 		{

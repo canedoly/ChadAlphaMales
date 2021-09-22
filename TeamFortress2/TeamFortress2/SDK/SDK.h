@@ -61,6 +61,18 @@
 #pragma warning (disable : 4305)
 #pragma warning (disable : 4172)
 
+//Need these for later, resetting input.
+struct ButtonCode_t;
+struct AnalogCode_t;
+struct InputEvent_t;
+
+enum InitReturnVal_t
+{
+	INIT_FAILED = 0,
+	INIT_OK,
+	INIT_LAST_VAL,
+};
+
 struct ShaderStencilState_t
 {
 	bool                        m_bEnable;

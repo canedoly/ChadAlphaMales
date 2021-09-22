@@ -438,6 +438,7 @@ void CConfigManager::Save(const wchar_t *name)
 
 			SAVE_VAR(Vars::Visuals::WorldModulation);
 
+			SAVE_VAR(Vars::Visuals::PlayerList);
 //#ifdef DEVELOPER_BUILD
 			SAVE_VAR(Vars::Visuals::Skins::Enabled);
 //#endif
@@ -479,6 +480,14 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::AntiHack::AntiAim::Pitch);
 				SAVE_VAR(Vars::AntiHack::AntiAim::YawReal);
 				SAVE_VAR(Vars::AntiHack::AntiAim::YawFake);
+			}
+
+			//Fakelag
+			{
+				SAVE_VAR(Vars::Misc::CL_Move::Fakelag);
+				SAVE_VAR(Vars::Misc::CL_Move::FakelagKey);
+				SAVE_VAR(Vars::Misc::CL_Move::FakelagOnKey);
+				SAVE_VAR(Vars::Misc::CL_Move::FakelagValue);
 			}
 		}
 
@@ -853,7 +862,8 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::ThirdPersonInstantYaw);
 
 			LOAD_VAR(Vars::Visuals::WorldModulation);
-			
+
+			LOAD_VAR(Vars::Visuals::PlayerList);
 //#ifdef DEVELOPER_BUILD
 			LOAD_VAR(Vars::Visuals::Skins::Enabled);
 //#endif
@@ -875,6 +885,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Misc::AutoStrafe);
 			LOAD_VAR(Vars::Misc::EdgeJump);
 			LOAD_VAR(Vars::Misc::AntiAFK);
+
 			// CL_Move
 			{
 				LOAD_VAR(Vars::Misc::CL_Move::Enabled);//Enabled
@@ -895,6 +906,14 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::AntiHack::AntiAim::Pitch);
 				LOAD_VAR(Vars::AntiHack::AntiAim::YawReal);
 				LOAD_VAR(Vars::AntiHack::AntiAim::YawFake);
+			}
+
+			//Fakelag
+			{
+				LOAD_VAR(Vars::Misc::CL_Move::Fakelag);
+				LOAD_VAR(Vars::Misc::CL_Move::FakelagKey);
+				LOAD_VAR(Vars::Misc::CL_Move::FakelagOnKey);
+				LOAD_VAR(Vars::Misc::CL_Move::FakelagValue);
 			}
 		}
 

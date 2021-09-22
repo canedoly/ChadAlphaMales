@@ -15,6 +15,15 @@ Discord* g_DiscordRPC;
 
 using namespace std::chrono; //lol??? 
 
+int StringToWString(std::wstring& ws, const std::string& s)
+{
+	std::wstring wsTmp(s.begin(), s.end());
+
+	ws = wsTmp;
+
+	return 0;
+}
+
 DWORD WINAPI MainThread(LPVOID lpParam)
 {
 	/*
@@ -84,6 +93,14 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 0, 255 }, _("[!] CAM Loaded!\n"));
 	g_Interfaces.Surface->PlaySound(_("vo//items//wheatley_sapper//wheatley_sapper_attached14.mp3"));
 	
+	std::wstring defaultConfig = L"Default"; // Thank you Mr.Fedora lmao
+	if (!std::filesystem::exists(g_CFG.m_sConfigPath + L"\\" + defaultConfig)) {
+
+		std::wstring s;
+		StringToWString(s, "Default");
+		g_CFG.Load(s.c_str());
+	}
+
 	while (!GetAsyncKeyState(VK_F11))
 		std::this_thread::sleep_for(420ms);
 

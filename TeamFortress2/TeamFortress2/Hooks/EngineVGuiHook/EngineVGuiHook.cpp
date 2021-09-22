@@ -96,15 +96,15 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 								ticks = MAX_NEW_COMMANDS_HEAVY;
 							}
 							else {
-								for (int i = MAX_NEW_COMMANDS; i >= 0; i--) {
+								for (int i = g_GlobalInfo.MaxNewCommands; i >= 0; i--) {
 									//printf("i: %d\n", i);
-									for (int j = MAX_NEW_COMMANDS - g_GlobalInfo.m_nShifted; j <= MAX_NEW_COMMANDS; j++) {
+									for (int j = g_GlobalInfo.MaxNewCommands - g_GlobalInfo.m_nShifted; j <= g_GlobalInfo.MaxNewCommands; j++) {
 										//printf("j: %d\n", j);
 										ticksChoked = j;
 										break;
 									}
 								}
-								ticks = MAX_NEW_COMMANDS;
+								ticks = g_GlobalInfo.MaxNewCommands;
 							}
 							int tickWidth = 5;
 							int barWidth = (tickWidth * ticks) + 2;

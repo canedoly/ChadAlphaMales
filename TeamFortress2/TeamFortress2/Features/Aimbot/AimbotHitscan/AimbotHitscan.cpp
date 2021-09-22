@@ -1,6 +1,5 @@
 #include "AimbotHitscan.h"
 #include "../../Vars.h"
-
 int CAimbotHitscan::GetHitbox(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 {
 	switch (Vars::Aimbot::Hitscan::AimHitbox.m_Var)
@@ -74,6 +73,13 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 				else {
 					continue;
 				}
+			}
+
+			PlayerInfo_t pi{};
+
+			if (g_Interfaces.Engine->GetPlayerInfo(Player->GetIndex(), &pi)) {
+				if (g_Playerlist.IsIgnored(pi.friendsID))
+					continue;
 			}
 
 			if (Vars::Aimbot::Global::IgnoreTaunting.m_Var && Player->IsTaunting())

@@ -72,6 +72,7 @@ void CAntiAim::Run(CUserCmd *pCmd, bool *pSendPacket)
 			case 3: { pCmd->viewangles.x = -271.0f; g_GlobalInfo.m_vRealViewAngles.x = 89.0f; break; }
 			case 4: { pCmd->viewangles.x = 271.0f; g_GlobalInfo.m_vRealViewAngles.x = -89.0f; break; }
 			case 5: { pCmd->viewangles.x = 0.0f; g_GlobalInfo.m_vRealViewAngles.x = 0.0f; break; }
+			case 6: { pCmd->viewangles.x = -45.0f; g_GlobalInfo.m_vRealViewAngles.x = -45.0f; break; }
 			default: { bPitchSet = false; break; }
 		}
 

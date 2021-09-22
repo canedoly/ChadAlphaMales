@@ -430,6 +430,13 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 					}
 				}
 
+				PlayerInfo_t pi{};
+
+				if (g_Interfaces.Engine->GetPlayerInfo(Player->GetIndex(), &pi)) {
+					if (g_Playerlist.IsIgnored(pi.friendsID))
+						continue;
+				}
+
 				if (Vars::Aimbot::Global::IgnoreTaunting.m_Var && Player->IsTaunting())
 					continue;
 
