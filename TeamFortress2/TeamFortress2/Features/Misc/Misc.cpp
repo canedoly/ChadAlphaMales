@@ -153,8 +153,8 @@ void ReplaceSpecials(std::string& str)
 				str[i] = 0xE0 | ((val >> 12) & 0xF);
 				str[i + 1] = 0x80 | ((val >> 6) & 0x3F);
 				str[i + 2] = 0x80 | (val & 0x3F);
-				i += 2;
-				c -= 2;
+i += 2;
+c -= 2;
 			}
 			break;
 		}
@@ -184,7 +184,7 @@ void CMisc::ChangeName(std::string name)
 
 void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 {
-	if ((nOldFlags & FL_ONGROUND) && Vars::Misc::EdgeJump.m_Var)
+	if ((nOldFlags & FL_ONGROUND) && Vars::Misc::EdgeJump)
 	{
 		if (const auto& pLocal = g_EntityCache.m_pLocal)
 		{
@@ -194,11 +194,11 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 	}
 }
 
-void CMisc::AutoJump(CUserCmd *pCmd)
+void CMisc::AutoJump(CUserCmd* pCmd)
 {
-	if (const auto &pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
-		if (!Vars::Misc::AutoJump.m_Var
+		if (!Vars::Misc::AutoJump
 			|| !pLocal->IsAlive()
 			|| pLocal->IsSwimming()
 			|| pLocal->IsInBumperKart()
@@ -247,16 +247,16 @@ static float angleDiffRad(float a1, float a2) noexcept
 
 void CMisc::AutoStrafe(CUserCmd* pCmd)
 {
-	if (!Vars::Misc::AutoStrafe.m_Var)
+	if (!Vars::Misc::AutoStrafe)
 		return;
-
 	if (const auto& pLocal = g_EntityCache.m_pLocal) {
+		if (pLocal->GetFlags() & FL_ONGROUND || pLocal->IsOnGround()) {
+			return;
+		}
 		static bool was_jumping = false;
 		bool is_jumping = pCmd->buttons & IN_JUMP;
 
-		if ((!is_jumping || was_jumping) && !pLocal->IsSwimming() && !pLocal->IsOnGround())
-		{
-
+		if ((!is_jumping || was_jumping)) {
 			const float speed = pLocal->GetVelocity().Lenght2D();
 			auto vel = pLocal->GetVelocity();
 
@@ -292,10 +292,8 @@ void CMisc::AutoStrafe(CUserCmd* pCmd)
 				pCmd->forwardmove = cosf(moveDir) * 450.f;
 				pCmd->sidemove = -sinf(moveDir) * 450.f;
 			}
-
-
+			was_jumping = is_jumping;
 		}
-		was_jumping = is_jumping;
 	}
 }
 
@@ -329,7 +327,7 @@ void CMisc::InitSpamKV(void* pKV)
 
 void CMisc::NoiseMakerSpam()
 {
-	if (!Vars::Misc::NoisemakerSpam.m_Var)
+	if (!Vars::Misc::NoisemakerSpam)
 		return;
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
@@ -350,7 +348,7 @@ void CMisc::NoiseMakerSpam()
 
 void CMisc::BypassPure()
 {
-	if (Vars::Misc::BypassPure.m_Var)
+	if (Vars::Misc::BypassPure)
 	{
 		static DWORD dwAddress = 0x0;
 
@@ -387,7 +385,7 @@ std::string GetSpam(const int nIndex) {
 
 void CMisc::ChatSpam()
 {
-	if (!Vars::Misc::ChatSpam.m_Var)
+	if (!Vars::Misc::ChatSpam)
 		return;
 
 	float flCurTime = g_Interfaces.Engine->Time(); 
@@ -401,7 +399,7 @@ void CMisc::ChatSpam()
 
 void CMisc::AutoRocketJump(CUserCmd* pCmd)
 {
-	if (!Vars::Misc::AutoRocketJump.m_Var || !g_GlobalInfo.m_bWeaponCanAttack || !GetAsyncKeyState(VK_RBUTTON))
+	if (!Vars::Misc::AutoRocketJump || !g_GlobalInfo.m_bWeaponCanAttack || !GetAsyncKeyState(VK_RBUTTON))
 		return;
 
 	if (g_Interfaces.EngineVGui->IsGameUIVisible() || g_Interfaces.Surface->IsCursorVisible())
@@ -455,7 +453,7 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd)
 
 void CMisc::nopush() {
 	ConVar* noPush = g_Interfaces.CVars->FindVar(_("tf_avoidteammates_pushaway"));
-	if (Vars::Misc::NoPush.m_Var) {
+	if (Vars::Misc::NoPush) {
 		if (noPush->GetInt() == 1) noPush->SetValue(0);
 	}
 	else {

@@ -343,7 +343,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 
 Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 {
-	switch (Vars::Aimbot::Projectile::AimPosition.m_Var)
+	switch (Vars::Aimbot::Projectile::AimPosition)
 	{
 	case 0: return pEntity->GetWorldSpaceCenter(); //body
 	case 1: return pEntity->GetWorldSpaceCenter() - Vec3(0.0f, 0.0f, 27.0f); //feet
@@ -358,7 +358,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 		}
 		case CLASS_DEMOMAN:
 		{
-			if (Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var && pEntity->GetFlags() & FL_ONGROUND) return pEntity->GetWorldSpaceCenter() - Vec3(0.0f, 0.0f, 27.0f);
+			if (Vars::Aimbot::Projectile::FeetAimIfOnGround && pEntity->GetFlags() & FL_ONGROUND) return pEntity->GetWorldSpaceCenter() - Vec3(0.0f, 0.0f, 27.0f);
 			else return pEntity->GetWorldSpaceCenter();
 		}
 		case CLASS_SNIPER:
@@ -386,7 +386,7 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 
 ESortMethod CAimbotProjectile::GetSortMethod()
 {
-	switch (Vars::Aimbot::Hitscan::SortMethod.m_Var) {
+	switch (Vars::Aimbot::Hitscan::SortMethod) {
 	case 0: return ESortMethod::FOV;
 	case 1: return ESortMethod::DISTANCE;
 	default: return ESortMethod::UNKNOWN;
@@ -398,14 +398,14 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 	ESortMethod SortMethod = GetSortMethod();
 
 	if (SortMethod == ESortMethod::FOV)
-		g_GlobalInfo.m_flCurAimFOV = Vars::Aimbot::Hitscan::AimFOV.m_Var;
+		g_GlobalInfo.m_flCurAimFOV = Vars::Aimbot::Hitscan::AimFOV;
 
 	g_AimbotGlobal.m_vecTargets.clear();
 
 	Vec3 vLocalPos = pLocal->GetShootPos();
 	Vec3 vLocalAngles = g_Interfaces.Engine->GetViewAngles();
 
-	if (Vars::Aimbot::Global::AimPlayers.m_Var)
+	if (Vars::Aimbot::Global::AimPlayers)
 	{
 		int nWeaponID = pWeapon->GetWeaponID();
 		bool bIsCrossbow = nWeaponID == TF_WEAPON_CROSSBOW;
@@ -417,10 +417,10 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 
 			if (Player->GetTeamNum() != pLocal->GetTeamNum())
 			{
-				if (Vars::Aimbot::Global::IgnoreInvlunerable.m_Var && !Player->IsVulnerable())
+				if (Vars::Aimbot::Global::IgnoreInvlunerable && !Player->IsVulnerable())
 					continue;
 
-				if (Vars::Aimbot::Global::IgnoreCloaked.m_Var && Player->IsCloaked()) {
+				if (Vars::Aimbot::Global::IgnoreCloaked && Player->IsCloaked()) {
 					int nCond = Player->GetCond();
 					if (nCond & TFCond_Milked || nCond & TFCond_Jarated) {
 						//pass
@@ -437,10 +437,10 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 						continue;
 				}
 
-				if (Vars::Aimbot::Global::IgnoreTaunting.m_Var && Player->IsTaunting())
+				if (Vars::Aimbot::Global::IgnoreTaunting && Player->IsTaunting())
 					continue;
 
-				if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[Player->GetIndex()])
+				if (Vars::Aimbot::Global::IgnoreFriends && g_EntityCache.Friends[Player->GetIndex()])
 					continue;
 			}
 
@@ -449,14 +449,14 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 			float flFOVTo = (SortMethod == ESortMethod::FOV) ? Math::CalcFov(vLocalAngles, vAngleTo) : 0.0f;
 			float flDistTo = (SortMethod == ESortMethod::DISTANCE) ? vLocalPos.DistTo(vPos) : 0.0f;
 
-			if (SortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Hitscan::AimFOV.m_Var)
+			if (SortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Hitscan::AimFOV)
 				continue;
 
 			g_AimbotGlobal.m_vecTargets.push_back({ Player, ETargetType::PLAYER, vPos, vAngleTo, flFOVTo, flDistTo });
 		}
 	}
 
-	if (Vars::Aimbot::Global::AimBuildings.m_Var)
+	if (Vars::Aimbot::Global::AimBuildings)
 	{
 		bool bIsRescueRanger = pWeapon->GetWeaponID() == TF_WEAPON_SHOTGUN_BUILDING_RESCUE;
 
@@ -470,7 +470,7 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 			float flFOVTo = SortMethod == ESortMethod::FOV ? Math::CalcFov(vLocalAngles, vAngleTo) : 0.0f;
 			float flDistTo = SortMethod == ESortMethod::DISTANCE ? vLocalPos.DistTo(vPos) : 0.0f;
 
-			if (SortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Hitscan::AimFOV.m_Var)
+			if (SortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Hitscan::AimFOV)
 				continue;
 
 			g_AimbotGlobal.m_vecTargets.push_back({ Building, ETargetType::BUILDING, vPos, vAngleTo, flFOVTo, flDistTo });
@@ -534,7 +534,7 @@ bool CAimbotProjectile::GetTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 	}
 
 	/*
-	if (Vars::Aimbot::Projectile::PerformanceMode.m_Var)
+	if (Vars::Aimbot::Projectile::PerformanceMode)
 	{
 		Target_t Target = g_AimbotGlobal.GetBestTarget(GetSortMethod());
 
@@ -568,7 +568,7 @@ void CAimbotProjectile::Aim(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon, Vec3& vA
 	vAngle -= g_GlobalInfo.m_vPunchAngles;
 	Math::ClampAngles(vAngle);
 
-	switch (Vars::Aimbot::Projectile::AimMethod.m_Var)
+	switch (Vars::Aimbot::Projectile::AimMethod)
 	{
 	case 0: {
 		pCmd->viewangles = vAngle;
@@ -588,7 +588,7 @@ void CAimbotProjectile::Aim(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon, Vec3& vA
 
 bool CAimbotProjectile::ShouldFire(CUserCmd* pCmd)
 {
-	return (/*Vars::Aimbot::Global::AutoShoot.m_Var && */g_GlobalInfo.m_bWeaponCanAttack);
+	return (/*Vars::Aimbot::Global::AutoShoot && */g_GlobalInfo.m_bWeaponCanAttack);
 }
 
 bool CAimbotProjectile::IsAttacking(CUserCmd* pCmd, CBaseCombatWeapon* pWeapon)
@@ -643,18 +643,18 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 
 	m_bIsFlameThrower = false;
 
-	if (!Vars::Aimbot::Projectile::Active.m_Var)
+	if (!Vars::Aimbot::Projectile::Active)
 		return;
 
 	Target_t Target = {};
 
-	bool bShouldAim = (Vars::Aimbot::Global::AimKey.m_Var == VK_LBUTTON ? (pCmd->buttons & IN_ATTACK) : g_AimbotGlobal.IsKeyDown());
+	bool bShouldAim = (Vars::Aimbot::Global::AimKey == VK_LBUTTON ? (pCmd->buttons & IN_ATTACK) : g_AimbotGlobal.IsKeyDown());
 
 	if (GetTarget(pLocal, pWeapon, pCmd, Target) && bShouldAim)
 	{
 		g_GlobalInfo.m_nCurrentTargetIdx = Target.m_pEntity->GetIndex();
 
-		if (Vars::Aimbot::Projectile::AimMethod.m_Var == 1)
+		if (Vars::Aimbot::Projectile::AimMethod == 1)
 			g_GlobalInfo.m_vAimPos = g_GlobalInfo.m_vPredictedPos;
 
 		if (ShouldFire(pCmd))
@@ -662,7 +662,7 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 			pCmd->buttons |= IN_ATTACK;
 
 			/*
-			if (Vars::Misc::CL_Move::Enabled.m_Var && Vars::Misc::CL_Move::Doubletap.m_Var && (pCmd->buttons & IN_ATTACK) && !g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_nWaitForShift)
+			if (Vars::Misc::CL_Move::Enabled && Vars::Misc::CL_Move::Doubletap && (pCmd->buttons & IN_ATTACK) && !g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_nWaitForShift)
 			{
 				g_GlobalInfo.m_bShouldShift = true;
 			}
@@ -682,7 +682,7 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 
 		bool bIsAttacking = IsAttacking(pCmd, pWeapon);
 
-		if (Vars::Aimbot::Projectile::AimMethod.m_Var == 1)
+		if (Vars::Aimbot::Projectile::AimMethod == 1)
 		{
 			if (m_bIsFlameThrower) {
 				g_GlobalInfo.m_bProjectileSilentActive = true;

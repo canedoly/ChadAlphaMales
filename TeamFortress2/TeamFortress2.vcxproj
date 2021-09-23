@@ -116,7 +116,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
-      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
@@ -181,7 +181,6 @@
     <ClCompile Include="TeamFortress2\Features\KatzeB0t\AntiCat.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ConfigManager\ConfigManager.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\InputHelper\InputHelper.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Menu\Menu.cpp" />
     <ClCompile Include="TeamFortress2\Features\Misc\Misc.cpp" />
     <ClCompile Include="TeamFortress2\Features\Chams\Chams.cpp" />
     <ClCompile Include="TeamFortress2\Features\NewMenu\ImGui\imgui.cpp" />

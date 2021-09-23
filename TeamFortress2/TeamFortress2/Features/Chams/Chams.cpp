@@ -5,7 +5,7 @@ bool CChams::ShouldRun()
 {
 	return true;
 	//return !g_Interfaces.EngineVGui->IsGameUIVisible();
-	//return Vars::Chams::Main::Active.m_Var && !g_Interfaces.EngineVGui->IsGameUIVisible();
+	//return Vars::Chams::Main::Active && !g_Interfaces.EngineVGui->IsGameUIVisible();
 }
 
 void CChams::DrawModel(CBaseEntity* pEntity)
@@ -120,7 +120,7 @@ void CChams::Render()
 		if (const auto& pRenderContext = g_Interfaces.MatSystem->GetRenderContext())
 		{
 			//Let's do this in advance if Glow is enabled.
-			/*if (Vars::Glow::Main::Active.m_Var)
+			/*if (Vars::Glow::Main::Active)
 			{*/
 			ShaderStencilState_t StencilState = {};
 			StencilState.m_bEnable = true;
@@ -142,7 +142,7 @@ void CChams::Render()
 
 void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 {
-	if (!Vars::Chams::Players::Active.m_Var)
+	if (!Vars::Chams::Players::Active)
 		return;
 
 	const auto& Players = g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL);
@@ -153,11 +153,11 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 	bool bMatWasForced = false;
 	bool fresnelHDR = false;
 
-	if (Vars::Chams::Players::Material.m_Var)
+	if (Vars::Chams::Players::Material)
 	{
 		g_Interfaces.ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
 			{
-				switch (Vars::Chams::Players::Material.m_Var) {
+				switch (Vars::Chams::Players::Material) {
 				case 1: { bMatWasForced = true; return m_pMatShaded; }
 				case 2: { bMatWasForced = true; return m_pMatShiny; }
 				case 3: { bMatWasForced = true; return m_pMatFlat; }
@@ -181,10 +181,10 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 	if (!bMatWasForced)
 		g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 
-	if (Vars::Chams::Players::Alpha.m_Var < 1.0f)
-		g_Interfaces.RenderView->SetBlend(Vars::Chams::Players::Alpha.m_Var);
+	if (Vars::Chams::Players::Alpha < 1.0f)
+		g_Interfaces.RenderView->SetBlend(Vars::Chams::Players::Alpha);
 
-	if (Vars::Chams::Players::IgnoreZ.m_Var)
+	if (Vars::Chams::Players::IgnoreZ)
 		pRenderContext->DepthRange(0.0f, 0.2f);
 
 	for (const auto& Player : Players)
@@ -196,7 +196,7 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 
 		if (!bIsLocal)
 		{
-			switch (Vars::Chams::Players::IgnoreTeammates.m_Var) {
+			switch (Vars::Chams::Players::IgnoreTeammates) {
 			case 0: break;
 			case 1: { if (Player->GetTeamNum() == pLocal->GetTeamNum()) { continue; } break; }
 			case 2: { if (Player->GetTeamNum() == pLocal->GetTeamNum() && !g_EntityCache.Friends[Player->GetIndex()]) { continue; } break; }
@@ -205,7 +205,7 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 
 		else
 		{
-			if (!Vars::Chams::Players::ShowLocal.m_Var)
+			if (!Vars::Chams::Players::ShowLocal)
 				continue;
 		}
 
@@ -215,7 +215,7 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 		if (bMatWasForced) {
 			Color_t DrawColor = Utils::GetEntityDrawColor(Player);
 			//Color_t DrawColor = Utils::Rainbow();
-			if (Vars::Chams::Players::Material.m_Var != 4) {
+			if (Vars::Chams::Players::Material != 4) {
 				g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g), Color::TOFLOAT(DrawColor.b));
 			}
 			else {
@@ -225,7 +225,7 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 
 			bool found = false;
 			bool found2 = false;
-			if (Vars::Chams::Players::Material.m_Var == 4) {
+			if (Vars::Chams::Players::Material == 4) {
 				/*
 				$selfillumtint	[0 0 0] base
 				$envmaptint		[0 1 0] top
@@ -245,7 +245,7 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 
 		DrawModel(Player);
 
-		if (Vars::Chams::Players::Wearables.m_Var)
+		if (Vars::Chams::Players::Wearables)
 		{
 			CBaseEntity* pAttachment = Player->FirstMoveChild();
 
@@ -261,7 +261,7 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 			}
 		}
 
-		if (Vars::Chams::Players::Weapons.m_Var)
+		if (Vars::Chams::Players::Weapons)
 		{
 			if (const auto& pWeapon = Player->GetActiveWeapon())
 				DrawModel(pWeapon);
@@ -273,10 +273,10 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 		g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 	}
 
-	if (Vars::Chams::Players::Alpha.m_Var < 1.0f)
+	if (Vars::Chams::Players::Alpha < 1.0f)
 		g_Interfaces.RenderView->SetBlend(1.0f);
 
-	if (Vars::Chams::Players::IgnoreZ.m_Var)
+	if (Vars::Chams::Players::IgnoreZ)
 		pRenderContext->DepthRange(0.0f, 1.0f);
 
 
@@ -284,7 +284,7 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 
 void CChams::RenderBuildings(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 {
-	if (!Vars::Chams::Buildings::Active.m_Var)
+	if (!Vars::Chams::Buildings::Active)
 		return;
 
 	const auto& Buildings = g_EntityCache.GetGroup(EGroupType::BUILDINGS_ALL);
@@ -294,11 +294,11 @@ void CChams::RenderBuildings(CBaseEntity* pLocal, IMatRenderContext* pRenderCont
 
 	bool bMatWasForced = false;
 
-	if (Vars::Chams::Buildings::Material.m_Var)
+	if (Vars::Chams::Buildings::Material)
 	{
 		g_Interfaces.ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
 			{
-				switch (Vars::Chams::Buildings::Material.m_Var) {
+				switch (Vars::Chams::Buildings::Material) {
 				case 1: { bMatWasForced = true; return m_pMatShaded; }
 				case 2: { bMatWasForced = true; return m_pMatShiny; }
 				case 3: { bMatWasForced = true; return m_pMatFlat; }
@@ -322,10 +322,10 @@ void CChams::RenderBuildings(CBaseEntity* pLocal, IMatRenderContext* pRenderCont
 	if (!bMatWasForced)
 		g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 
-	if (Vars::Chams::Buildings::Alpha.m_Var < 1.0f)
-		g_Interfaces.RenderView->SetBlend(Vars::Chams::Buildings::Alpha.m_Var);
+	if (Vars::Chams::Buildings::Alpha < 1.0f)
+		g_Interfaces.RenderView->SetBlend(Vars::Chams::Buildings::Alpha);
 
-	if (Vars::Chams::Buildings::IgnoreZ.m_Var)
+	if (Vars::Chams::Buildings::IgnoreZ)
 		pRenderContext->DepthRange(0.0f, 0.2f);
 
 	for (const auto& Building : Buildings)
@@ -333,7 +333,7 @@ void CChams::RenderBuildings(CBaseEntity* pLocal, IMatRenderContext* pRenderCont
 		if (!Building->IsAlive())
 			continue;
 
-		if (Vars::Chams::Buildings::IgnoreTeammates.m_Var && Building->GetTeamNum() == pLocal->GetTeamNum())
+		if (Vars::Chams::Buildings::IgnoreTeammates && Building->GetTeamNum() == pLocal->GetTeamNum())
 			continue;
 
 		if (!Utils::IsOnScreen(pLocal, Building))
@@ -343,7 +343,7 @@ void CChams::RenderBuildings(CBaseEntity* pLocal, IMatRenderContext* pRenderCont
 			Color_t DrawColor = Utils::GetEntityDrawColor(Building);
 			g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g), Color::TOFLOAT(DrawColor.b));
 			/*
-			if (Vars::Chams::Players::Material.m_Var != 4) {
+			if (Vars::Chams::Players::Material != 4) {
 				g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g), Color::TOFLOAT(DrawColor.b));
 			}
 			else {
@@ -353,7 +353,7 @@ void CChams::RenderBuildings(CBaseEntity* pLocal, IMatRenderContext* pRenderCont
 
 			bool found = false;
 			bool found2 = false;
-			if (Vars::Chams::Players::Material.m_Var == 4) {
+			if (Vars::Chams::Players::Material == 4) {
 				IMaterialVar* pVar = m_pMatFresnel->FindVar(_("$selfillumtint"), &found);
 				if (found) {
 					pVar->SetVecValue(Color::TOFLOAT(Colors::FresnelBase.r), Color::TOFLOAT(Colors::FresnelBase.g), Color::TOFLOAT(Colors::FresnelBase.b));
@@ -375,25 +375,25 @@ void CChams::RenderBuildings(CBaseEntity* pLocal, IMatRenderContext* pRenderCont
 		g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 	}
 
-	if (Vars::Chams::Buildings::Alpha.m_Var < 1.0f)
+	if (Vars::Chams::Buildings::Alpha < 1.0f)
 		g_Interfaces.RenderView->SetBlend(1.0f);
 
-	if (Vars::Chams::Buildings::IgnoreZ.m_Var)
+	if (Vars::Chams::Buildings::IgnoreZ)
 		pRenderContext->DepthRange(0.0f, 1.0f);
 }
 
 void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 {
-	if (!Vars::Chams::World::Active.m_Var)
+	if (!Vars::Chams::World::Active)
 		return;
 
 	bool bMatWasForced = false;
 
-	if (Vars::Chams::World::Material.m_Var)
+	if (Vars::Chams::World::Material)
 	{
 		g_Interfaces.ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
 			{
-				switch (Vars::Chams::World::Material.m_Var) {
+				switch (Vars::Chams::World::Material) {
 				case 1: { bMatWasForced = true; return m_pMatShaded; }
 				case 2: { bMatWasForced = true; return m_pMatShiny; }
 				case 3: { bMatWasForced = true; return m_pMatFlat; }
@@ -417,13 +417,13 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 	if (!bMatWasForced)
 		g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 
-	if (Vars::Chams::World::Alpha.m_Var < 1.0f)
-		g_Interfaces.RenderView->SetBlend(Vars::Chams::World::Alpha.m_Var);
+	if (Vars::Chams::World::Alpha < 1.0f)
+		g_Interfaces.RenderView->SetBlend(Vars::Chams::World::Alpha);
 
-	if (Vars::Chams::World::IgnoreZ.m_Var)
+	if (Vars::Chams::World::IgnoreZ)
 		pRenderContext->DepthRange(0.0f, 0.2f);
 
-	if (Vars::Chams::World::Health.m_Var)
+	if (Vars::Chams::World::Health)
 	{
 		for (const auto& Health : g_EntityCache.GetGroup(EGroupType::WORLD_HEALTH))
 		{
@@ -432,7 +432,7 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 
 			if (bMatWasForced) {
 				Color_t DrawColor = Colors::Health;
-				if (Vars::Chams::Players::Material.m_Var != 4) {
+				if (Vars::Chams::Players::Material != 4) {
 					g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g), Color::TOFLOAT(DrawColor.b));
 				}
 				else {
@@ -442,7 +442,7 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 
 				bool found = false;
 				bool found2 = false;
-				if (Vars::Chams::Players::Material.m_Var == 4) {
+				if (Vars::Chams::Players::Material == 4) {
 					IMaterialVar* pVar = m_pMatFresnel->FindVar(_("$selfillumtint"), &found);
 					if (found) {
 						pVar->SetVecValue(Color::TOFLOAT(Colors::FresnelBase.r), Color::TOFLOAT(Colors::FresnelBase.g), Color::TOFLOAT(Colors::FresnelBase.b));
@@ -458,7 +458,7 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 		}
 	}
 
-	if (Vars::Chams::World::Ammo.m_Var)
+	if (Vars::Chams::World::Ammo)
 	{
 		for (const auto& Ammo : g_EntityCache.GetGroup(EGroupType::WORLD_AMMO))
 		{
@@ -467,7 +467,7 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 
 			if (bMatWasForced) {
 				Color_t DrawColor = Colors::Ammo;
-				if (Vars::Chams::Players::Material.m_Var != 4) {
+				if (Vars::Chams::Players::Material != 4) {
 					g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g), Color::TOFLOAT(DrawColor.b));
 				}
 				else {
@@ -477,7 +477,7 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 
 				bool found = false;
 				bool found2 = false;
-				if (Vars::Chams::Players::Material.m_Var == 4) {
+				if (Vars::Chams::Players::Material == 4) {
 					IMaterialVar* pVar = m_pMatFresnel->FindVar(_("$selfillumtint"), &found);
 					if (found) {
 						pVar->SetVecValue(Color::TOFLOAT(Colors::FresnelBase.r), Color::TOFLOAT(Colors::FresnelBase.g), Color::TOFLOAT(Colors::FresnelBase.b));
@@ -493,7 +493,7 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 		}
 	}
 
-	if (Vars::Chams::World::Projectiles.m_Var)
+	if (Vars::Chams::World::Projectiles)
 	{
 		for (const auto& Projectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
 		{
@@ -502,7 +502,7 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 
 			int nTeam = Projectile->GetTeamNum();
 
-			if (Vars::Chams::World::Projectiles.m_Var == 2 && nTeam == pLocal->GetTeamNum())
+			if (Vars::Chams::World::Projectiles == 2 && nTeam == pLocal->GetTeamNum())
 				continue;
 
 			if (!Utils::IsOnScreen(pLocal, Projectile))
@@ -510,7 +510,7 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 
 			if (bMatWasForced) {
 				Color_t DrawColor = Utils::GetTeamColor(nTeam);
-				if (Vars::Chams::Players::Material.m_Var != 4) {
+				if (Vars::Chams::Players::Material != 4) {
 					g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g), Color::TOFLOAT(DrawColor.b));
 				}
 				else {
@@ -520,7 +520,7 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 
 				bool found = false;
 				bool found2 = false;
-				if (Vars::Chams::Players::Material.m_Var == 4) {
+				if (Vars::Chams::Players::Material == 4) {
 					IMaterialVar* pVar = m_pMatFresnel->FindVar(_("$selfillumtint"), &found);
 					if (found) {
 						pVar->SetVecValue(Color::TOFLOAT(Colors::FresnelBase.r), Color::TOFLOAT(Colors::FresnelBase.g), Color::TOFLOAT(Colors::FresnelBase.b));
@@ -541,9 +541,9 @@ void CChams::RenderWorld(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 		g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 	}
 
-	if (Vars::Chams::World::Alpha.m_Var < 1.0f)
+	if (Vars::Chams::World::Alpha < 1.0f)
 		g_Interfaces.RenderView->SetBlend(1.0f);
 
-	if (Vars::Chams::World::IgnoreZ.m_Var)
+	if (Vars::Chams::World::IgnoreZ)
 		pRenderContext->DepthRange(0.0f, 1.0f);
 }

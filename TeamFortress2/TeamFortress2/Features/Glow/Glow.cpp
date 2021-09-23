@@ -83,7 +83,7 @@ void CGlowEffect::Render()
 		int w = g_ScreenSize.w;
 		int h = g_ScreenSize.h;
 
-		//if (!Vars::Glow::Main::Active.m_Var || w < 1 || h < 1 || w > 4096 || h > 2160)
+		//if (!Vars::Glow::Main::Active || w < 1 || h < 1 || w > 4096 || h > 2160)
 			//return;
 
 		if (g_Interfaces.EngineVGui->IsGameUIVisible())
@@ -94,7 +94,7 @@ void CGlowEffect::Render()
 		if (!pRenderContext)
 			return;
 
-		SetScale(Vars::Glow::Main::Scale.m_Var);
+		SetScale(Vars::Glow::Main::Scale);
 
 		ShaderStencilState_t StencilStateDisable = {};
 		StencilStateDisable.m_bEnable = false;
@@ -118,7 +118,7 @@ void CGlowEffect::Render()
 		g_Interfaces.RenderView->SetBlend(1.0f);
 		g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 
-		if (Vars::Glow::Players::Active.m_Var)
+		if (Vars::Glow::Players::Active)
 		{
 			for (const auto &Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL))
 			{
@@ -129,7 +129,7 @@ void CGlowEffect::Render()
 
 				if (!bIsLocal)
 				{
-					switch (Vars::Glow::Players::IgnoreTeammates.m_Var) {
+					switch (Vars::Glow::Players::IgnoreTeammates) {
 						case 0: break;
 						case 1: { if (Player->GetTeamNum() == pLocal->GetTeamNum()) { continue; } break; }
 						case 2: { if (Player->GetTeamNum() == pLocal->GetTeamNum() && !g_EntityCache.Friends[Player->GetIndex()]) { continue; } break; }
@@ -138,7 +138,7 @@ void CGlowEffect::Render()
 
 				else
 				{
-					if (!Vars::Glow::Players::ShowLocal.m_Var)
+					if (!Vars::Glow::Players::ShowLocal)
 						continue;
 				}
 
@@ -147,17 +147,17 @@ void CGlowEffect::Render()
 
 				Color_t DrawColor = {};
 
-				if (Vars::Glow::Players::Color.m_Var == 0)
+				if (Vars::Glow::Players::Color == 0)
 					DrawColor = Utils::GetEntityDrawColor(Player);
 
 				else DrawColor = Utils::GetHealthColor(Player->GetHealth(), Player->GetMaxHealth());
 
-				m_vecGlowEntities.push_back({ Player, DrawColor, Vars::Glow::Players::Alpha.m_Var });
+				m_vecGlowEntities.push_back({ Player, DrawColor, Vars::Glow::Players::Alpha });
 
 				if (!g_Chams.HasDrawn(Player))
 					DrawModel(Player, STUDIO_RENDER, true);
 
-				if (Vars::Glow::Players::Wearables.m_Var)
+				if (Vars::Glow::Players::Wearables)
 				{
 					CBaseEntity *pAttachment = Player->FirstMoveChild();
 
@@ -168,7 +168,7 @@ void CGlowEffect::Render()
 
 						if (pAttachment->IsWearable())
 						{
-							m_vecGlowEntities.push_back({ pAttachment, DrawColor, Vars::Glow::Players::Alpha.m_Var });
+							m_vecGlowEntities.push_back({ pAttachment, DrawColor, Vars::Glow::Players::Alpha });
 
 							if (!g_Chams.HasDrawn(pAttachment))
 								DrawModel(pAttachment, STUDIO_RENDER, true);
@@ -178,11 +178,11 @@ void CGlowEffect::Render()
 					}
 				}
 
-				if (Vars::Glow::Players::Weapons.m_Var)
+				if (Vars::Glow::Players::Weapons)
 				{
 					if (const auto &pWeapon = Player->GetActiveWeapon())
 					{
-						m_vecGlowEntities.push_back({ pWeapon, DrawColor, Vars::Glow::Players::Alpha.m_Var });
+						m_vecGlowEntities.push_back({ pWeapon, DrawColor, Vars::Glow::Players::Alpha });
 
 						if (!g_Chams.HasDrawn(pWeapon))
 							DrawModel(pWeapon, STUDIO_RENDER, true);
@@ -191,14 +191,14 @@ void CGlowEffect::Render()
 			}
 		}
 
-		if (Vars::Glow::Buildings::Active.m_Var)
+		if (Vars::Glow::Buildings::Active)
 		{
 			for (const auto &Building : g_EntityCache.GetGroup(EGroupType::BUILDINGS_ALL))
 			{
 				if (!Building->IsAlive())
 					continue;
 
-				if (Vars::Glow::Buildings::IgnoreTeammates.m_Var && Building->GetTeamNum() == pLocal->GetTeamNum())
+				if (Vars::Glow::Buildings::IgnoreTeammates && Building->GetTeamNum() == pLocal->GetTeamNum())
 					continue;
 
 				if (!Utils::IsOnScreen(pLocal, Building))
@@ -206,49 +206,49 @@ void CGlowEffect::Render()
 
 				Color_t DrawColor = {};
 
-				if (Vars::Glow::Buildings::Color.m_Var == 0)
+				if (Vars::Glow::Buildings::Color == 0)
 					DrawColor = Utils::GetEntityDrawColor(Building);
 
 				else DrawColor = Utils::GetHealthColor(Building->GetHealth(), Building->GetMaxHealth());
 
-				m_vecGlowEntities.push_back({ Building, DrawColor, Vars::Glow::Buildings::Alpha.m_Var });
+				m_vecGlowEntities.push_back({ Building, DrawColor, Vars::Glow::Buildings::Alpha });
 
 				if (!g_Chams.HasDrawn(Building))
 					DrawModel(Building, STUDIO_RENDER, true);
 			}
 		}
 
-		if (Vars::Glow::World::Active.m_Var)
+		if (Vars::Glow::World::Active)
 		{
-			if (Vars::Glow::World::Health.m_Var)
+			if (Vars::Glow::World::Health)
 			{
 				for (const auto &Health : g_EntityCache.GetGroup(EGroupType::WORLD_HEALTH))
 				{
 					if (!Utils::IsOnScreen(pLocal, Health))
 						continue;
 
-					m_vecGlowEntities.push_back({ Health, Colors::Health, Vars::Glow::World::Alpha.m_Var });
+					m_vecGlowEntities.push_back({ Health, Colors::Health, Vars::Glow::World::Alpha });
 
 					if (!g_Chams.HasDrawn(Health))
 						DrawModel(Health, STUDIO_RENDER, true);
 				}
 			}
 
-			if (Vars::Glow::World::Ammo.m_Var)
+			if (Vars::Glow::World::Ammo)
 			{
 				for (const auto &Ammo : g_EntityCache.GetGroup(EGroupType::WORLD_AMMO))
 				{
 					if (!Utils::IsOnScreen(pLocal, Ammo))
 						continue;
 
-					m_vecGlowEntities.push_back({ Ammo, Colors::Ammo, Vars::Glow::World::Alpha.m_Var });
+					m_vecGlowEntities.push_back({ Ammo, Colors::Ammo, Vars::Glow::World::Alpha });
 
 					if (!g_Chams.HasDrawn(Ammo))
 						DrawModel(Ammo, STUDIO_RENDER, true);
 				}
 			}
 
-			if (Vars::Glow::World::Projectiles.m_Var)
+			if (Vars::Glow::World::Projectiles)
 			{
 				for (const auto &Projectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
 				{
@@ -257,13 +257,13 @@ void CGlowEffect::Render()
 
 					int nTeam = Projectile->GetTeamNum();
 
-					if (Vars::Glow::World::Projectiles.m_Var == 2 && nTeam == pLocal->GetTeamNum())
+					if (Vars::Glow::World::Projectiles == 2 && nTeam == pLocal->GetTeamNum())
 						continue;
 
 					if (!Utils::IsOnScreen(pLocal, Projectile))
 						continue;
 
-					m_vecGlowEntities.push_back({ Projectile, Utils::GetTeamColor(nTeam), Vars::Glow::World::Alpha.m_Var });
+					m_vecGlowEntities.push_back({ Projectile, Utils::GetTeamColor(nTeam), Vars::Glow::World::Alpha });
 
 					if (!g_Chams.HasDrawn(Projectile))
 						DrawModel(Projectile, STUDIO_RENDER, true);

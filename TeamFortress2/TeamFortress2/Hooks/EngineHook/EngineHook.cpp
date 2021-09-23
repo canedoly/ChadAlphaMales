@@ -6,11 +6,11 @@
 
 void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFinalTick)
 {
-	if (Vars::Misc::CL_Move::Enabled.m_Var)
+	if (Vars::Misc::CL_Move::Enabled)
 	{
 		g_GlobalInfo.fast_stop = false;
 		/*
-		if (Vars::Misc::CL_Move::TeleportKey.m_Var && (GetAsyncKeyState(Vars::Misc::CL_Move::TeleportKey.m_Var)) && !g_GlobalInfo.m_nShifted) //teleport
+		if (Vars::Misc::CL_Move::TeleportKey && (GetAsyncKeyState(Vars::Misc::CL_Move::TeleportKey)) && !g_GlobalInfo.m_nShifted) //teleport
 		{
 			g_GlobalInfo.fast_stop = false;
 			while (g_GlobalInfo.m_nShifted < MAX_NEW_COMMANDS_HEAVY)87
@@ -24,7 +24,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 			return;
 		}
 		*/
-		if (GetAsyncKeyState(Vars::Misc::CL_Move::RechargeKey.m_Var)) {//recharge key
+		if (GetAsyncKeyState(Vars::Misc::CL_Move::RechargeKey)) {//recharge key
 			g_GlobalInfo.fast_stop = false;
 			g_GlobalInfo.m_bRecharging = true;
 		}
@@ -67,7 +67,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 
 		CUserCmd* pCmd;
 
-		if (GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) {
+		if (GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey)) {
 			if (g_GlobalInfo.m_nShifted < dtTicks) { // do not try shifting without being charged
 				for (int i = pCmd->command_number + 1; i < pCmd->command_number + 22 + 1; i++) {
 					CUserCmd* future_cmd = g_Interfaces.Input->GetUserCmd(i % MULTIPLAYER_BACKUP);
@@ -114,18 +114,18 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 			dtTicks = g_GlobalInfo.MaxNewCommands;
 		}
 		
-		if (GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) {
+		if (GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey)) {
 			g_GlobalInfo.fast_stop = true;
 			while (g_GlobalInfo.m_nShifted < dtTicks)
 			{
 				if (!g_GlobalInfo.m_bShouldShift) {
 					return;
 				}
-				if (!Vars::Misc::CL_Move::NotInAir.m_Var) {
+				if (!Vars::Misc::CL_Move::NotInAir) {
 					Func.Original<fn>()(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == (dtTicks - 1))); //this doubletaps
 					g_GlobalInfo.m_nShifted++;
 				}
-				if (Vars::Misc::CL_Move::NotInAir.m_Var) {
+				if (Vars::Misc::CL_Move::NotInAir) {
 
 					if (pLocal->IsOnGround()) {
 						Func.Original<fn>()(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == (dtTicks - 1))); //this doubletaps

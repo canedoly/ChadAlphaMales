@@ -34,9 +34,9 @@ void CVisuals::SkyboxChanger() {
 		"sky_island_01",
 		"sky_rainbow_01"
 	};
-	if (Vars::Visuals::SkyboxChanger.m_Var) {
+	if (Vars::Visuals::SkyboxChanger) {
 		if (Vars::Skybox::skyboxnum == 0) {
-			if (Vars::Misc::BypassPure.m_Var) {
+			if (Vars::Misc::BypassPure) {
 				LoadSkies(Vars::Skybox::SkyboxName.c_str());
 			}
 			else {
@@ -96,7 +96,7 @@ bool CVisuals::RemoveScope(int nPanel)
 	if (!m_nHudZoom && Hash::IsHudScope(g_Interfaces.Panel->GetName(nPanel)))
 		m_nHudZoom = nPanel;
 
-	return (Vars::Visuals::RemoveScope.m_Var && nPanel == m_nHudZoom);
+	return (Vars::Visuals::RemoveScope && nPanel == m_nHudZoom);
 }
 
 void CVisuals::FOV(CViewSetup *pView)
@@ -105,25 +105,25 @@ void CVisuals::FOV(CViewSetup *pView)
 
 	if (pLocal && pView)
 	{
-		if (pLocal->GetObserverMode() == OBS_MODE_FIRSTPERSON || (pLocal->IsScoped() && !Vars::Visuals::RemoveZoom.m_Var))
+		if (pLocal->GetObserverMode() == OBS_MODE_FIRSTPERSON || (pLocal->IsScoped() && !Vars::Visuals::RemoveZoom))
 			return;
 
-		pView->fov = Vars::Visuals::FieldOfView.m_Var;
+		pView->fov = Vars::Visuals::FieldOfView;
 
 		if (pLocal->IsAlive())
-			pLocal->SetFov(Vars::Visuals::FieldOfView.m_Var);
+			pLocal->SetFov(Vars::Visuals::FieldOfView);
 	}
 }
 
 /*
 void CVisuals::Fullbright() {
 	static ConVar* fullbright = g_Interfaces.CVars->FindVar(_("mat_fullbright"));
-	fullbright->SetValue(Vars::Visuals::Fullbright.m_Var); // Probably isn't the best idea to set it like 500x a second :woozy_face:
+	fullbright->SetValue(Vars::Visuals::Fullbright); // Probably isn't the best idea to set it like 500x a second :woozy_face:
 }
 */
 
 void CVisuals::ARatio() {
-	float ratio = (Vars::Visuals::AspectRatioValue.m_Var * 0.1) / 2;
+	float ratio = (Vars::Visuals::AspectRatioValue * 0.1) / 2;
 	static ConVar* RatioVar = g_Interfaces.CVars->FindVar(_("r_aspectratio"));
 	if (ratio > 0.001)
 		RatioVar->SetValue(ratio);
@@ -133,7 +133,7 @@ void CVisuals::ARatio() {
 
 void CVisuals::ViewmodelXYZ() {
 	static char buff[12];
-	snprintf(buff, sizeof(buff), _("%d %d %d"), (int)Vars::Visuals::ViewModelX.m_Var, (int)Vars::Visuals::ViewModelY.m_Var, (int)Vars::Visuals::ViewModelZ.m_Var);
+	snprintf(buff, sizeof(buff), _("%d %d %d"), (int)Vars::Visuals::ViewModelX, (int)Vars::Visuals::ViewModelY, (int)Vars::Visuals::ViewModelZ);
 
 	static auto customview = g_Interfaces.CVars->FindVar(_("tf_viewmodels_offset_override"));
 	customview->m_fnChangeCallback = 0;
@@ -144,15 +144,15 @@ void CVisuals::ThirdPerson()
 {
 	if (const auto &pLocal = g_EntityCache.m_pLocal)
 	{
-		if (Vars::Visuals::ThirdPersonKey.m_Var)
+		if (Vars::Visuals::ThirdPersonKey)
 		{
 			if (!g_Interfaces.EngineVGui->IsGameUIVisible() && !g_Interfaces.Surface->IsCursorVisible() && !g_Menu.m_bTyping)
 			{
 				static float flPressedTime = g_Interfaces.Engine->Time();
 				float flElapsed = g_Interfaces.Engine->Time() - flPressedTime;
 
-				if ((GetAsyncKeyState(Vars::Visuals::ThirdPersonKey.m_Var) & 0x8000) && flElapsed > 0.2f) {
-					Vars::Visuals::ThirdPerson.m_Var = !Vars::Visuals::ThirdPerson.m_Var;
+				if ((GetAsyncKeyState(Vars::Visuals::ThirdPersonKey) & 0x8000) && flElapsed > 0.2f) {
+					Vars::Visuals::ThirdPerson = !Vars::Visuals::ThirdPerson;
 					flPressedTime = g_Interfaces.Engine->Time();
 				}
 			}
@@ -160,8 +160,8 @@ void CVisuals::ThirdPerson()
 		
 		bool bIsInThirdPerson = g_Interfaces.Input->CAM_IsThirdPerson();
 
-		if (!Vars::Visuals::ThirdPerson.m_Var
-			|| ((!Vars::Visuals::RemoveScope.m_Var || !Vars::Visuals::RemoveZoom.m_Var) && pLocal->IsScoped()))
+		if (!Vars::Visuals::ThirdPerson
+			|| ((!Vars::Visuals::RemoveScope || !Vars::Visuals::RemoveZoom) && pLocal->IsScoped()))
 		{
 			if (bIsInThirdPerson)
 				pLocal->ForceTauntCam(0);
@@ -172,11 +172,11 @@ void CVisuals::ThirdPerson()
 		if (!bIsInThirdPerson)
 			pLocal->ForceTauntCam(1);
 
-		if (bIsInThirdPerson && Vars::Visuals::ThirdPersonSilentAngles.m_Var)
+		if (bIsInThirdPerson && Vars::Visuals::ThirdPersonSilentAngles)
 		{
 			g_Interfaces.Prediction->SetLocalViewAngles(g_GlobalInfo.m_vRealViewAngles);
 
-			if (Vars::Visuals::ThirdPersonInstantYaw.m_Var)
+			if (Vars::Visuals::ThirdPersonInstantYaw)
 			{
 				if (const auto &pAnimState = pLocal->GetAnimState())
 					pAnimState->m_flCurrentFeetYaw = g_GlobalInfo.m_vRealViewAngles.y;
@@ -216,7 +216,7 @@ void ApplyModulation(const Color_t &clr)
 
 void CVisuals::ModulateWorld()
 {
-	if (!Vars::Visuals::WorldModulation.m_Var)
+	if (!Vars::Visuals::WorldModulation)
 		return;
 
 	ApplyModulation(Colors::WorldModulation);
@@ -224,7 +224,7 @@ void CVisuals::ModulateWorld()
 
 void CVisuals::UpdateWorldModulation()
 {
-	if (!Vars::Visuals::WorldModulation.m_Var) {
+	if (!Vars::Visuals::WorldModulation) {
 		RestoreWorldModulation();
 		return;
 	}

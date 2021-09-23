@@ -23,7 +23,7 @@ bool __stdcall ClientModeHook::ShouldDrawViewModel::Hook()
 {
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
-		if (pLocal->IsScoped() && Vars::Visuals::RemoveScope.m_Var && Vars::Visuals::RemoveZoom.m_Var && !g_Interfaces.Input->CAM_IsThirdPerson())
+		if (pLocal->IsScoped() && Vars::Visuals::RemoveScope && Vars::Visuals::RemoveZoom && !g_Interfaces.Input->CAM_IsThirdPerson())
 			return true;
 	}
 
@@ -133,7 +133,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		}
 	}
 
-	if (Vars::Misc::AntiAFK.m_Var) {
+	if (Vars::Misc::AntiAFK) {
 		updateAntiAfk(pCmd);
 	}
 
@@ -165,9 +165,9 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			if (pLocal->IsAlive())
 			{
 				auto netchan = g_Interfaces.Engine->GetNetChannelInfo();
-				if ((Vars::Misc::CL_Move::Fakelag.m_Var && netchan->m_nChokedPackets < (int)Vars::Misc::CL_Move::FakelagValue.m_Var) || pWeapon->CanShoot(pLocal) && (pCmd->buttons & IN_ATTACK)) {
-					if (Vars::Misc::CL_Move::FakelagOnKey.m_Var) {
-						if (GetAsyncKeyState(Vars::Misc::CL_Move::FakelagKey.m_Var)) {
+				if ((Vars::Misc::CL_Move::Fakelag && netchan->m_nChokedPackets < (int)Vars::Misc::CL_Move::FakelagValue) || pWeapon->CanShoot(pLocal) && (pCmd->buttons & IN_ATTACK)) {
+					if (Vars::Misc::CL_Move::FakelagOnKey) {
+						if (GetAsyncKeyState(Vars::Misc::CL_Move::FakelagKey)) {
 							*pSendPacket = false;
 						}
 					}
@@ -182,13 +182,13 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		}
 	}
 
-	if (Vars::Misc::TauntSlide.m_Var)
+	if (Vars::Misc::TauntSlide)
 	{
 		if (const auto& pLocal = g_EntityCache.m_pLocal)
 		{
 			if (pLocal->IsTaunting())
 			{
-				if (Vars::Misc::TauntControl.m_Var)
+				if (Vars::Misc::TauntControl)
 					pCmd->viewangles.x = (pCmd->buttons & IN_BACK) ? 91.0f : (pCmd->buttons & IN_FORWARD) ? 0.0f : 90.0f;
 
 				return false;
@@ -200,7 +200,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	{
 		if (const auto& pLocal = g_EntityCache.m_pLocal)
 		{
-			if (!Vars::Misc::NoPush.m_Var)
+			if (!Vars::Misc::NoPush)
 				return false;
 
 			if (pLocal->IsTaunting() || pLocal->IsInBumperKart())
