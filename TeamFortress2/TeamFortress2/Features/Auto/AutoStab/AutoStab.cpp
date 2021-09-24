@@ -31,7 +31,7 @@ bool CAutoStab::CanBackstab(const Vec3 &vSrc, const Vec3 &vDst, Vec3 vWSCDelta)
 
 bool CAutoStab::TraceMelee(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, const Vec3 &vViewAngles, CBaseEntity **pEntityOut)
 {
-	float flRange = (48.0f * Vars::Triggerbot::Stab::Range);
+	float flRange = (48.0f * Vars::Triggerbot::Stab::Range.m_Var);
 
 	if (flRange <= 0.0f)
 		return false;
@@ -62,13 +62,13 @@ bool CAutoStab::IsEntityValid(CBaseEntity *pLocal, CBaseEntity *pEntity)
 	if (!pEntity || !pEntity->IsAlive() || pEntity->GetTeamNum() == pLocal->GetTeamNum() || !pEntity->IsPlayer())
 		return false;
 
-	if (Vars::Triggerbot::Global::IgnoreInvlunerable && !pEntity->IsVulnerable())
+	if (Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var && !pEntity->IsVulnerable())
 		return false;
 
-	if (Vars::Triggerbot::Global::IgnoreCloaked && pEntity->IsCloaked())
+	if (Vars::Triggerbot::Global::IgnoreCloaked.m_Var && pEntity->IsCloaked())
 		return false;
 
-	if (Vars::Triggerbot::Global::IgnoreFriends && g_EntityCache.Friends[pEntity->GetIndex()])
+	if (Vars::Triggerbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[pEntity->GetIndex()])
 		return false;
 
 	return true;
@@ -81,7 +81,7 @@ void CAutoStab::RunLegit(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserC
 	if (!TraceMelee(pLocal, pWeapon, pCmd->viewangles, &pEnemy))
 		return;
 
-	if (Vars::Triggerbot::Stab::IgnRazor && pEnemy->GetClassNum() == ETFClass::CLASS_SNIPER &&
+	if (Vars::Triggerbot::Stab::IgnRazor.m_Var && pEnemy->GetClassNum() == ETFClass::CLASS_SNIPER &&
 		pEnemy->GetWeaponFromSlot(EWeaponSlots::SLOT_SECONDARY)->GetItemDefIndex() == Sniper_s_TheRazorback)
 		return;
 
@@ -91,7 +91,7 @@ void CAutoStab::RunLegit(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserC
 	pCmd->buttons |= IN_ATTACK;
 	m_bShouldDisguise = true;
 
-	if (Vars::Misc::DisableInterpolation)
+	if (Vars::Misc::DisableInterpolation.m_Var)
 	{
 		pCmd->tick_count = TIME_TO_TICKS(pEnemy->GetSimulationTime()
 			+ std::max(g_ConVars.cl_interp->GetFloat(), g_ConVars.cl_interp_ratio->GetFloat() / g_ConVars.cl_updaterate->GetFloat()));
@@ -102,7 +102,7 @@ void CAutoStab::RunRage(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCm
 {
 	for (const auto &pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
-		if (Vars::Triggerbot::Stab::IgnRazor && pEnemy->GetClassNum() == ETFClass::CLASS_SNIPER &&
+		if (Vars::Triggerbot::Stab::IgnRazor.m_Var && pEnemy->GetClassNum() == ETFClass::CLASS_SNIPER &&
 			pEnemy->GetWeaponFromSlot(EWeaponSlots::SLOT_SECONDARY)->GetItemDefIndex() == Sniper_s_TheRazorback)
 			continue;
 
@@ -116,7 +116,7 @@ void CAutoStab::RunRage(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCm
 		if (!CanBackstab(vAngleTo, pEnemy->GetEyeAngles(), (pEnemy->GetWorldSpaceCenter() - pLocal->GetWorldSpaceCenter())))
 			continue;
 
-		if (Vars::Triggerbot::Stab::Silent) {
+		if (Vars::Triggerbot::Stab::Silent.m_Var) {
 			Utils::FixMovement(pCmd, vAngleTo);
 			g_GlobalInfo.m_bSilentTime = true;
 		}
@@ -125,7 +125,7 @@ void CAutoStab::RunRage(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCm
 		pCmd->buttons |= IN_ATTACK;
 		m_bShouldDisguise = true;
 
-		if (Vars::Misc::DisableInterpolation)
+		if (Vars::Misc::DisableInterpolation.m_Var)
 		{
 			pCmd->tick_count = TIME_TO_TICKS(pEnemy->GetSimulationTime()
 				+ std::max(g_ConVars.cl_interp->GetFloat(), g_ConVars.cl_interp_ratio->GetFloat() / g_ConVars.cl_updaterate->GetFloat()));
@@ -137,10 +137,10 @@ void CAutoStab::RunRage(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCm
 
 void CAutoStab::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCmd *pCmd)
 {
-	if (!Vars::Triggerbot::Stab::Active || !g_GlobalInfo.m_bWeaponCanAttack || pWeapon->GetWeaponID() != TF_WEAPON_KNIFE)
+	if (!Vars::Triggerbot::Stab::Active.m_Var || !g_GlobalInfo.m_bWeaponCanAttack || pWeapon->GetWeaponID() != TF_WEAPON_KNIFE)
 		return;
 
-	if (Vars::Triggerbot::Stab::RageMode)
+	if (Vars::Triggerbot::Stab::RageMode.m_Var)
 		RunRage(pLocal, pWeapon, pCmd);
 
 	else RunLegit(pLocal, pWeapon, pCmd);

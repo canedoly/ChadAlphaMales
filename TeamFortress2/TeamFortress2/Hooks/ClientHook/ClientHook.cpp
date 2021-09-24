@@ -35,7 +35,7 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 		{
 			g_GlobalInfo.m_vPunchAngles = Vec3();
 
-			if (Vars::Visuals::RemovePunch) {
+			if (Vars::Visuals::RemovePunch.m_Var) {
 				if (const auto& pLocal = g_EntityCache.m_pLocal) {
 					g_GlobalInfo.m_vPunchAngles = pLocal->GetPunchAngles();	//Store punch angles to be compesnsated for in aim
 					pLocal->ClearPunchAngle();								//Clear punch angles for visual no-recoil

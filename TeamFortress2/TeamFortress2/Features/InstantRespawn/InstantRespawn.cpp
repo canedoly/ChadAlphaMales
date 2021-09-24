@@ -4,7 +4,7 @@
 //Credits to Cathook Devs
 void CInstantRespawn::InstantRespawn()
 {
-	if (!Vars::Misc::InstantRespawn || !g_EntityCache.m_pLocal)
+	if (!Vars::Misc::InstantRespawn.m_Var || !g_EntityCache.m_pLocal)
 		return;
 
 	auto* KV = new KeyValues("MVM_Revive_Response");
