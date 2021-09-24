@@ -7,8 +7,8 @@
 #include "../../Radar/Radar.h"
 #include "../../SpectatorList/SpectatorList.h"
 
-#define SAVE_VAR(x) Save(_(L#x), x)
-#define LOAD_VAR(x) Load(_(L#x), x)
+#define SAVE_VAR(x) Save(_(L#x), x.m_Var)
+#define LOAD_VAR(x) Load(_(L#x), x.m_Var)
 
 #define SAVE_OTHER(x) Save(_(L#x), x)
 #define LOAD_OTHER(x) Load(_(L#x), x)

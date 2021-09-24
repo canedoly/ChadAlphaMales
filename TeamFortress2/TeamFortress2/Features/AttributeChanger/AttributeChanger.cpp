@@ -7,7 +7,7 @@ constexpr int MAX_BUFFER = (MAX_PATH * 3);
 
 void CAttributChanger::Run()
 {
-	if (!Vars::Visuals::Skins::Enabled|| !g_Interfaces.Engine->IsInGame())
+	if (!Vars::Visuals::Skins::Enabled.m_Var|| !g_Interfaces.Engine->IsInGame())
 		return;
 
 	static auto dwItemDefOff = g_NetVars.get_offset(_("DT_EconEntity"), _("m_AttributeManager"), _("m_Item"), _("m_iItemDefinitionIndex"));
@@ -136,9 +136,9 @@ void CAttributChanger::SetAttribute()
 		if (const auto& pWeapon = pLocal->GetActiveWeapon())
 		{
 			const int nIndex = pWeapon->GetItemDefIndex();
-			m_mapAttributes[nIndex] = { nIndex, Vars::Visuals::Skins::Effect, 
-										Vars::Visuals::Skins::Particle, Vars::Visuals::Skins::Sheen, 
-										Vars::Visuals::Skins::Acient,   Vars::Visuals::Skins::Override };
+			m_mapAttributes[nIndex] = { nIndex, Vars::Visuals::Skins::Effect.m_Var, 
+										Vars::Visuals::Skins::Particle.m_Var, Vars::Visuals::Skins::Sheen.m_Var, 
+										Vars::Visuals::Skins::Acient.m_Var,   Vars::Visuals::Skins::Override.m_Var };
 
 			ForceFullUpdate(g_Interfaces.ClientState);
 		}

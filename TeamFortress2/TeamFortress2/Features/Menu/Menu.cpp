@@ -11,7 +11,7 @@ bool CMenu::MouseInRegion(const int x, const int y, const int w, const int h)
 /*
 void CMenu::DrawTooltip()
 {
-	if (m_szCurTip.empty() || !Vars::Visuals::ToolTips)
+	if (m_szCurTip.empty() || !Vars::Visuals::ToolTips.m_Var)
 		return;
 
 	int w, h;
@@ -85,14 +85,14 @@ bool CMenu::CheckBox(CVar<bool>& Var, const wchar_t* const szToolTip)
 	{
 		if (g_InputHelper.IsPressed(VK_LBUTTON)) {
 			callback = true;
-			Var = !Var;
+			Var.m_Var = !Var.m_Var;
 		}
 		g_Draw.GradientRect(x, y, x + w, y + h, { 45, 45, 45, 255 }, { 65, 65, 65, 255 }, false);
 		//g_Draw.Rect(x, y, w, h, Vars::Menu::Colors::WidgetActive);
 		m_szCurTip += szToolTip;
 	}
 
-	if (Var)
+	if (Var.m_Var)
 	{
 		g_Draw.GradientRect(x, y, x + w, y + h, { 0, 0, 0, 255 }, Vars::Menu::Colors::WidgetActive, false);
 	}
@@ -190,7 +190,7 @@ bool CMenu::ComboBox(CVar<int>& Var, const std::vector<CVar<int>>& List)
 	{
 		for (const auto& Item : List)
 		{
-			if (Item == Var)
+			if (Item.m_Var == Var.m_Var)
 				return Item.m_szDisplayName;
 		}
 
@@ -201,7 +201,7 @@ bool CMenu::ComboBox(CVar<int>& Var, const std::vector<CVar<int>>& List)
 	{
 		for (size_t n = 0; n < List.size(); n++)
 		{
-			if (List[n] == Var)
+			if (List[n].m_Var == Var.m_Var)
 				return n;
 		}
 
@@ -228,7 +228,7 @@ bool CMenu::ComboBox(CVar<int>& Var, const std::vector<CVar<int>>& List)
 		if (indexes[&Var] > 0)
 		{
 			if (g_InputHelper.IsPressed(VK_LBUTTON)) {
-				Var = List[--indexes[&Var]];
+				Var.m_Var = List[--indexes[&Var]].m_Var;
 				callback = true;
 			}
 
@@ -241,7 +241,7 @@ bool CMenu::ComboBox(CVar<int>& Var, const std::vector<CVar<int>>& List)
 		if (indexes[&Var] < int(List.size() - 1))
 		{
 			if (g_InputHelper.IsPressed(VK_LBUTTON)) {
-				Var = List[++indexes[&Var]];
+				Var.m_Var = List[++indexes[&Var]].m_Var;
 				callback = true;
 			}
 
@@ -270,13 +270,13 @@ bool CMenu::InputFloat(CVar<float>& Var, float Min, float Max, float Step, const
 	int w = Vars::Menu::InputBoxW;
 	int h = Vars::Menu::InputBoxH;
 
-	if (Var != Min)
+	if (Var.m_Var != Min)
 	{
 		if (g_InputHelper.m_nMouseX > x && g_InputHelper.m_nMouseX < x + (w / 2) && g_InputHelper.m_nMouseY > y && g_InputHelper.m_nMouseY < y + h)
 		{
 			if (g_InputHelper.IsPressedAndHeld(VK_LBUTTON)) {
-				Var -= Step;
-				Var = std::clamp(Var, Min, Max);
+				Var.m_Var -= Step;
+				Var.m_Var = std::clamp(Var.m_Var, Min, Max);
 				callback = true;
 			}
 
@@ -284,13 +284,13 @@ bool CMenu::InputFloat(CVar<float>& Var, float Min, float Max, float Step, const
 		}
 	}
 
-	if (Var != Max)
+	if (Var.m_Var != Max)
 	{
 		if (g_InputHelper.m_nMouseX > x + (w / 2) && g_InputHelper.m_nMouseX < x + w && g_InputHelper.m_nMouseY > y && g_InputHelper.m_nMouseY < y + h)
 		{
 			if (g_InputHelper.IsPressedAndHeld(VK_LBUTTON)) {
-				Var += Step;
-				Var = std::clamp(Var, Min, Max);
+				Var.m_Var += Step;
+				Var.m_Var = std::clamp(Var.m_Var, Min, Max);
 				callback = true;
 			}
 
@@ -299,7 +299,7 @@ bool CMenu::InputFloat(CVar<float>& Var, float Min, float Max, float Step, const
 	}
 
 	g_Draw.OutlinedRect(x, y, w, h, Vars::Menu::Colors::OutlineMenu);
-	g_Draw.String(FONT_MENU, x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, ALIGN_CENTER, Fmt, Var);
+	g_Draw.String(FONT_MENU, x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, ALIGN_CENTER, Fmt, Var.m_Var);
 	g_Draw.String(FONT_MENU, x + w + Vars::Menu::SpacingText, y + (h / 2), Vars::Menu::Colors::Text, ALIGN_CENTERVERTICAL, Var.m_szDisplayName);
 
 	m_LastWidget.x = x;
@@ -319,13 +319,13 @@ bool CMenu::InputInt(CVar<int>& Var, int Min, int Max, int Step)
 	int w = Vars::Menu::InputBoxW;
 	int h = Vars::Menu::InputBoxH;
 
-	if (Var != Min)
+	if (Var.m_Var != Min)
 	{
 		if (g_InputHelper.m_nMouseX > x && g_InputHelper.m_nMouseX < x + (w / 2) && g_InputHelper.m_nMouseY > y && g_InputHelper.m_nMouseY < y + h)
 		{
 			if (g_InputHelper.IsPressedAndHeld(VK_LBUTTON)) {
-				Var -= Step;
-				Var = std::clamp(Var, Min, Max);
+				Var.m_Var -= Step;
+				Var.m_Var = std::clamp(Var.m_Var, Min, Max);
 				callback = true;
 			}
 
@@ -333,13 +333,13 @@ bool CMenu::InputInt(CVar<int>& Var, int Min, int Max, int Step)
 		}
 	}
 
-	if (Var != Max)
+	if (Var.m_Var != Max)
 	{
 		if (g_InputHelper.m_nMouseX > x + (w / 2) && g_InputHelper.m_nMouseX < x + w && g_InputHelper.m_nMouseY > y && g_InputHelper.m_nMouseY < y + h)
 		{
 			if (g_InputHelper.IsPressedAndHeld(VK_LBUTTON)) {
-				Var += Step;
-				Var = std::clamp(Var, Min, Max);
+				Var.m_Var += Step;
+				Var.m_Var = std::clamp(Var.m_Var, Min, Max);
 				callback = true;
 			}
 
@@ -348,7 +348,7 @@ bool CMenu::InputInt(CVar<int>& Var, int Min, int Max, int Step)
 	}
 
 	g_Draw.OutlinedRect(x, y, w, h, Vars::Menu::Colors::OutlineMenu);
-	g_Draw.String(FONT_MENU, x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, ALIGN_CENTER, "%d", Var);
+	g_Draw.String(FONT_MENU, x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, ALIGN_CENTER, "%d", Var.m_Var);
 	g_Draw.String(FONT_MENU, x + w + Vars::Menu::SpacingText, y + (h / 2), Vars::Menu::Colors::Text, ALIGN_CENTERVERTICAL, Var.m_szDisplayName);
 
 	m_LastWidget.x = x;
@@ -719,12 +719,12 @@ bool CMenu::InputKey(CVar<int>& output, bool bAllowNone)
 						}
 
 						if (n == VK_ESCAPE && bAllowNone) {
-							output = 0x0;
+							output.m_Var = 0x0;
 							curr = nullptr;
 							break;
 						}
 
-						output = n;
+						output.m_Var = n;
 						curr = nullptr;
 						break;
 					}
@@ -738,7 +738,7 @@ bool CMenu::InputKey(CVar<int>& output, bool bAllowNone)
 	{
 		if (curr == nullptr)
 			time_notactive = g_Interfaces.Engine->Time();
-		g_Draw.String(FONT_MENU, x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, ALIGN_CENTER, "%ws", VK2STR(output).c_str());
+		g_Draw.String(FONT_MENU, x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, ALIGN_CENTER, "%ws", VK2STR(output.m_Var).c_str());
 	}
 
 	g_Draw.String(FONT_MENU, x + w + Vars::Menu::SpacingText, y + (h / 2), Vars::Menu::Colors::Text, ALIGN_CENTERVERTICAL, output.m_szDisplayName);
@@ -822,12 +822,12 @@ bool CMenu::InputKey(CVar<int>& output, bool bAllowNone)
 						}
 
 						if (n == VK_ESCAPE && bAllowNone) {
-							output = 0x0;
+							output.m_Var = 0x0;
 							active = false;
 							break;
 						}
 
-						output = n;
+						output.m_Var = n;
 						active = false;
 						break;
 					}
@@ -842,7 +842,7 @@ bool CMenu::InputKey(CVar<int>& output, bool bAllowNone)
 	else
 	{
 		time_notactive = g_Interfaces.Engine->Time();
-		g_Draw.String(FONT_MENU, x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, ALIGN_CENTER, "%ws", VK2STR(output).c_str());
+		g_Draw.String(FONT_MENU, x + (w / 2), y + (h / 2), Vars::Menu::Colors::Text, ALIGN_CENTER, "%ws", VK2STR(output.m_Var).c_str());
 	}
 
 	g_Draw.String(FONT_MENU, x + w + Vars::Menu::SpacingText, y + (h / 2), Vars::Menu::Colors::Text, ALIGN_CENTERVERTICAL, output.m_szDisplayName);
@@ -1048,7 +1048,7 @@ void CMenu::Run()
 		g_Draw.Rect(Width + 50, 30, 50, 50, Colorz);
 		//Vars::Menu::Colors::WidgetActive = Colorz;
 		*/
-		if (Vars::Visuals::Snow)
+		if (Vars::Visuals::Snow.m_Var)
 		{
 			struct SnowFlake_t {
 				float x, y, fall, drift;

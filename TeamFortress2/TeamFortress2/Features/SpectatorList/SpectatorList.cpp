@@ -32,7 +32,7 @@ bool CSpectatorList::GetSpectators(CBaseEntity *pLocal)
 
 bool CSpectatorList::ShouldRun()
 {
-	return Vars::Visuals::SpectatorList && !g_Interfaces.EngineVGui->IsGameUIVisible();
+	return Vars::Visuals::SpectatorList.m_Var && !g_Interfaces.EngineVGui->IsGameUIVisible();
 }
 
 void CSpectatorList::Run()
@@ -40,7 +40,7 @@ void CSpectatorList::Run()
 	if (!ShouldRun())
 		return;
 
-	if (Vars::Visuals::SpectatorList)
+	if (Vars::Visuals::SpectatorList.m_Var)
 		DrawClassic();
 }
 
@@ -101,7 +101,7 @@ void CSpectatorList::DrawClassic()
 
 			int nAddX = 0, nAddY = g_Draw.m_vecFonts[FONT_MENU].nTall;
 
-			if (Vars::Visuals::SpectatorList)
+			if (Vars::Visuals::SpectatorList.m_Var)
 			{
 				nDrawX -= 55;
 

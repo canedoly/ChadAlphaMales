@@ -7,7 +7,7 @@
 
 bool CAimbot::ShouldRun(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 {
-	if (!Vars::Aimbot::Global::Active)
+	if (!Vars::Aimbot::Global::Active.m_Var)
 		return false;
 
 	if (g_Interfaces.EngineVGui->IsGameUIVisible() || g_Interfaces.Surface->IsCursorVisible())
