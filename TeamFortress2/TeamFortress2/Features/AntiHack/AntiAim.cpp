@@ -35,7 +35,7 @@ void CAntiAim::Run(CUserCmd *pCmd, bool *pSendPacket)
 	g_GlobalInfo.m_vRealViewAngles = g_GlobalInfo.m_vViewAngles;
 	g_GlobalInfo.m_vFakeViewAngles = g_GlobalInfo.m_vViewAngles;
 
-	if (!Vars::AntiHack::AntiAim::Active.m_Var)
+	if (!Vars::AntiHack::AntiAim::Active)
 		return;
 
 	if (const auto &pLocal = g_EntityCache.m_pLocal)
@@ -66,7 +66,7 @@ void CAntiAim::Run(CUserCmd *pCmd, bool *pSendPacket)
 
 		Vec3 vAngles = pCmd->viewangles;
 
-		switch (Vars::AntiHack::AntiAim::Pitch.m_Var) {
+		switch (Vars::AntiHack::AntiAim::Pitch) {
 			case 1: { pCmd->viewangles.x = -89.0f; g_GlobalInfo.m_vRealViewAngles.x = -89.0f; break; }
 			case 2: { pCmd->viewangles.x = 89.0f; g_GlobalInfo.m_vRealViewAngles.x = 89.0f; break; }
 			case 3: { pCmd->viewangles.x = -271.0f; g_GlobalInfo.m_vRealViewAngles.x = 89.0f; break; }
@@ -78,11 +78,11 @@ void CAntiAim::Run(CUserCmd *pCmd, bool *pSendPacket)
 
 		static bool b = false;
 
-		float SpinSpeed = fmod(g_Interfaces.GlobalVars->realtime * Vars::AntiHack::AntiAim::SpinSpeed.m_Var / 10.0f * 360.0f, 360.0f);
+		float SpinSpeed = fmod(g_Interfaces.GlobalVars->realtime * Vars::AntiHack::AntiAim::SpinSpeed / 10.0f * 360.0f, 360.0f);
 
 		if (b)
 		{
-			switch (Vars::AntiHack::AntiAim::YawReal.m_Var) {
+			switch (Vars::AntiHack::AntiAim::YawReal) {
 				case 1: { pCmd->viewangles.y += 90.0f;  break; }
 				case 2: { pCmd->viewangles.y -= 90.0f; break; }
 				case 3: { pCmd->viewangles.y += 180.0f; break; }
@@ -96,7 +96,7 @@ void CAntiAim::Run(CUserCmd *pCmd, bool *pSendPacket)
 
 		else
 		{
-			switch (Vars::AntiHack::AntiAim::YawFake.m_Var) {
+			switch (Vars::AntiHack::AntiAim::YawFake) {
 				case 1: { pCmd->viewangles.y += 90.0f; break; }
 				case 2: { pCmd->viewangles.y -= 90.0f; break; }
 				case 3: { pCmd->viewangles.y += 180.0f; break; }

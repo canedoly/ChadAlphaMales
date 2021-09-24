@@ -4,7 +4,7 @@
 
 bool CAimbotGlobal::IsKeyDown()
 {
-	return !Vars::Aimbot::Global::AimKey.m_Var ? true : (GetAsyncKeyState(Vars::Aimbot::Global::AimKey.m_Var) & 0x8000);
+	return !Vars::Aimbot::Global::AimKey? true : (GetAsyncKeyState(Vars::Aimbot::Global::AimKey) & 0x8000);
 }
 
 void CAimbotGlobal::SortTargets(const ESortMethod &Method)

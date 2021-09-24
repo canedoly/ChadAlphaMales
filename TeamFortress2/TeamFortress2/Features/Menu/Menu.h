@@ -2,6 +2,7 @@
 
 #include "../Vars.h"
 #include "../../Utils/Easings/easing.h" // Don't ask why this is here :wink:
+
 class CMenu
 {
 private:
@@ -9,7 +10,7 @@ private:
 	Rect_t m_LastGroupBox = {};
 
 	void Separator();
-	bool CheckBox(CVar<bool> &Var, const wchar_t* const szToolTip);
+	/*bool CheckBox(CVar<bool>& Var, const wchar_t* const szToolTip);
 	bool ButtonTab(const wchar_t* Label, bool Active = false, int WidthOverride = 0, int HeightOverride = 0);
 	bool Button(const wchar_t* Label, bool Active = false, int WidthOverride = 0, int HeightOverride = 0);
 	bool ComboBox(CVar<int> &Var, const std::vector<CVar<int>> &List);
@@ -23,7 +24,7 @@ private:
 	int ScaleDPI(int i);
 	void GroupBoxStart();
 	void GroupBoxEnd(const wchar_t *Label, int Width);
-	bool MouseInRegion(const int x, const int y, const int w, const int h);
+	bool MouseInRegion(const int x, const int y, const int w, const int h);*/
 	//void DrawTooltip();
 
 private:

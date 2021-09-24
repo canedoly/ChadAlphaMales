@@ -2,13 +2,14 @@
 
 #include "../SDK/SDK.h"
 #include "../Features/Playerlist/Playerlist.h"
+/*
 template <class T>
 class CVar
 {
 public:
 	T m_Var;
 	const wchar_t* m_szDisplayName;
-};
+;*/
 
 namespace Vars
 {
@@ -17,10 +18,10 @@ namespace Vars
 	}
 	namespace Menu
 	{
-		inline bool Opened			= false;
-		inline Rect_t Position		= { 100, 100, 870, 480 };
-		inline const auto Title		= XorStr(L"Team Fortress 2");
-		inline int TitleBarH		= 16;
+		inline bool Opened = false;
+		inline Rect_t Position = { 100, 100, 870, 480 };
+		inline const auto Title = XorStr(L"Team Fortress 2");
+		inline int TitleBarH = 16;
 
 		inline int SpacingX = 8;
 		inline int SpacingY = 4;
@@ -48,9 +49,9 @@ namespace Vars
 
 		namespace Colors
 		{
-			//inline Color_t WindowBackground = { 30, 30, 30, 255 };
+			//inline Color_t WindowBackground = = 30, 30, 30, 255 ;
 			inline Color_t TitleBar = { 60, 60, 60, 255 };
-			inline Color_t Text = { 255, 255, 255, 190 };
+			inline Color_t Text = {255, 255, 255, 190};
 			inline Color_t Widget = { 20, 20, 20, 255 };
 			inline Color_t WidgetActive = { 150, 0, 255, 255 };
 			inline Color_t OutlineMenu = { 50, 50, 50, 255 };
@@ -61,67 +62,67 @@ namespace Vars
 	{
 		namespace CritHack
 		{
-			inline CVar<bool> Active{ true, L"Active" };
-			inline CVar<int> CritKey{ VK_LSHIFT, L"Crit Key" };
-			inline CVar<bool> SaveBucket{ false, L"Save Bucket" };
-			inline CVar<bool> MeeleCrits{ false, L"Meele Crits" };
-			inline CVar<bool> CritBar{ false, L"Crit Bar" };
+			inline bool Active = true;
+			inline int CritKey = VK_LSHIFT;
+			inline bool SaveBucket = false;
+			inline bool MeeleCrits = false;
+			inline bool CritBar = false;
 		}
 
 		namespace Global
 		{
-			inline CVar<bool> Active				{ true, L"Active" };
-			inline CVar<int> AimKey					{ VK_LSHIFT, L"Aim Key" };
-			inline CVar<bool> AutoShoot				{ true, L"Auto Shoot" };
-			inline CVar<bool> AimPlayers			{ true, L"Aim Players" };
-			inline CVar<bool> AimBuildings			{ true, L"Aim Buildings" };
-			inline CVar<bool> IgnoreInvlunerable	{ true, L"Ignore Invulnerable" };
-			inline CVar<bool> IgnoreCloaked			{ false, L"Ignore Cloaked" };
-			inline CVar<bool> IgnoreFriends			{ true, L"Ignore Friends" };
-			inline CVar<bool> IgnoreTaunting		{ true, L"Ignore Taunting" };
+			inline bool Active = true;
+			inline int AimKey = VK_LSHIFT;
+			inline bool AutoShoot = true;
+			inline bool AimPlayers = true;
+			inline bool AimBuildings = true;
+			inline bool IgnoreInvlunerable = true;
+			inline bool IgnoreCloaked = false;
+			inline bool IgnoreFriends = true;
+			inline bool IgnoreTaunting = true;
 		}
 
 		namespace Hitscan
 		{
-			inline CVar<bool> Active			{ true, L"Active" };
-			inline CVar<int> SortMethod			{ 0, L"Sort Method" };	//0 - FOV,		1 - Distance
-			inline CVar<int> AimMethod			{ 1, L"Aim Method" };	//0 - Normal,	1 - Smooth, 2 - Silent
-			inline CVar<int> AimHitbox			{ 2, L"Aim Hitbox" };	//0 - Head,		1 - Body,	2 - Auto
-			inline CVar<float> AimFOV			{ 15.0f, L"Aim FOV" };
-			inline CVar<float> SmoothingAmount	{ 4.0f, L"Smoothing Amount" };
-			inline CVar<int> TapFire			{ 1, L"Tap Fire" };	//0 - Off, 1 - Distance, 2 - Always
-			inline CVar<bool> ScanHitboxes		{ true, L"Scan Body" };
-			inline CVar<bool> ScanHead			{ true, L"Scan Head" };
-			inline CVar<bool> ScanBuildings		{ true, L"Scan Buildings" };
-			inline CVar<bool> WaitForHeadshot	{ true, L"Wait For Headshot" };
-			inline CVar<bool> WaitForCharge     { true, L"Wait For Charge" };
-			inline CVar<bool> SpectatedSmooth	{ false, L"Spectated Smooth" };
-			inline CVar<bool> ScopedOnly		{ false, L"Scoped Only" };
-			inline CVar<bool> AutoScope			{ false, L"Auto Scope" };
-			inline CVar<bool> AutoRev			{ false, L"Auto Rev" };
+			inline bool Active = true;
+			inline int SortMethod = 0;
+			inline int AimMethod = 1;
+			inline int AimHitbox = 2;
+			inline float AimFOV = 15.0f;
+			inline float SmoothingAmount = 4.0f;
+			inline int TapFire = 1;
+			inline bool ScanHitboxes = true;
+			inline bool ScanHead = true;
+			inline bool ScanBuildings = true;
+			inline bool WaitForHeadshot = true;
+			inline bool WaitForCharge = true;
+			inline bool SpectatedSmooth = false;
+			inline bool ScopedOnly = false;
+			inline bool AutoScope = false;
+			inline bool AutoRev = false;
 		}
 
 		namespace Projectile
 		{
-			inline CVar<bool> Active			{ true, L"Active" };
-			inline CVar<bool> PerformanceMode	{ true, L"Performance Mode" };
-			inline CVar<int> SortMethod			{ 0, L"Sort Method" };	//0 - FOV,		1 - Distance
-			inline CVar<int> AimMethod			{ 1, L"Aim Method" };	//0 - Normal,	1 - Silent
-			inline CVar<int> AimPosition		{ 2, L"Aim Position" };	//0 - Body,		1 - Feet,	2 - Auto
-			inline CVar<float> AimFOV			{ 25.0f, L"Aim FOV" };
-			inline CVar<bool> FeetAimIfOnGround{ false, L"Aim at feet if target is on the ground." };
+			inline bool Active = true;
+			inline bool PerformanceMode = true;
+			inline int SortMethod = 0;
+			inline int AimMethod = 1;
+			inline int AimPosition = 2;
+			inline float AimFOV = 25.0f;
+			inline bool FeetAimIfOnGround = false;
 		}
 
 		namespace Melee
 		{
-			inline CVar<bool> Active			{ true, L"Active" };
-			inline CVar<int> SortMethod			{ 1, L"Sort Method" };	//0 - FOV,		1 - Distance
-			inline CVar<int> AimMethod			{ 1, L"Aim Method" };	//0 - Normal,	1 - Smooth, 2 - Silent
-			inline CVar<float> AimFOV			{ 45.0f, L"Aim FOV" };
-			inline CVar<float> SmoothingAmount	{ 8.0f, L"Smoothing Amount" };
-			inline CVar<bool> RangeCheck		{ true, L"Range Check" };
-			inline CVar<bool> PredictSwing		{ true, L"Predict Swing" };
-			inline CVar<bool> WhipTeam          { true, L"Whip Teammates" };
+			inline bool Active = true;
+			inline int SortMethod = 1;
+			inline int AimMethod = 1;
+			inline float AimFOV = 45.0f;
+			inline float SmoothingAmount = 8.0f;
+			inline bool RangeCheck = true;
+			inline bool PredictSwing = true;
+			inline bool WhipTeam = true;
 		}
 	}
 
@@ -129,55 +130,55 @@ namespace Vars
 	{
 		namespace Global
 		{
-			inline CVar<bool> Active				{ false, L"Active" };
-			inline CVar<int> TriggerKey				{ VK_LSHIFT, L"Trigger Key" };
-			inline CVar<bool> IgnoreInvlunerable	{ true, L"Ignore Invulnerable" };
-			inline CVar<bool> IgnoreCloaked			{ false, L"Ignore Cloaked" };
-			inline CVar<bool> IgnoreFriends			{ false, L"Ignore Friends" };
+			inline bool Active = false;
+			inline int TriggerKey = VK_LSHIFT;
+			inline bool IgnoreInvlunerable = true;
+			inline bool IgnoreCloaked = false;
+			inline bool IgnoreFriends = false;
 		}
 
 		namespace Shoot
 		{
-			inline CVar<bool> Active			{ false, L"Active" };
-			inline CVar<bool> TriggerPlayers	{ true, L"Trigger Players" };
-			inline CVar<bool> TriggerBuildings	{ true, L"Trigger Buildings" };
-			inline CVar<bool> HeadOnly			{ false, L"Head Only" };
-			inline CVar<bool> WaitForCharge		{ true, L"Wait For Charge" };
-			inline CVar<float> HeadScale		{ 0.7f, L"Head Scale" };
+			inline bool Active = false;
+			inline bool TriggerPlayers = true;
+			inline bool TriggerBuildings = true;
+			inline bool HeadOnly = false;
+			inline bool WaitForCharge = true;
+			inline float HeadScale = 0.7f;
 		}
 
 		namespace Stab
 		{
-			inline CVar<bool> Active	{ true, L"Active" };
-			inline CVar<bool> RageMode	{ false, L"Rage Mode" };
-			inline CVar<bool> Silent	{ false, L"Silent" };
-			inline CVar<bool> Disguise	{ false, L"Disguise" };
-			inline CVar<bool> IgnRazor	{ false, L"Ignore Razorback" };
-			inline CVar<float> Range	{ 0.9f, L"Range" };
+			inline bool Active = true;
+			inline bool RageMode = false;
+			inline bool Silent = false;
+			inline bool Disguise = false;
+			inline bool IgnRazor = false;
+			inline float Range = 0.9f;
 		}
 
 		namespace Detonate
 		{
-			inline CVar<bool> Active	    { true, L"Active" };
-			inline CVar<bool> Stickies      { true, L"Detonate Stickies" };
-			inline CVar<bool> Flares        { true, L"Detonate Flares" };
-			inline CVar<float> RadiusScale	{ 1.0f, L"Radius Scale" };
+			inline bool Active = true;
+			inline bool Stickies = true;
+			inline bool Flares = true;
+			inline float RadiusScale = 1.0f;
 		}
 
 		namespace Blast
 		{
-			inline CVar<bool> Active    { false, L"Active" };
-			inline CVar<bool> Rage      { false, L"Rage" };
-			inline CVar<bool> Silent	{ false, L"Silent" };
-			inline CVar<int> Fov	    { 55,    L"FOV" };
+			inline bool Active = false;
+			inline bool Rage = false;
+			inline bool Silent = false;
+			inline int Fov = 55;
 		}
 
 		namespace Uber
 		{
-			inline CVar<bool> Active		{ false, L"Active" };
-			inline CVar<bool> OnlyFriends	{ false, L"Only Friends" };
-			inline CVar<bool> PopLocal      { false, L"Pop on local" };
-			inline CVar<float> HealthLeft   { 35.0f, L"Health left" };
+			inline bool Active = false;
+			inline bool OnlyFriends = false;
+			inline bool PopLocal = false;
+			inline float HealthLeft = 35.0f;
 		}
 	}
 
@@ -186,54 +187,54 @@ namespace Vars
 
 		namespace Main
 		{
-			//inline CVar<bool> Active	{ true, L"Active" };
-			inline CVar<int> Outline	{ 2, L"Outline" }; //0 - OFF, 1 - Text Only, 2 - All
+			//inline bool Active	= true;
+			inline int Outline = 2;
 		}
 
 		namespace Players
 		{
-			inline CVar<bool> Active			{ true, L"Active" };
-			inline CVar<bool> ShowLocal			{ true, L"Show Local" };
-			inline CVar<int> IgnoreTeammates	{ 2, L"Ignore Teammates" };	//0 - OFF, 1 - All, 2 - Keep Friends
-			inline CVar<int> IgnoreCloaked		{ 0, L"Ignore Cloaked" };	//0 - OFF, 1 - All, 2 - Enemies Only
-			inline CVar<bool> Name				{ true, L"Name" };
-			inline CVar<int> Uber				{ 2, L"Uber" }; //0 - Off, 1 - Text, 2 - Bar
-			inline CVar<int> Class				{ 1, L"Class" }; // 0 - Off, 1 - Icon, 2 - Text, 3 - Both
-			inline CVar<bool> Health			{ false, L"Health" };
-			inline CVar<bool> Cond				{ true, L"Cond" };
-			inline CVar<bool> HealthBar			{ true, L"Health Bar" };
-			inline CVar<int> Box				{ 0, L"Box" };	//0 - OFF, 1 - Simple, 2 - Corners
-			inline CVar<int> Bones				{ 0, L"Bones" };
-			inline CVar<bool> GUID              { false, L"GUID" };
-			inline CVar<bool> Lines             { false, L"Lines" };
-			inline CVar<bool> Dlights			{ false, L"Dlights" };
-			inline CVar<float> DlightRadius		{ 200.0f, L"DLight Radius" };
-			inline CVar<float> Alpha			{ 1.0f, L"Alpha" };
+			inline bool Active = true;
+			inline bool ShowLocal = true;
+			inline int IgnoreTeammates = 2;
+			inline int IgnoreCloaked = 0;
+			inline bool Name = true;
+			inline int Uber = 2;
+			inline int Class = 1;
+			inline bool Health = false;
+			inline bool Cond = true;
+			inline bool HealthBar = true;
+			inline int Box = 0;
+			inline int Bones = 0;
+			inline bool GUID = false;
+			inline bool Lines = false;
+			inline bool Dlights = false;
+			inline float DlightRadius = 200.0f;
+			inline float Alpha = 1.0f;
 		}
 
 		namespace Buildings
 		{
-			inline CVar<bool> Active			{ true, L"Active" };
-			inline CVar<bool> IgnoreTeammates	{ true, L"Ignore Teammates" };
-			inline CVar<bool> Name				{ true, L"Name" };
-			inline CVar<bool> Health			{ false, L"Health" };
-			inline CVar<bool> Owner             { false, L"Owner" };
-			inline CVar<bool> Level				{ true, L"Level" };
-			inline CVar<bool> Cond				{ true, L"Cond" };
-			inline CVar<bool> HealthBar			{ true, L"Health Bar" };
-			inline CVar<bool> Lines				{ false, L"Lines" };
-			inline CVar<int> Box				{ 0, L"Box" };	//0 - OFF, 1 - Simple, 2 - Corners
-			inline CVar<bool> Dlights			{ false, L"Dlights" };
-			inline CVar<float> DlightRadius		{ 200.0f, L"DLight Radius" };
-			inline CVar<float> Alpha			{ 1.0f, L"Alpha" };
+			inline bool Active = true;
+			inline bool IgnoreTeammates = true;
+			inline bool Name = true;
+			inline bool Health = false;
+			inline bool Owner = false;
+			inline bool Level = true;
+			inline bool Cond = true;
+			inline bool HealthBar = true;
+			inline bool Lines = false;
+			inline int Box = 0;
+			inline bool Dlights = false;
+			inline float DlightRadius = 200.0f;
+			inline float Alpha = 1.0f;
 		}
 
 		namespace World
 		{
-			inline CVar<bool> Active		{ true, L"Active" };
-			inline CVar<bool> HealthText	{ true, L"Health Text" };
-			inline CVar<bool> AmmoText		{ true, L"Ammo Text" };
-			inline CVar<float> Alpha		{ 1.0f, L"Alpha" };
+			inline bool Active = true;
+			inline bool HealthText = true;
+			inline bool AmmoText = true;
+			inline float Alpha = 1.0f;
 		}
 	}
 
@@ -242,52 +243,52 @@ namespace Vars
 		/*
 		namespace Main
 		{
-			inline CVar<bool> Active{ false , L"Active" };
+			inline bool Active= false ;
 		}
 		*/
 
 		namespace Players
 		{
-			inline CVar<bool> Active{ true, L"Active" };
-			inline CVar<bool> ShowLocal{ true, L"Show Local" };
-			inline CVar<int> IgnoreTeammates{ 2, L"Ignore Teammates" };	//0 - OFF, 1 - All, 2 - Keep Friends
-			inline CVar<bool> Wearables{ true, L"Render Wearables" };
-			inline CVar<bool> Weapons{ true, L"Render Weapons" };
-			inline CVar<int> Material{ 1, L"Material" }; //0 - None, 1 - Shaded, 2 - Shiny, 3 - Flat
-			inline CVar<bool> IgnoreZ{ false , L"IgnoreZ" };
-			inline CVar<float> Alpha{ 1.0f, L"Alpha" };
+			inline bool Active = true;
+			inline bool ShowLocal = true;
+			inline int IgnoreTeammates = 2;
+			inline bool Wearables = true;
+			inline bool Weapons = true;
+			inline int Material = 1;
+			inline bool IgnoreZ = false;
+			inline float Alpha = 1.0f;
 		}
 
 		namespace Buildings
 		{
-			inline CVar<bool> Active{ true, L"Active" };
-			inline CVar<bool> IgnoreTeammates{ true, L"Ignore Teammates" };
-			inline CVar<int> Material{ 1, L"Material" }; //0 - None, 1 - Shaded, 2 - Shiny, 3 - Flat
-			inline CVar<bool> IgnoreZ{ false , L"IgnoreZ" };
-			inline CVar<float> Alpha{ 1.0f, L"Alpha" };
+			inline bool Active = true;
+			inline bool IgnoreTeammates = true;
+			inline int Material = 1;
+			inline bool IgnoreZ = false;
+			inline float Alpha = 1.0f;
 		}
 
 		namespace World
 		{
-			inline CVar<bool> Active{ false, L"Active" };
-			inline CVar<bool> Health{ true, L"Health" };
-			inline CVar<bool> Ammo{ true, L"Ammo" };
-			inline CVar<int> Projectiles{ 1, L"Projectiles" }; //0 - Off, 1 - All, 2 - Enemy Only
-			inline CVar<int> Material{ 1, L"Material" }; //0 - None, 1 - Shaded, 2 - Shiny, 3 - Flat
-			inline CVar<bool> IgnoreZ{ false , L"IgnoreZ" };
-			inline CVar<float> Alpha{ 1.0f, L"Alpha" };
+			inline bool Active = false;
+			inline bool Health = true;
+			inline bool Ammo = true;
+			inline int Projectiles = 1;
+			inline int Material = 1;
+			inline bool IgnoreZ = false;
+			inline float Alpha = 1.0f;
 		}
 
 		namespace DME
 		{
-			inline CVar<bool> Active{ false, L"Active" };
-			inline CVar<bool> SeeThru{ false, L"See Through" };
+			inline bool Active = false;
+			inline bool SeeThru = false;
 
-			inline CVar<int> Hands{ 0, L"Hands" }; //0 - Original, 1 - Shaded, 2 - Shiny, 3 - Flat, 4 - WF-Shaded, 5 - WF-Shiny, 6 - WF-Flat
-			inline CVar<float> HandsAlpha{ 1.0f, L"Hands Alpha" };
+			inline int Hands = 0;
+			inline float HandsAlpha = 1.0f;
 
-			inline CVar<int> Weapon{ 0, L"Weapon" }; //0 - Original, 1 - Shaded, 2 - Shiny, 3 - Flat, 4 - WF-Shaded, 5 - WF-Shiny, 6 - WF-Flat
-			inline CVar<float> WeaponAlpha{ 1.0f, L"Weapon Alpha" };
+			inline int Weapon = 0;
+			inline float WeaponAlpha = 1.0f;
 		}
 	}
 
@@ -295,36 +296,36 @@ namespace Vars
 	{
 		namespace Main
 		{
-			//inline CVar<bool> Active{ false, L"Active" };
-			inline CVar<int> Scale{ 5, L"Scale" };
+			//inline bool Active= false;
+			inline int Scale = 5;
 		}
 
 		namespace Players
 		{
-			inline CVar<bool> Active{ true, L"Active" };
-			inline CVar<bool> ShowLocal{ true, L"Show Local" };
-			inline CVar<int> IgnoreTeammates{ 2, L"Ignore Teammates" };	//0 - OFF, 1 - All, 2 - Keep Friends
-			inline CVar<bool> Wearables{ true, L"Render Wearables" };
-			inline CVar<bool> Weapons{ true, L"Render Weapons" };
-			inline CVar<float> Alpha{ 1.0f, L"Alpha" };
-			inline CVar<int> Color{ 0, L"Color" }; //0 - Team, 1 - Health
+			inline bool Active = true;
+			inline bool ShowLocal = true;
+			inline int IgnoreTeammates = 2;
+			inline bool Wearables = true;
+			inline bool Weapons = true;
+			inline float Alpha = 1.0f;
+			inline int Color = 0;
 		}
 
 		namespace Buildings
 		{
-			inline CVar<bool> Active{ true, L"Active" };
-			inline CVar<bool> IgnoreTeammates{ true, L"Ignore Teammates" };
-			inline CVar<float> Alpha{ 1.0f, L"Alpha" };
-			inline CVar<int> Color{ 0, L"Color" }; //0 - Team, 1 - Health
+			inline bool Active = true;
+			inline bool IgnoreTeammates = true;
+			inline float Alpha = 1.0f;
+			inline int Color = 0;
 		}
 
 		namespace World
 		{
-			inline CVar<bool> Active{ false, L"Active" };
-			inline CVar<bool> Health{ true, L"Health" };
-			inline CVar<bool> Ammo{ true, L"Ammo" };
-			inline CVar<int> Projectiles{ 1, L"Projectiles" }; //0 - Off, 1 - All, 2 - Enemy Only
-			inline CVar<float> Alpha{ 1.0f, L"Alpha" };
+			inline bool Active = false;
+			inline bool Health = true;
+			inline bool Ammo = true;
+			inline int Projectiles = 1;
+			inline float Alpha = 1.0f;
 		}
 	}
 
@@ -332,91 +333,91 @@ namespace Vars
 	{
 		namespace Main
 		{
-			inline CVar<bool> Active{ false, L"Active" };
-			inline CVar<int>  BackAlpha{ 200, L"Back Alpha" };
-			inline CVar<int>  Size{ 100, L"Size" };
-			inline CVar<int>  Range{ 1500, L"Range" };
+			inline bool Active = false;
+			inline int  BackAlpha = 200;
+			inline int  Size = 100;
+			inline int  Range = 1500;
 		}
 
 		namespace Players
 		{
-			inline CVar<bool> Active			{ true, L"Active" };
-			inline CVar<int>  IconType			{ 1, L"Icon" }; //0 - Scoreboard, 1 - Portraits, 2 - Avatars
-			//inline CVar<int>  BackGroundType	{ 2, L"Background" }; //0 - Off, 1 - Rect, 2 - Texture
-			//inline CVar<bool> Outline			{ true, L"Outline" };
-			inline CVar<int>  IgnoreTeam		{ 2, L"Ignore Teammates" };  //0 - Off, 1 - All, 2 - Keep Friends
-			//inline CVar<int>  IgnoreCloaked		{ 0, L"Ignore Cloaked" };	//0 - Off, 1 - All, 2 - Enemies Only
-			inline CVar<bool> Health			{ false, L"Health Bar" };
-			inline CVar<int>  IconSize			{ 24, L"Icon Size" };
+			inline bool Active = true;
+			inline int  IconType = 1;
+			//inline int  BackGroundType	= 2;
+			//inline bool Outline			= true;
+			inline int  IgnoreTeam = 2;
+			//inline int  IgnoreCloaked		= 0;
+			inline bool Health = false;
+			inline int  IconSize = 24;
 		}
 
 		namespace Buildings
 		{
-			inline CVar<bool> Active		{ true, L"Active" };
-			//inline CVar<bool> Outline		{ false, L"Outline" };
-			inline CVar<bool> IgnoreTeam	{ true, L"Ignore Team" };
-			inline CVar<bool> Health		{ false, L"Health Bar" };
-			inline CVar<int>  IconSize		{ 18, L"Icon Size" };
+			inline bool Active = true;
+			//inline bool Outline		= false;
+			inline bool IgnoreTeam = true;
+			inline bool Health = false;
+			inline int  IconSize = 18;
 		}
 
 		namespace World
 		{
-			//inline CVar<bool> Active     { false, L"Active" };
-			inline CVar<bool> Health     { true, L"Health" };
-			inline CVar<bool> Ammo       { true, L"Ammo" };
-			inline CVar<int>  IconSize	 { 14, L"Icon Size" };
+			//inline bool Active     = false;
+			inline bool Health = true;
+			inline bool Ammo = true;
+			inline int  IconSize = 14;
 		}
 	}
 
 	namespace Visuals
 	{
-		inline CVar<bool> RemoveDisguises   { false, L"Remove Disguises" };
-		inline CVar<bool> RemoveTaunts		{ false, L"Remove Taunts" };
-		inline CVar<int> Fullbright			{ 0, L"Fullbright" };
-		inline CVar<int> FieldOfView		{ 110, L"Field of View" };
-		inline CVar<float> AspectRatioValue	{ 0, L"Aspect ratio" };
-		inline CVar<int> AimFOVAlpha		{ 10, L"Aim FOV Alpha" };
+		inline bool RemoveDisguises = false;
+		inline bool RemoveTaunts = false;
+		inline int Fullbright = 0;
+		inline int FieldOfView = 110;
+		inline float AspectRatioValue = 0;
+		inline int AimFOVAlpha = 10;
 
-		inline CVar<int> ViewModelX		{ 0, L"Viewmodel X" };
-		inline CVar<int> ViewModelY		{ 0, L"Viewmodel Y" };
-		inline CVar<int> ViewModelZ		{ 0, L"Viewmodel Z" };
+		inline int ViewModelX = 0;
+		inline int ViewModelY = 0;
+		inline int ViewModelZ = 0;
 
-		inline CVar<bool> RemoveScope		{ true, L"Remove Scope" };
-		inline CVar<bool> RemoveZoom		{ true, L"Remove Zoom" };
-		inline CVar<bool> RemovePunch		{ false, L"Remove Recoil" };
-		inline CVar<bool> CrosshairAimPos	{ true, L"Crosshair At Aim Pos" };
-		inline CVar<bool> ChatInfo			{ true, L"Show Class Changes" };
+		inline bool RemoveScope = true;
+		inline bool RemoveZoom = true;
+		inline bool RemovePunch = false;
+		inline bool CrosshairAimPos = true;
+		inline bool ChatInfo = true;
 
-		inline CVar<bool> SpectatorList{ true, L"Spectator List" };
-		//inline CVar<int> SpectatorList { 3, L"Spectator List" }; //0 - Off, 1 - Default, 2 - Classic, 3 - Classic Avatars
+		inline bool SpectatorList = true;
+		//inline int SpectatorList = 3;
 
-		inline CVar<bool> SpyWarning				{ true, L"Active" };
-		inline CVar<bool> SpyWarningAnnounce		{ true, L"Announce" };
-		inline CVar<int> SpyWarningStyle			{ 0, L"Style" }; //0 - Indicator, 1 - Flash
-		inline CVar<bool> SpyWarningVisibleOnly		{ true, L"Visible Only" };
-		inline CVar<bool> SpyWarningIgnoreFriends	{ true, L"Ignore Friends" };
+		inline bool SpyWarning = true;
+		inline bool SpyWarningAnnounce = true;
+		inline int SpyWarningStyle = 0;
+		inline bool SpyWarningVisibleOnly = true;
+		inline bool SpyWarningIgnoreFriends = true;
 
-		inline CVar<bool> Snow{ false, L"Menu Snow" };
-		inline CVar<bool> ToolTips{ false, L"Menu tooltips" };
+		inline bool Snow = false;
+		inline bool ToolTips = false;
 
-		inline CVar<bool> ThirdPerson				{ false, L"Active" };
-		inline CVar<int> ThirdPersonKey				{ 0x0, L"Toggle Key"};
-		inline CVar<bool> ThirdPersonSilentAngles	{ true, L"Silent Angles" };
-		inline CVar<bool> ThirdPersonInstantYaw		{ true, L"Instant Yaw" };
+		inline bool ThirdPerson = false;
+		inline int ThirdPersonKey = 0x0;
+		inline bool ThirdPersonSilentAngles = true;
+		inline bool ThirdPersonInstantYaw = true;
 
-		inline CVar<bool> WorldModulation			{ false, L"World Modulation" };
-		inline CVar<bool> SkyboxChanger				{ true, L"Skybox changer" };
+		inline bool WorldModulation = false;
+		inline bool SkyboxChanger = true;
 
-		inline CVar<bool> PlayerList				{ false, L"Playerlist" };
+		inline bool PlayerList = false;
 
 		namespace Skins
 		{
-			inline CVar<bool> Enabled				{ false, L"Active" };
-			inline CVar<int> Sheen					{ 0, L"Sheen" };
-			inline CVar<int> Effect					{ 0, L"Effect" };
-			inline CVar<int> Particle				{ 0, L"Particle" };
-			inline CVar<bool> Acient				{ false, L"Ancient" };
-			inline CVar<bool> Override				{ false, L"Style Override" };
+			inline bool Enabled = false;
+			inline int Sheen = 0;
+			inline int Effect = 0;
+			inline int Particle = 0;
+			inline bool Acient = false;
+			inline bool Override = false;
 		}
 	}
 
@@ -428,37 +429,37 @@ namespace Vars
 
 	namespace Misc
 	{
-		inline CVar<bool> AutoJump				{ true, L"Auto Jump" };
-		inline CVar<bool> AutoStrafe			{ true, L"Auto Strafe" };
-		inline CVar<bool> TauntSlide			{ false, L"Taunt Slide" };
-		inline CVar<bool> TauntControl			{ false, L"Taunt Control" };
-		inline CVar<bool> BypassPure            { false, L"Bypass Pure" };
-		inline CVar<bool> NoisemakerSpam        { false, L"Noisemaker Spam" };
-		inline CVar<bool> DisableInterpolation	{ true, L"Disable Interpolation" };
-		inline CVar<bool> MedalFlip				{ true, L"Medal Flip" };
-		inline CVar<bool> AutoRocketJump		{ false, L"Auto RocketJump" };
-		inline CVar<bool> ChatSpam              { false, L"Chat Spam" };
-		inline CVar<bool> NoPush				{ false, L"No Push" };
-		inline CVar<bool> InstantRespawn		{ false, L"MvM Instant Respawn" };
-		inline CVar<bool> EdgeJump				{ false, L"Edge Jump" };
-		inline CVar<bool> AntiAFK{ false, L"Anti AFK" };
-		inline CVar<bool> VoteRevealer			{ false, L"Reveal votes" };
-		inline CVar<bool> VotesInChat			{ false, L"Reveal votes to party" };
+		inline bool AutoJump = true;
+		inline bool AutoStrafe = true;
+		inline bool TauntSlide = false;
+		inline bool TauntControl = false;
+		inline bool BypassPure = false;
+		inline bool NoisemakerSpam = false;
+		inline bool DisableInterpolation = true;
+		inline bool MedalFlip = true;
+		inline bool AutoRocketJump = false;
+		inline bool ChatSpam = false;
+		inline bool NoPush = false;
+		inline bool InstantRespawn = false;
+		inline bool EdgeJump = false;
+		inline bool AntiAFK = false;
+		inline bool VoteRevealer = false;
+		inline bool VotesInChat = false;
 		namespace CL_Move
 		{
-			inline CVar<bool> Enabled{ true, L"Enabled" };
-			inline CVar<bool> Doubletap{ true, L"Doubletap" };
-			inline CVar<bool> NotInAir{ true, L"Dont DT in air" };
-			//inline CVar<int> TeleportKey{ 0x46, L"Teleport Key" }; //F
-			inline CVar<int> RechargeKey{ 0x52, L"Recharge Key" }; //R
-			inline CVar<int> DoubletapKey{ 0x46, L"Doubletap Key" }; //V
+			inline bool Enabled = true;
+			inline bool Doubletap = true;
+			inline bool NotInAir = true;
+			//inline int TeleportKey= 0x46;
+			inline int RechargeKey = 0x52;
+			inline int DoubletapKey = 0x46;
 
-			inline CVar<bool> WaitForDT{ true, L"Wait for DT" };
+			inline bool WaitForDT = true;
 
-			inline CVar<bool> Fakelag{ true, L"Fakelag" };
-			inline CVar<bool> FakelagOnKey{ true, L"Fakelag On Key" };
-			inline CVar<int> FakelagKey{ 0x54, L"Fakelag Key" }; //T
-			inline CVar<int> FakelagValue{ 1, L"Fakelag value" };
+			inline bool Fakelag = true;
+			inline bool FakelagOnKey = true;
+			inline int FakelagKey = 0x54;
+			inline int FakelagValue = 1;
 		}
 	}
 
@@ -466,11 +467,11 @@ namespace Vars
 	{
 		namespace AntiAim
 		{
-			inline CVar<bool> Active	{ false, L"Active" };
-			inline CVar<int> Pitch		{ 0, L"Pitch" };		//0 - None, 1 - Up, 2 - Down, 3 - Fake Up, 4 - Fake Down
-			inline CVar<int> SpinSpeed	{ 0, L"Spin Speed" };
-			inline CVar<int> YawReal	{ 0, L"Yaw Real" };	//0 - None, 1 - Left, 2 - Right, 3 - Backwards
-			inline CVar<int> YawFake	{ 0, L"Yaw Fake" };	//0 - None, 1 - Left, 2 - Right, 3 - Backwards
+			inline bool Active = false;
+			inline int Pitch = 0;
+			inline int SpinSpeed = 0;
+			inline int YawReal = 0;
+			inline int YawFake = 0;
 		}
 	}
 }

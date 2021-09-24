@@ -26,14 +26,14 @@ private:
 
 void CAutoDetonate::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCmd *pCmd)
 {
-	if (!Vars::Triggerbot::Detonate::Active.m_Var)
+	if (!Vars::Triggerbot::Detonate::Active)
 		return;
 
 	m_bDetonated = false;
 
-	if (Vars::Triggerbot::Detonate::Stickies.m_Var)
+	if (Vars::Triggerbot::Detonate::Stickies)
 	{
-		m_flRadius = (115.0f * Vars::Triggerbot::Detonate::RadiusScale.m_Var);
+		m_flRadius = (115.0f * Vars::Triggerbot::Detonate::RadiusScale);
 
 		for (const auto& Sticky : g_EntityCache.GetGroup(EGroupType::LOCAL_STICKIES))
 		{
@@ -49,13 +49,13 @@ void CAutoDetonate::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCm
 				{
 					if (bIsPlayer)
 					{
-						if (Vars::Triggerbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[pEntity->GetIndex()])
+						if (Vars::Triggerbot::Global::IgnoreFriends && g_EntityCache.Friends[pEntity->GetIndex()])
 							continue;
 
-						if (Vars::Triggerbot::Global::IgnoreCloaked.m_Var && pEntity->IsCloaked())
+						if (Vars::Triggerbot::Global::IgnoreCloaked && pEntity->IsCloaked())
 							continue;
 
-						if (Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var && !pEntity->IsVulnerable())
+						if (Vars::Triggerbot::Global::IgnoreInvlunerable && !pEntity->IsVulnerable())
 							continue;
 					}
 
@@ -75,9 +75,9 @@ void CAutoDetonate::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCm
 		}
 	}
 
-	if (Vars::Triggerbot::Detonate::Flares.m_Var)
+	if (Vars::Triggerbot::Detonate::Flares)
 	{
-		m_flRadius = 85.0f * Vars::Triggerbot::Detonate::RadiusScale.m_Var;
+		m_flRadius = 85.0f * Vars::Triggerbot::Detonate::RadiusScale;
 		
 		//There should only be one in existance at the time
 		//Old flare will blow up / vanish before the slow shit reloads
@@ -95,13 +95,13 @@ void CAutoDetonate::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCm
 				{
 					if (bIsPlayer)
 					{
-						if (Vars::Triggerbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[pEntity->GetIndex()])
+						if (Vars::Triggerbot::Global::IgnoreFriends && g_EntityCache.Friends[pEntity->GetIndex()])
 							continue;
 
-						if (Vars::Triggerbot::Global::IgnoreCloaked.m_Var && pEntity->IsCloaked())
+						if (Vars::Triggerbot::Global::IgnoreCloaked && pEntity->IsCloaked())
 							continue;
 
-						if (Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var && !pEntity->IsVulnerable())
+						if (Vars::Triggerbot::Global::IgnoreInvlunerable && !pEntity->IsVulnerable())
 							continue;
 					}
 

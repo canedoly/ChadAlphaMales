@@ -4,7 +4,7 @@
 
 int __stdcall UniformRandomStreamHook::RandInt::Hook(int iMinVal, int iMaxVal)
 {
-	if (Vars::Misc::MedalFlip.m_Var && g_Interfaces.EngineVGui->IsGameUIVisible())
+	if (Vars::Misc::MedalFlip && g_Interfaces.EngineVGui->IsGameUIVisible())
 	{
 		if (iMinVal == 0 && iMaxVal == 9)
 			return 0;

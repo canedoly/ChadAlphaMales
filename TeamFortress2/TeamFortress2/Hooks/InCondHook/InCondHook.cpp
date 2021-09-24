@@ -24,7 +24,7 @@ bool __fastcall InCondHook::Hook(void* ecx, void* edx, ETFCond nCond)
 	};
 
 	//Compare team's, removing team's taunt is useless
-	if (nCond == ETFCond::TF_COND_TAUNTING && Vars::Visuals::RemoveTaunts.m_Var)
+	if (nCond == ETFCond::TF_COND_TAUNTING && Vars::Visuals::RemoveTaunts)
 	{
 		if (const auto& pLocal = g_EntityCache.m_pLocal)
 			if (const auto& pEntity = GetOuter())
@@ -33,7 +33,7 @@ bool __fastcall InCondHook::Hook(void* ecx, void* edx, ETFCond nCond)
 	}
 
 	//Just compare entity ptr's, filtering out local is enough. Also prevents T pose.
-	if (nCond == ETFCond::TF_COND_DISGUISED && Vars::Visuals::RemoveDisguises.m_Var && g_EntityCache.m_pLocal != GetOuter())
+	if (nCond == ETFCond::TF_COND_DISGUISED && Vars::Visuals::RemoveDisguises && g_EntityCache.m_pLocal != GetOuter())
 		return false;
 
 	return Func.Original<fn>()(ecx, edx, nCond);

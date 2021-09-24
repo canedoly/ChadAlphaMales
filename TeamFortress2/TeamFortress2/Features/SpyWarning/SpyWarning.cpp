@@ -3,7 +3,7 @@
 
 bool CSpyWarning::ShouldRun(CBaseEntity *pLocal)
 {
-	if (!Vars::Visuals::SpyWarning.m_Var || g_Interfaces.EngineVGui->IsGameUIVisible())
+	if (!Vars::Visuals::SpyWarning || g_Interfaces.EngineVGui->IsGameUIVisible())
 		return false;
 
 	if (!pLocal->IsAlive() || pLocal->IsStunned())
@@ -90,7 +90,7 @@ void CSpyWarning::Run()
 			if (!pEnemy || !pEnemy->IsAlive() || pEnemy->GetClassNum() != CLASS_SPY || pEnemy->IsCloaked() || pEnemy->IsAGhost())
 				continue;
 
-			if (Vars::Visuals::SpyWarningIgnoreFriends.m_Var && g_EntityCache.Friends[pEnemy->GetIndex()])
+			if (Vars::Visuals::SpyWarningIgnoreFriends && g_EntityCache.Friends[pEnemy->GetIndex()])
 				continue;
 
 			Vec3 vEnemyPos = pEnemy->GetWorldSpaceCenter();
@@ -104,7 +104,7 @@ void CSpyWarning::Run()
 			if (fFovToEnemy < 70.0f)
 				continue;
 
-			if (Vars::Visuals::SpyWarningVisibleOnly.m_Var)
+			if (Vars::Visuals::SpyWarningVisibleOnly)
 			{
 				CGameTrace Trace = {};
 				CTraceFilterWorldAndPropsOnly Filter = {};
@@ -118,7 +118,7 @@ void CSpyWarning::Run()
 			m_vecSpies.push_back(vEnemyPos);
 		}
 
-		if (Vars::Visuals::SpyWarningAnnounce.m_Var)
+		if (Vars::Visuals::SpyWarningAnnounce)
 		{
 			static bool bOldEmpty = m_vecSpies.empty();
 
@@ -131,7 +131,7 @@ void CSpyWarning::Run()
 			}
 		}
 
-		if (Vars::Visuals::SpyWarningStyle.m_Var == 0)
+		if (Vars::Visuals::SpyWarningStyle == 0)
 		{
 			if (m_vecSpies.empty())
 				return;

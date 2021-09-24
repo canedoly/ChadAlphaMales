@@ -4,7 +4,7 @@
 
 void __cdecl GetDrawPositionHook::Hook(float *pX, float *pY, bool *pbBehindCamera, Vec3 angleCrosshairOffset)
 {
-	if (Vars::Visuals::CrosshairAimPos.m_Var && !g_GlobalInfo.m_vAimPos.IsZero())
+	if (Vars::Visuals::CrosshairAimPos && !g_GlobalInfo.m_vAimPos.IsZero())
 	{
 		Vec3 vScreen;
 		if (Utils::W2S(g_GlobalInfo.m_vAimPos, vScreen)) {

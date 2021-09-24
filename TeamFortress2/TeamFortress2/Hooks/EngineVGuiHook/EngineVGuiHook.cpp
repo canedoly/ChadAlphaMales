@@ -69,7 +69,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 					return;
 
 				//Tickbase info
-				if (Vars::Misc::CL_Move::Enabled.m_Var)
+				if (Vars::Misc::CL_Move::Enabled)
 				{
 					const auto& pLocal = g_EntityCache.m_pLocal;
 					const auto& pWeapon = g_EntityCache.m_pLocalWeapon;
@@ -116,15 +116,15 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 					}
 				}
 				//Current Active Aimbot FOV
-				if (Vars::Visuals::AimFOVAlpha.m_Var && g_GlobalInfo.m_flCurAimFOV)
+				if (Vars::Visuals::AimFOVAlpha && g_GlobalInfo.m_flCurAimFOV)
 				{
 					if (const auto &pLocal = g_EntityCache.m_pLocal)
 					{
-						float flFOV = static_cast<float>(Vars::Visuals::FieldOfView.m_Var);
+						float flFOV = static_cast<float>(Vars::Visuals::FieldOfView);
 						float flR = tanf(DEG2RAD(g_GlobalInfo.m_flCurAimFOV) / 2.0f)
-							/ tanf(DEG2RAD((pLocal->IsScoped() && !Vars::Visuals::RemoveZoom.m_Var) ? 30.0f : flFOV) / 2.0f) * g_ScreenSize.w;
+							/ tanf(DEG2RAD((pLocal->IsScoped() && !Vars::Visuals::RemoveZoom) ? 30.0f : flFOV) / 2.0f) * g_ScreenSize.w;
 						Color_t clr = Colors::FOVCircle;
-						clr.a = static_cast<byte>(Vars::Visuals::AimFOVAlpha.m_Var);
+						clr.a = static_cast<byte>(Vars::Visuals::AimFOVAlpha);
 						g_Draw.OutlinedCircle(g_ScreenSize.w / 2, g_ScreenSize.h / 2, flR, 68, clr);
 					}
 				}

@@ -104,7 +104,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	while (!GetAsyncKeyState(VK_F11))
 		std::this_thread::sleep_for(420ms);
 
-	g_Menu.m_bOpen = false;
+	//g_Menu.m_bOpen = false;
 
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 200, 0, 255 }, _("[-] Stopping Discord RPC\n"));
 	Discord_Shutdown();

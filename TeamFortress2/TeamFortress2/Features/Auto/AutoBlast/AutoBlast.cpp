@@ -5,7 +5,7 @@
 
 void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd)
 {
-	if (!Vars::Triggerbot::Blast::Active.m_Var || !g_GlobalInfo.m_bWeaponCanSecondaryAttack)
+	if (!Vars::Triggerbot::Blast::Active || !g_GlobalInfo.m_bWeaponCanSecondaryAttack)
 		return;
 
 	if (pWeapon->GetWeaponID() != TF_WEAPON_FLAMETHROWER || g_GlobalInfo.m_nCurItemDefIndex == Pyro_m_ThePhlogistinator)
@@ -48,7 +48,7 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 			//I cant remember if the airblast radius range from 2007 SDK was 185.0f or not..
 			if (vEyePos.DistTo(vPredicted) <= 185.0f && Utils::VisPos(pLocal, pProjectile, vEyePos, vPredicted))
 			{
-				if (Vars::Triggerbot::Blast::Rage.m_Var) {
+				if (Vars::Triggerbot::Blast::Rage) {
 					pCmd->viewangles = Math::CalcAngle(vEyePos, vPredicted);
 					bShouldBlast = true;
 					break;
@@ -56,7 +56,7 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 				else
 				{
-					if (Math::GetFov(g_Interfaces.Engine->GetViewAngles(), vEyePos, vPredicted) <= Vars::Aimbot::Hitscan::AimFOV.m_Var) {
+					if (Math::GetFov(g_Interfaces.Engine->GetViewAngles(), vEyePos, vPredicted) <= Vars::Aimbot::Hitscan::AimFOV) {
 						bShouldBlast = true;
 						break;
 					}
@@ -66,7 +66,7 @@ void CAutoAirblast::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCm
 
 		if (bShouldBlast)
 		{
-			if (Vars::Triggerbot::Blast::Rage.m_Var && Vars::Triggerbot::Blast::Silent.m_Var)
+			if (Vars::Triggerbot::Blast::Rage && Vars::Triggerbot::Blast::Silent)
 				g_GlobalInfo.m_bSilentTime = true;
 
 			g_GlobalInfo.m_bAttacking = true;

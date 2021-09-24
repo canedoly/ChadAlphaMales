@@ -18,15 +18,15 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 		return;
 
 	if (const auto pLocal = g_EntityCache.m_pLocal) {
-		if (Vars::Visuals::ChatInfo.m_Var) {
-			if (Vars::Misc::VoteRevealer.m_Var && uNameHash == FNV1A::HashConst(_("vote_cast"))) {
+		if (Vars::Visuals::ChatInfo) {
+			if (Vars::Misc::VoteRevealer && uNameHash == FNV1A::HashConst(_("vote_cast"))) {
 				const auto pEntity = g_Interfaces.EntityList->GetClientEntity(pEvent->GetInt(_("entityid")));
 				if (pEntity && pEntity->IsPlayer()) {
 					const bool bVotedYes = pEvent->GetInt(_("vote_option")) == 0;
 					PlayerInfo_t pi;
 					g_Interfaces.Engine->GetPlayerInfo(pEntity->GetIndex(), &pi);
 					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format(_("\x4[CAM] \x1%s voted %s)"), pi.name, bVotedYes ? "Yes" : "No").c_str());
-					if (Vars::Misc::VotesInChat.m_Var) {
+					if (Vars::Misc::VotesInChat) {
 						g_Interfaces.Engine->ClientCmd_Unrestricted(tfm::format(_("say_party \"%s voted %s\""), pi.name, bVotedYes ? "Yes" : "No").c_str());
 					}
 				}
@@ -63,7 +63,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 				if (g_Interfaces.Engine->GetPlayerInfo(nPlayer, &info)) {
 					Exploits::cathook.run_auth(); // I know this might be dumb as fuck but It should work better if it waits for a response first and then send it back.
 					if (m_known_bots.find(info.friendsID) == m_known_bots.end()) {
-						if (Vars::Visuals::ChatInfo.m_Var) {
+						if (Vars::Visuals::ChatInfo) {
 							char szBuff[255];
 							//sprintf(szBuff, _("CAT detected: %s"), info.name);
 							//g_Visuals.vecEventVector.push_back(EventLogging_t{ szBuff });

@@ -5,7 +5,7 @@
 
 bool CDMEChams::ShouldRun()
 {
-	if (!Vars::Chams::DME::Active.m_Var || g_Interfaces.EngineVGui->IsGameUIVisible())
+	if (!Vars::Chams::DME::Active || g_Interfaces.EngineVGui->IsGameUIVisible())
 		return false;
 
 	return true;
@@ -130,11 +130,11 @@ bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &
 		{
 			bool bMatWasForced = false;
 
-			if (Vars::Chams::DME::Hands.m_Var)
+			if (Vars::Chams::DME::Hands)
 			{
 				g_Interfaces.ModelRender->ForcedMaterialOverride([&]() -> IMaterial*
 				{
-					switch (Vars::Chams::DME::Hands.m_Var) {
+					switch (Vars::Chams::DME::Hands) {
 						case 1: { bMatWasForced = true; return m_pMatShaded; }
 						case 2: { bMatWasForced = true; return m_pMatShiny; }
 						case 3: { bMatWasForced = true; return m_pMatFlat; }
@@ -162,7 +162,7 @@ bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &
 				//g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Colors::Hands.r), Color::TOFLOAT(Colors::Hands.g), Color::TOFLOAT(Colors::Hands.b));
 
 			if (bMatWasForced) {
-				if (Vars::Chams::DME::Hands.m_Var != 7) {
+				if (Vars::Chams::DME::Hands != 7) {
 					g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Colors::Hands.r), Color::TOFLOAT(Colors::Hands.g), Color::TOFLOAT(Colors::Hands.b));
 				}
 				else {
@@ -172,7 +172,7 @@ bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &
 				bool found = false;
 				bool found2 = false;
 				bool found3 = false;
-				if (Vars::Chams::DME::Hands.m_Var == 7) {
+				if (Vars::Chams::DME::Hands == 7) {
 					/*
 					$selfillumtint	[0 0 0] base
 					$envmaptint		[0 1 0] top
@@ -187,15 +187,15 @@ bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &
 					}
 					IMaterialVar* pVar3 = m_pMatFresnel->FindVar(_("$additive"), &found3);
 					if (found3) {
-						if(Vars::Chams::DME::SeeThru.m_Var)
+						if(Vars::Chams::DME::SeeThru)
 							pVar3->SetIntValue(1);
 						else
 							pVar3->SetIntValue(0);
 					}
 				}
 			}
-			if (Vars::Chams::DME::HandsAlpha.m_Var < 1.0f)
-				g_Interfaces.RenderView->SetBlend(Vars::Chams::DME::HandsAlpha.m_Var);
+			if (Vars::Chams::DME::HandsAlpha < 1.0f)
+				g_Interfaces.RenderView->SetBlend(Vars::Chams::DME::HandsAlpha);
 
 			ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(ModelRenderHook::DrawModelExecute::index)
 				(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
@@ -205,7 +205,7 @@ bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &
 				g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 			}
 
-			if (Vars::Chams::DME::HandsAlpha.m_Var < 1.0f)
+			if (Vars::Chams::DME::HandsAlpha < 1.0f)
 				g_Interfaces.RenderView->SetBlend(1.0f);
 
 			return true;
@@ -231,11 +231,11 @@ bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &
 
 				bool bMatWasForced = false;
 
-				if (Vars::Chams::DME::Weapon.m_Var)
+				if (Vars::Chams::DME::Weapon)
 				{
 					g_Interfaces.ModelRender->ForcedMaterialOverride([&]() -> IMaterial *
 					{
-						switch (Vars::Chams::DME::Weapon.m_Var) {
+						switch (Vars::Chams::DME::Weapon) {
 							case 1: { bMatWasForced = true; return m_pMatShaded; }
 							case 2: { bMatWasForced = true; return m_pMatShiny; }
 							case 3: { bMatWasForced = true; return m_pMatFlat; }
@@ -261,7 +261,7 @@ bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &
 
 				if (bMatWasForced) {
 					//g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Colors::Weapon.r), Color::TOFLOAT(Colors::Weapon.g), Color::TOFLOAT(Colors::Weapon.b));
-					if (Vars::Chams::DME::Weapon.m_Var != 7) {
+					if (Vars::Chams::DME::Weapon != 7) {
 						g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(Colors::Weapon.r), Color::TOFLOAT(Colors::Weapon.g), Color::TOFLOAT(Colors::Weapon.b));
 					}
 					else {
@@ -271,7 +271,7 @@ bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &
 
 					bool found = false;
 					bool found2 = false;
-					if (Vars::Chams::DME::Weapon.m_Var == 7) {
+					if (Vars::Chams::DME::Weapon == 7) {
 						/*
 						$selfillumtint	[0 0 0] base
 						$envmaptint		[0 1 0] top
@@ -287,8 +287,8 @@ bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &
 					}
 				}
 
-				if (Vars::Chams::DME::WeaponAlpha.m_Var < 1.0f)
-					g_Interfaces.RenderView->SetBlend(Vars::Chams::DME::WeaponAlpha.m_Var);
+				if (Vars::Chams::DME::WeaponAlpha < 1.0f)
+					g_Interfaces.RenderView->SetBlend(Vars::Chams::DME::WeaponAlpha);
 
 				ModelRenderHook::Table.Original<ModelRenderHook::DrawModelExecute::fn>(ModelRenderHook::DrawModelExecute::index)
 					(g_Interfaces.ModelRender, pState, pInfo, pBoneToWorld);
@@ -298,7 +298,7 @@ bool CDMEChams::Render(const DrawModelState_t &pState, const ModelRenderInfo_t &
 					g_Interfaces.RenderView->SetColorModulation(1.0f, 1.0f, 1.0f);
 				}
 
-				if (Vars::Chams::DME::WeaponAlpha.m_Var < 1.0f)
+				if (Vars::Chams::DME::WeaponAlpha < 1.0f)
 					g_Interfaces.RenderView->SetBlend(1.0f);
 
 				return true;
