@@ -386,6 +386,7 @@ namespace Vars
 		inline CVar<bool> RemovePunch		{ false, L"Remove Recoil" };
 		inline CVar<bool> CrosshairAimPos	{ true, L"Crosshair At Aim Pos" };
 		inline CVar<bool> ChatInfo			{ true, L"Show Class Changes" };
+		inline CVar<bool> RemoveHats		{ false, L"Remove Hats" };
 
 		inline CVar<bool> SpectatorList{ true, L"Spectator List" };
 		//inline CVar<int> SpectatorList { 3, L"Spectator List" }; //0 - Off, 1 - Default, 2 - Classic, 3 - Classic Avatars
