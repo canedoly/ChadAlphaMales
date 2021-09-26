@@ -38,6 +38,8 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	
 	g_SteamInterfaces.Init();
 	g_Interfaces.Init();
+	g_Interfaces.Engine->ClientCmd_Unrestricted("cl_vote_ui_active_after_voting 1");
+	g_Interfaces.Engine->ClientCmd_Unrestricted("cl_timeout 99999");
 	g_Interfaces.Engine->ClientCmd_Unrestricted("clear");
 	g_Interfaces.CVars->ConsoleColorPrintf({ 0, 155, 255, 255 }, _("[!] Initializing stuff...\n"));
 	g_NetVars.Init();
@@ -99,13 +101,13 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		std::wstring s;
 		StringToWString(s, "Default");
 		g_CFG.Load(s.c_str());
+		g_Visuals.AddToEventLog(_("Default config loaded!"));
 	}
 
-	while (!GetAsyncKeyState(VK_F11))
+	while (!GetAsyncKeyState(VK_F24))
 		std::this_thread::sleep_for(420ms);
 
-	g_Menu.m_bOpen = false;
-
+	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 200, 0, 255 }, _("[-] Unloading CAM...\n"));
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 200, 0, 255 }, _("[-] Stopping Discord RPC\n"));
 	Discord_Shutdown();
 
@@ -119,7 +121,6 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	
 	g_Hooks.Release();
 	g_Visuals.RestoreWorldModulation(); //needs to do this after hooks are released cuz UpdateWorldMod in FSN will override it
-	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 200, 0, 255 }, _("[-] Unloading CAM...\n"));
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 0, 255 }, _("[!] CAM Unloaded!\n"));
 	WinAPI::FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), EXIT_SUCCESS);
 	return EXIT_SUCCESS;

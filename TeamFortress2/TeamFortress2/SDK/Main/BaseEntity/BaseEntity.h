@@ -164,7 +164,9 @@ public: //Everything else, lol.
 		if (const auto& pModel = GetModel()) {
 			if (const auto& pHdr = g_Interfaces.ModelInfo->GetStudioModel(pModel)) {
 				matrix3x4 BoneMatrix[128];
-				if (SetupBones(BoneMatrix, 128, 0x100, g_Interfaces.GlobalVars->curtime)) {
+				// Original 0x100, Changed to BONE_USED_BY_ANYTHING to avoid warping?
+				// Not sure if that's how you do it...
+				if (SetupBones(BoneMatrix, 128, BONE_USED_BY_ANYTHING, g_Interfaces.GlobalVars->curtime)) { 
 					if (const auto& pSet = pHdr->GetHitboxSet(GetHitboxSet())) {
 						if (const auto& pBox = pSet->hitbox(nHitbox)) {
 							vMins = pBox->bbmin; vMaxs = pBox->bbmax;
@@ -184,7 +186,9 @@ public: //Everything else, lol.
 		if (const auto& pModel = GetModel()) {
 			if (const auto& pHdr = g_Interfaces.ModelInfo->GetStudioModel(pModel)) {
 				matrix3x4 BoneMatrix[128];
-				if (SetupBones(BoneMatrix, 128, 0x100, g_Interfaces.GlobalVars->curtime)) {
+				// Original 0x100, Changed to BONE_USED_BY_ANYTHING to avoid warping?
+				// Not sure if that's how you do it...
+				if (SetupBones(BoneMatrix, 128, BONE_USED_BY_ANYTHING, g_Interfaces.GlobalVars->curtime)) {
 					if (const auto& pSet = pHdr->GetHitboxSet(GetHitboxSet())) {
 						if (const auto& pBox = pSet->hitbox(nHitbox)) {
 							vMins = pBox->bbmin; vMaxs = pBox->bbmax;
@@ -295,7 +299,9 @@ public: //Everything else, lol.
 		if (const auto& pModel = GetModel()) {
 			if (const auto& pHdr = g_Interfaces.ModelInfo->GetStudioModel(pModel)) {
 				matrix3x4 BoneMatrix[128];
-				if (SetupBones(BoneMatrix, 128, 0x100, g_Interfaces.GlobalVars->curtime)) {
+				// Original 0x100, Changed to BONE_USED_BY_ANYTHING to avoid warping?
+				// Not sure if that's how you do it...
+				if (SetupBones(BoneMatrix, 128, BONE_USED_BY_ANYTHING, g_Interfaces.GlobalVars->curtime)) {
 					if (const auto& pSet = pHdr->GetHitboxSet(GetHitboxSet())) {
 						if (const auto& pBox = pSet->hitbox(nHitbox)) {
 							Vec3 vPos = (pBox->bbmin + pBox->bbmax) * 0.5f, vOut;
@@ -312,7 +318,9 @@ public: //Everything else, lol.
 
 	__inline Vec3 GetBonePos(const int nBone) {
 		matrix3x4 BoneMatrix[128];
-		if (SetupBones(BoneMatrix, 128, 0x100, g_Interfaces.GlobalVars->curtime))
+		// Original 0x100, Changed to BONE_USED_BY_ANYTHING to avoid warping?
+		// Not sure if that's the right place to do it...
+		if (SetupBones(BoneMatrix, 128, BONE_USED_BY_ANYTHING, g_Interfaces.GlobalVars->curtime))
 			return Vec3(BoneMatrix[nBone][0][3], BoneMatrix[nBone][1][3], BoneMatrix[nBone][2][3]);
 
 		return Vec3(0.0f, 0.0f, 0.0f);

@@ -173,7 +173,10 @@ bool CAimbotHitscan::ScanHead(CBaseEntity* pLocal, Target_t& Target)
 		return false;
 
 	matrix3x4 BoneMatrix[128];
-	if (!Target.m_pEntity->SetupBones(BoneMatrix, 128, 0x100, g_Interfaces.GlobalVars->curtime))
+
+	// Original 0x100, Changed to BONE_USED_BY_ANYTHING to avoid warping?
+	// Not sure if that's how you do it...
+	if (!Target.m_pEntity->SetupBones(BoneMatrix, 128, BONE_USED_BY_ANYTHING, g_Interfaces.GlobalVars->curtime))
 		return false;
 
 	mstudiohitboxset_t* pSet = pHDR->GetHitboxSet(Target.m_pEntity->GetHitboxSet());
@@ -572,7 +575,7 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 
 			pCmd->buttons |= IN_ATTACK;
 
-			if (Vars::Misc::CL_Move::Enabled.m_Var && Vars::Misc::CL_Move::Doubletap.m_Var && (pCmd->buttons & IN_ATTACK) && !g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_nWaitForShift)
+			if (Vars::Misc::CL_Move::Doubletap.m_Var && (pCmd->buttons & IN_ATTACK) && !g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_nWaitForShift)
 			{/*
 				if (pLocal->GetClassNum() == CLASS_HEAVY && pWeapon->GetSlot() == SLOT_PRIMARY && !pLocal->GetVecVelocity().IsZero())
 					g_GlobalInfo.m_bShouldShift = false;

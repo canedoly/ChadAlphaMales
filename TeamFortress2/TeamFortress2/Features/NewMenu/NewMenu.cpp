@@ -932,7 +932,7 @@ void MiscTab() {
         ImGui::MenuChild(_("General"), ImVec2(300, 270), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Instant Respawn MVM"), &Vars::Misc::InstantRespawn.m_Var);
-            //ImGui::Checkbox(_("Anti AFK"), &Vars::Misc::AntiAFK.m_Var); Didn't realize it was broken itself
+            ImGui::Checkbox(_("Anti AFK"), &Vars::Misc::AntiAFK.m_Var);
             ImGui::Checkbox(_("Taunt Slide"), &Vars::Misc::TauntSlide.m_Var);
             ImGui::Checkbox(_("Taunt Control"), &Vars::Misc::TauntControl.m_Var);
             ImGui::Checkbox(_("Bypass sv_pure"), &Vars::Misc::BypassPure.m_Var);
@@ -995,7 +995,7 @@ void MiscTab() {
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(MenuCol.x / 1.5, MenuCol.y / 1.5, MenuCol.z / 1.5, 255));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(MenuCol.x, MenuCol.y, MenuCol.z, 255));
             InputKeybind(_("DoubleTap Key"), Vars::Misc::CL_Move::DoubletapKey);
-            ImGui::SliderInt(_("Ticks to shift"), &g_GlobalInfo.MaxNewCommands, 10, 20, _("%d"), ImGuiSliderFlags_ClampOnInput);
+            ImGui::SliderInt(_("Ticks to shift"), &g_GlobalInfo.MaxNewCommands, 10, 23, _("%d"), ImGuiSliderFlags_ClampOnInput);
             ImGui::Checkbox(_("Wait for DT"), &Vars::Misc::CL_Move::WaitForDT.m_Var);
             ImGui::Checkbox(_("Don't DT in air"), &Vars::Misc::CL_Move::NotInAir.m_Var);
             ImGui::SetCursorPosX(8);
@@ -1159,9 +1159,9 @@ static auto s2 = ImVec2{};
 static auto p2 = ImVec2{};
 
 void CNMenu::Render(IDirect3DDevice9* pDevice) {
-	static bool bInitImGui = false;
-	static bool bColumnsWidthened = false;
-	bool modified_custom_style = false;
+    static bool bInitImGui = false;
+    static bool bColumnsWidthened = false;
+    bool modified_custom_style = false;
 
     //fix drawing without calling engine functons/cl_showpos
     pDevice->SetRenderState(D3DRS_COLORWRITEENABLE, 0xFFFFFFFF);
@@ -1171,10 +1171,10 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
     pDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 
     static LPDIRECT3DTEXTURE9 lg = nullptr;
-	if (!bInitImGui) {
-		ImGui::CreateContext();
-		ImGui_ImplWin32_Init(FindWindowA(0, _("Team Fortress 2")));
-		ImGui_ImplDX9_Init(pDevice);
+    if (!bInitImGui) {
+        ImGui::CreateContext();
+        ImGui_ImplWin32_Init(FindWindowA(0, _("Team Fortress 2")));
+        ImGui_ImplDX9_Init(pDevice);
 
         auto& io = ImGui::GetIO();
         io.IniFilename = NULL;
@@ -1193,20 +1193,20 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
         name = io.Fonts->AddFontFromMemoryTTF((void*)MuseoFont, sizeof(MuseoFont), 19.0f, &font_config, ranges);
         font = io.Fonts->AddFontFromMemoryTTF((void*)MuseoFont, sizeof(MuseoFont), 13.0f, &font_config, ranges);
         bInitImGui = true;
-	}
+    }
 
-	if (GetAsyncKeyState(VK_INSERT) & 1) { // Can we please fix this in WndProcHook...? :(
-		g_Interfaces.Surface->SetCursorAlwaysVisible(menuOpen = !menuOpen);
+    if (GetAsyncKeyState(VK_INSERT) & 1) { // Can we please fix this in WndProcHook...? :(
+        g_Interfaces.Surface->SetCursorAlwaysVisible(menuOpen = !menuOpen);
         //g_Interfaces.Surface->ResetInputState();
-		g_Menu.flTimeOnChange = g_Interfaces.Engine->Time();
+        g_Menu.flTimeOnChange = g_Interfaces.Engine->Time();
 
-	}
-	g_Menu.m_flFadeElapsed = g_Interfaces.Engine->Time() - g_Menu.flTimeOnChange;
+    }
+    g_Menu.m_flFadeElapsed = g_Interfaces.Engine->Time() - g_Menu.flTimeOnChange;
 
-	ImGui_ImplDX9_NewFrame();
-	ImGui_ImplWin32_NewFrame();
+    ImGui_ImplDX9_NewFrame();
+    ImGui_ImplWin32_NewFrame();
 
-	ImGui::NewFrame();
+    ImGui::NewFrame();
 
     ImGui::GetIO().MouseDrawCursor = menuOpen;
     Handle();
@@ -1217,6 +1217,47 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
         CustomStyle();
 
         ImGui::PushFont(font);
+        {
+            ImGui::Begin(_("##console"), NULL, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_AlwaysAutoResize);
+            {
+                auto draw = ImGui::GetWindowDrawList();
+
+                MenuCol = ImGui::GetStyle().Colors[ImGuiCol_MenuBarBg];
+                s2 = ImVec2(ImGui::GetWindowSize().x - ImGui::GetStyle().WindowPadding.x * 2, ImGui::GetWindowSize().y - ImGui::GetStyle().WindowPadding.y * 2);
+                p2 = ImVec2(ImGui::GetWindowPos().x + ImGui::GetStyle().WindowPadding.x, ImGui::GetWindowPos().y + ImGui::GetStyle().WindowPadding.y);
+                draw->AddRectFilled(p2, ImVec2(p2.x + s2.x, p2.y + s2.y + 25), ImColor(15, 17, 19, 200), 5); // Titlebar
+                draw->AddRectFilled(ImVec2(p2.x, p2.y + 25), ImVec2(p2.x + s2.x, p2.y + s2.y), ImColor(18, 20, 21, 200), 5, ImDrawCornerFlags_Bot); // Background
+                draw->AddRectFilled(ImVec2(p2.x, p2.y + 24), ImVec2(p2.x + s2.x, p2.y + 25), ImColor(MenuCol)); // Line
+                draw->AddText(ImVec2(p2.x + 15 / 2, p2.y + 13 / 2), ImColor(255, 255, 255, 255), _("Console"));
+            }
+
+            ImGui::SetCursorPosY(40);
+            if (ImGui::Button("Force SV_Cheats", ImVec2(120, 0))) {
+                ConVar* sv_cheats = g_Interfaces.CVars->FindVar("sv_cheats");
+                sv_cheats->SetValue(1);
+            }
+
+            if(ImGui::Button("CL_FullUpdate",ImVec2(120,0)))
+                g_Interfaces.Engine->ClientCmd_Unrestricted("cl_fullupdate");
+
+            if (ImGui::Button("SND_Restart", ImVec2(120, 0)))
+                g_Interfaces.Engine->ClientCmd_Unrestricted("snd_restart");
+
+            if (ImGui::Button("StopSound", ImVec2(120, 0)))
+                g_Interfaces.Engine->ClientCmd_Unrestricted("stopsound");
+
+            if (ImGui::Button("Status", ImVec2(120, 0)))
+                g_Interfaces.Engine->ClientCmd_Unrestricted("status");
+
+            if (ImGui::Button("Ping", ImVec2(120, 0)))
+                g_Interfaces.Engine->ClientCmd_Unrestricted("ping");
+
+            if (ImGui::Button("Retry", ImVec2(120, 0)))
+                g_Interfaces.Engine->ClientCmd_Unrestricted("retry");
+
+            ImGui::End();
+        }
+
         if (Vars::Visuals::PlayerList.m_Var) {
             ImGui::Begin(_("##PLIST"), NULL, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_AlwaysAutoResize);
             {

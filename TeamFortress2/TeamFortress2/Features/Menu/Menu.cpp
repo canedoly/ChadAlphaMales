@@ -1859,7 +1859,6 @@ void CMenu::Run()
 
 					GroupBoxStart();
 					{
-						CheckBox(Vars::Misc::CL_Move::Enabled, _(L"Master switch to enable / disable all tickbase exploits."));
 						InputKey(Vars::Misc::CL_Move::RechargeKey, false);
 						InputKey(Vars::Misc::CL_Move::DoubletapKey, false);
 						//InputKey(Vars::Misc::CL_Move::TeleportKey, false);

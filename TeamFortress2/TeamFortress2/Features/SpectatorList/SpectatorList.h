@@ -5,7 +5,6 @@ class CSpectatorList
 {
 private:
 	struct Spectator_t { std::wstring m_sName; std::wstring m_sMode; bool m_bIsFriend; int m_nTeam; int m_nIndex; };
-	std::vector<Spectator_t> m_vecSpectators;
 	bool GetSpectators(CBaseEntity *pLocal);
 	bool ShouldRun();
 	void DragSpecList(int &x, int &y, int w, int h, int offsety);
@@ -16,7 +15,7 @@ private:
 
 public:
 	int m_nSpecListX = 500, m_nSpecListY = 500;
-
+	std::vector<Spectator_t> m_vecSpectators;
 public:
 	void Run();
 };

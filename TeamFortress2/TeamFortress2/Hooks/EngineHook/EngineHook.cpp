@@ -6,7 +6,7 @@
 
 void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFinalTick)
 {
-	if (Vars::Misc::CL_Move::Enabled.m_Var)
+	if (Vars::Misc::CL_Move::Doubletap.m_Var)
 	{
 		g_GlobalInfo.fast_stop = false;
 		/*

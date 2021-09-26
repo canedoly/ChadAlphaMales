@@ -462,7 +462,6 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Misc::AntiAFK);
 			// CL_Move
 			{
-				SAVE_VAR(Vars::Misc::CL_Move::Enabled);//Enabled
 				SAVE_VAR(Vars::Misc::CL_Move::Doubletap);// { true, L"Doubletap" };
 				SAVE_VAR(Vars::Misc::CL_Move::WaitForDT);// { true, L"Doubletap" };
 				SAVE_VAR(Vars::Misc::CL_Move::NotInAir);// { true, L"Doubletap" };
@@ -888,7 +887,6 @@ void CConfigManager::Load(const wchar_t *name)
 
 			// CL_Move
 			{
-				LOAD_VAR(Vars::Misc::CL_Move::Enabled);//Enabled
 				LOAD_VAR(Vars::Misc::CL_Move::Doubletap);// { true, L"Doubletap" };
 				LOAD_VAR(Vars::Misc::CL_Move::WaitForDT);// { true, L"Doubletap" };
 				LOAD_VAR(Vars::Misc::CL_Move::NotInAir);// { true, L"Doubletap" };
