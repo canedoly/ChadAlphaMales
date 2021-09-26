@@ -99,6 +99,21 @@ void CHooks::Init()
 	}
 
 	WndProcHook::WndProc = (WNDPROC)SetWindowLongPtr(m_hwWindow, GWL_WNDPROC, (LONG_PTR)WndProcHook::Hook);
+	
+	//Inventory expander
+	{
+		CTFInventoryManager* InventoryManager = nullptr;
+		InventoryManager = CTFInventoryManager::Get();
+
+		CTFPlayerInventory* playerinventory = nullptr;
+		playerinventory = InventoryManager->GetPlayerInventory();
+
+		uintptr_t maxItems = GetVFuncPtr(playerinventory, 9);
+
+		using namespace InventoryExpander;
+
+		Func.Hook((reinterpret_cast<void*>(maxItems)), reinterpret_cast<void*>(Expand));
+	}
 
 	//EngineHook
 	{
