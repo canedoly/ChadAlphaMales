@@ -446,7 +446,6 @@ namespace Vars
 		inline CVar<bool> VotesInChat			{ false, L"Reveal votes to party" };
 		namespace CL_Move
 		{
-			inline CVar<bool> Enabled{ true, L"Enabled" };
 			inline CVar<bool> Doubletap{ true, L"Doubletap" };
 			inline CVar<bool> NotInAir{ true, L"Dont DT in air" };
 			//inline CVar<int> TeleportKey{ 0x46, L"Teleport Key" }; //F

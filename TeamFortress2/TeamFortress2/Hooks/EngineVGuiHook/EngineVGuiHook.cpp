@@ -69,7 +69,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 					return;
 
 				//Tickbase info
-				if (Vars::Misc::CL_Move::Enabled.m_Var)
+				if (Vars::Misc::CL_Move::Doubletap.m_Var)
 				{
 					const auto& pLocal = g_EntityCache.m_pLocal;
 					const auto& pWeapon = g_EntityCache.m_pLocalWeapon;
@@ -154,7 +154,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			}
 			int ms = std::max(0, (int)std::round(g_GlobalInfo.m_Latency * 1000.f));
 
-			_snwprintf(buff, sizeof(buff), _(L"CAM [v1.1] | fps: %i | delay: %ims"), fps, ms);
+			_snwprintf(buff, sizeof(buff), _(L"CAM [v1.1b] | fps: %i | delay: %ims"), fps, ms);
 
 			g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_MENU].dwFont, buff, label_w, label_h);
 

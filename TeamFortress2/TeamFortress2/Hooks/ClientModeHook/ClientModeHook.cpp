@@ -44,6 +44,9 @@ static void updateAntiAfk(CUserCmd* pCmd)
 			bool flip = false;
 			pCmd->buttons |= flip ? IN_FORWARD : IN_BACK;
 			flip = !flip;
+			g_Visuals.AddToEventLog(_("Attempting to prevent Anti-AFK kick...")); 
+			g_Interfaces.CVars->ConsoleColorPrintf({ 150, 255, 0, 255 }, _("Attempting to prevent Anti-AFK kick...\n"));
+			g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, "\x4[CAM]\x1 Attempting to prevent Anti-AFK kick...");
 			if (AntiAfkTimer.check(g_ConVars.afkTimer->GetInt() * 60 * 1000 + 1000))
 			{
 				AntiAfkTimer.update();

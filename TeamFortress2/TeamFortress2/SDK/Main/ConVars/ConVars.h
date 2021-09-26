@@ -16,7 +16,7 @@ struct ConVars_t
 	ConVar *glow_outline_effect_enable		= nullptr;
 	ConVar* r_drawspecificstaticprop        = nullptr;
 	ConVar* sv_namechange_cooldown_seconds  = nullptr;
-	ConVar* afkTimer = nullptr;
+	ConVar* afkTimer						= nullptr;
 
 	void Init();
 };

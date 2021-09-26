@@ -46,7 +46,7 @@ void CSpectatorList::Run()
 
 void CSpectatorList::DragSpecList(int& x, int& y, int w, int h, int offsety)
 {
-	if (!g_Menu.m_bOpen)
+	if (!g_NewMenu.menuOpen)
 		return;
 
 	int mousex, mousey;
@@ -81,16 +81,26 @@ void CSpectatorList::DragSpecList(int& x, int& y, int w, int h, int offsety)
 
 void CSpectatorList::DrawClassic()
 {
+	DragSpecList(
+		m_nSpecListX,
+		m_nSpecListY,
+		m_nSpecListW,
+		m_nSpecListTitleBarH,
+		0);
+
+	int wz, hz;
+	g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_MENU].dwFont, _(L"Spectators"), wz, hz);
+
+	g_Draw.Rect(m_nSpecListX, m_nSpecListY, m_nSpecListW, 2, Vars::Menu::Colors::WidgetActive);
+	g_Draw.Rect(m_nSpecListX, m_nSpecListY + 2, m_nSpecListW, g_Draw.m_vecFonts[FONT_MENU].nTall + 5, { 0,0,0,200 });
+	g_Draw.String(FONT_MENU, m_nSpecListX + wz, m_nSpecListY + 10, { 255,255,255,255 }, ALIGN_CENTERVERTICAL, _("Spectators"));
+
 	if (const auto &pLocal = g_EntityCache.m_pLocal)
 	{
 		if (!pLocal->IsAlive() || !GetSpectators(pLocal))
 			return;
 
-		int nDrawY = 363;
-
-		g_Draw.Rect(25, 338, 175, 2, Vars::Menu::Colors::WidgetActive);
-		g_Draw.Rect(25, 340, 175, g_Draw.m_vecFonts[FONT_MENU].nTall + 5, { 0,0,0,150 });
-		g_Draw.String(FONT_MENU, 90, 341, { 255,255,255,255 }, ALIGN_DEFAULT, _("spectators"));
+		int nDrawY = m_nSpecListY;
 
 		for (const auto& Spectator : m_vecSpectators)
 		{
@@ -109,7 +119,7 @@ void CSpectatorList::DrawClassic()
 				if (!g_Interfaces.Engine->GetPlayerInfo(Spectator.m_nIndex, &pi))
 					continue;
 
-				g_Draw.Avatar(25, nDrawY, 15, 15, pi.friendsID);
+				g_Draw.Avatar(m_nSpecListX, nDrawY + 25, 15, 15, pi.friendsID);
 				nDrawY += 6;
 
 				nAddX = 25;
@@ -117,10 +127,10 @@ void CSpectatorList::DrawClassic()
 			}
 
 			if (Spectator.m_sMode.data() == _(L"1st")) { //  There's definitely a better way to do this lol
-				g_Draw.String(FONT_MENU, 50, nDrawY - 6, { 255,0,0,255 }, ALIGN_DEFAULT, _(L"[%ls] %ls"), Spectator.m_sMode.data(), Spectator.m_sName.data());
+				g_Draw.String(FONT_MENU, m_nSpecListX + 25, nDrawY + 25, { 255,0,0,255 }, ALIGN_CENTERVERTICAL, _(L"[%ls] %ls"), Spectator.m_sMode.data(), Spectator.m_sName.data());
 			}
 			else {
-				g_Draw.String(FONT_MENU, 50, nDrawY - 6, { 255,255,255,255 }, ALIGN_DEFAULT, _(L"[%ls] %ls"), Spectator.m_sMode.data(), Spectator.m_sName.data());
+				g_Draw.String(FONT_MENU, m_nSpecListX + 25, nDrawY + 25, { 255,255,255,255 }, ALIGN_CENTERVERTICAL, _(L"[%ls] %ls"), Spectator.m_sMode.data(), Spectator.m_sName.data());
 			}
 			nDrawY += nAddY;
 		}
