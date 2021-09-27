@@ -880,7 +880,7 @@ void VisualsTab() {
         ImGui::SetCursorPosY(245);
         ImGui::BeginGroup();
         ImGui::SetCursorPosX(273);
-        ImGui::MenuChild(_("Thirdperson"), ImVec2(253, 135), false, ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::MenuChild(_("Thirdperson"), ImVec2(253, 270), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Thirdperson"), &Vars::Visuals::ThirdPerson.m_Var);
             plsfix(50);
@@ -891,6 +891,10 @@ void VisualsTab() {
             ImGui::PopStyleColor(3);
             ImGui::Checkbox(_("Show silent angles"), &Vars::Visuals::ThirdPersonSilentAngles.m_Var);
             ImGui::Checkbox(_("Instant yaw"), &Vars::Visuals::ThirdPersonInstantYaw.m_Var);
+            ImGui::SliderFloat(_("Forward offset"),    &Vars::Visuals::ThirdpersonOffsetX.m_Var, -100.0f, 100.f, _("%.0f"), ImGuiSliderFlags_AlwaysClamp);
+            ImGui::SliderFloat(_("Right offset"),      &Vars::Visuals::ThirdpersonOffsetY.m_Var, -100.0f, 100.f, _("%.0f"), ImGuiSliderFlags_AlwaysClamp);
+            ImGui::SliderFloat(_("Up offset"),         &Vars::Visuals::ThirdpersonOffsetZ.m_Var, -100.0f, 100.f, _("%.0f"), ImGuiSliderFlags_AlwaysClamp);
+            ImGui::Checkbox(_("Thirdperson crosshair"), &Vars::Visuals::ThirdpersonCrosshair.m_Var);
         }
         ImGui::EndChild();
         ImGui::EndGroup();
