@@ -29,8 +29,10 @@ public:
 	std::vector<EventLogging_t> vecEventVector;
 	void AddToEventLog(const char* string, ...);
 	void SkyboxChanger();
+	void DevTextures();
 	void RunEventLogs();
 	bool RemoveScope(int nPanel);
+	void OffsetCamera(CViewSetup* pView);
 	void FOV(CViewSetup *pView);
 	//void Fullbright();
 	void ARatio();
