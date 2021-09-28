@@ -852,6 +852,7 @@ void VisualsTab() {
             ImGui::Checkbox(_("Remove zoom"), &Vars::Visuals::RemoveZoom.m_Var);
             ImGui::Checkbox(_("Remove recoil"), &Vars::Visuals::RemovePunch.m_Var);
             ImGui::Checkbox(_("Aimbot crosshair"), &Vars::Visuals::CrosshairAimPos.m_Var);
+            ImGui::InputTextWithHint(_("##customsteamrpc"), _("Custom Steam RPC"), &Vars::Misc::SteamRPC);
             ImGui::Checkbox(_("Chat info"), &Vars::Visuals::ChatInfo.m_Var);
             ImGui::Checkbox(_("PlayerList"), &Vars::Visuals::PlayerList.m_Var);
         }
