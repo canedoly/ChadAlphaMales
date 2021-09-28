@@ -25,10 +25,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 					const bool bVotedYes = pEvent->GetInt(_("vote_option")) == 0;
 					PlayerInfo_t pi;
 					g_Interfaces.Engine->GetPlayerInfo(pEntity->GetIndex(), &pi);
-					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format(_("\x4[CAM] \x1%s voted %s)"), pi.name, bVotedYes ? "Yes" : "No").c_str());
-					if (Vars::Misc::VotesInChat.m_Var) {
-						g_Interfaces.Engine->ClientCmd_Unrestricted(tfm::format(_("say_party \"%s voted %s\""), pi.name, bVotedYes ? "Yes" : "No").c_str());
-					}
+					g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format(_("\x4[CAM] \x3%s \x1voted \x3%s"), pi.name, bVotedYes ? "YES" : "NO").c_str());
 				}
 			}
 			

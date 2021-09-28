@@ -737,7 +737,7 @@ void ESPTab3() {
         ImGui::SetCursorPosX(15);
         ImGui::MenuChild(_("Player Glow"), ImVec2(253, 446), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
-            ImGui::SliderInt("Global glow scale", &Vars::Glow::Main::Scale.m_Var, 1, 10, "%d", ImGuiSliderFlags_Logarithmic);
+            ImGui::SliderInt("Global glow scale", &Vars::Glow::Main::Scale.m_Var, 1, 10, "%d", ImGuiSliderFlags_Logarithmic | ImGuiSliderFlags_AlwaysClamp);
             ImGui::Checkbox(_("Player glow"), &Vars::Glow::Players::Active.m_Var);
             static const char* ignoreTeammatesGlow[]{ "Off", "All", "Keep friends" };
             ImGui::Combo(_("Ignore teammates###glowteam"), &Vars::Glow::Players::IgnoreTeammates.m_Var, ignoreTeammatesGlow, IM_ARRAYSIZE(ignoreTeammatesGlow));
@@ -928,7 +928,7 @@ void MiscTab() {
         ImGui::SetCursorPosY(50);
         ImGui::BeginGroup();
         ImGui::SetCursorPosX(15);
-        ImGui::MenuChild(_("General"), ImVec2(300, 270), false, ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::MenuChild(_("General"), ImVec2(300, 295), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Instant Respawn MVM"), &Vars::Misc::InstantRespawn.m_Var);
             ImGui::Checkbox(_("Anti AFK"), &Vars::Misc::AntiAFK.m_Var);
@@ -940,15 +940,16 @@ void MiscTab() {
             ImGui::Checkbox(_("Chat Spam"), &Vars::Misc::ChatSpam.m_Var);
             ImGui::Checkbox(_("No Push"), &Vars::Misc::NoPush.m_Var);
             ImGui::Checkbox(_("No Interp"), &Vars::Misc::DisableInterpolation.m_Var);
+            ImGui::Checkbox(_("Vote revealer"), &Vars::Misc::VoteRevealer.m_Var);
         }
         ImGui::EndChild();
         ImGui::EndGroup();
     }
     {//left bottom
-        ImGui::SetCursorPosY(320);
+        ImGui::SetCursorPosY(345);
         ImGui::BeginGroup();
         ImGui::SetCursorPosX(15);
-        ImGui::MenuChild(_("Movement"), ImVec2(300, 200), false, ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::MenuChild(_("Movement"), ImVec2(300, 175), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Bhop"), &Vars::Misc::AutoJump.m_Var);
             ImGui::Checkbox(_("AutoStrafer"), &Vars::Misc::AutoStrafe.m_Var);

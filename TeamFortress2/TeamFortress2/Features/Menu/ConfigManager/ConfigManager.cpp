@@ -460,6 +460,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Misc::AutoStrafe);
 			SAVE_VAR(Vars::Misc::EdgeJump);
 			SAVE_VAR(Vars::Misc::AntiAFK);
+			SAVE_VAR(Vars::Misc::VoteRevealer);
 			// CL_Move
 			{
 				SAVE_VAR(Vars::Misc::CL_Move::Doubletap);// { true, L"Doubletap" };
@@ -884,6 +885,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Misc::AutoStrafe);
 			LOAD_VAR(Vars::Misc::EdgeJump);
 			LOAD_VAR(Vars::Misc::AntiAFK);
+			SAVE_VAR(Vars::Misc::VoteRevealer);
 
 			// CL_Move
 			{

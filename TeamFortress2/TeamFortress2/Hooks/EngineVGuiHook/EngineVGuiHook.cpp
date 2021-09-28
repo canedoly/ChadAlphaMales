@@ -16,7 +16,7 @@ std::time_t CurzTime = std::time(nullptr);
 std::string comp_name() {
 
 	char buff[MAX_PATH];
-	GetEnvironmentVariableA("USERNAME", buff, MAX_PATH);
+	GetEnvironmentVariableA(_("USERNAME"), buff, MAX_PATH);
 
 	return std::string(buff);
 }
