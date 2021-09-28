@@ -146,7 +146,6 @@ void CVisuals::OffsetCamera(CViewSetup* pView) {
 			pView->origin += vForward * Vars::Visuals::ThirdpersonOffsetX.m_Var;
 			pView->origin += vRight * Vars::Visuals::ThirdpersonOffsetY.m_Var;
 			pView->origin += vUp * Vars::Visuals::ThirdpersonOffsetZ.m_Var;
-
 		}
 	}
 }
@@ -252,7 +251,7 @@ void ApplyModulation(const Color_t &clr)
 
 			std::string_view group(pMaterial->GetTextureGroupName());
 
-			if (group.find(_(TEXTURE_GROUP_WORLD)) != group.npos || group.find(_(TEXTURE_GROUP_SKYBOX)) != group.npos)
+			if (group.find(_(TEXTURE_GROUP_WORLD)) != group.npos /* || group.find(_(TEXTURE_GROUP_SKYBOX)) != group.npos*/)
 			{
 				bool bFound = false;
 				IMaterialVar *pVar = pMaterial->FindVar(_("$color2"), &bFound);
