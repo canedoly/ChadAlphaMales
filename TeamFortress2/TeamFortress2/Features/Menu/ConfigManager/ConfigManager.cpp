@@ -435,6 +435,10 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::ThirdPersonKey);
 			SAVE_VAR(Vars::Visuals::ThirdPersonSilentAngles);
 			SAVE_VAR(Vars::Visuals::ThirdPersonInstantYaw);
+			SAVE_VAR(Vars::Visuals::ThirdpersonOffsetX);
+			SAVE_VAR(Vars::Visuals::ThirdpersonOffsetY);
+			SAVE_VAR(Vars::Visuals::ThirdpersonOffsetZ);
+			SAVE_VAR(Vars::Visuals::ThirdpersonCrosshair);
 
 			SAVE_VAR(Vars::Visuals::WorldModulation);
 
@@ -859,6 +863,10 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::ThirdPersonKey);
 			LOAD_VAR(Vars::Visuals::ThirdPersonSilentAngles);
 			LOAD_VAR(Vars::Visuals::ThirdPersonInstantYaw);
+			LOAD_VAR(Vars::Visuals::ThirdpersonOffsetX);
+			LOAD_VAR(Vars::Visuals::ThirdpersonOffsetY);
+			LOAD_VAR(Vars::Visuals::ThirdpersonOffsetZ);
+			LOAD_VAR(Vars::Visuals::ThirdpersonCrosshair);
 
 			LOAD_VAR(Vars::Visuals::WorldModulation);
 

@@ -133,6 +133,24 @@ bool CVisuals::RemoveScope(int nPanel)
 	return (Vars::Visuals::RemoveScope.m_Var && nPanel == m_nHudZoom);
 }
 
+void CVisuals::OffsetCamera(CViewSetup* pView) {
+	CBaseEntity* pLocal = g_EntityCache.m_pLocal;
+
+	if (pLocal && pView)
+	{
+		if (g_Interfaces.Input->CAM_IsThirdPerson()) {
+			Vec3 pViewangles = g_Interfaces.Engine->GetViewAngles();
+			Vec3 vForward{}, vRight{}, vUp{};
+			Math::AngleVectors(pViewangles, &vForward, &vRight, &vUp);
+
+			pView->origin += vForward * Vars::Visuals::ThirdpersonOffsetX.m_Var;
+			pView->origin += vRight * Vars::Visuals::ThirdpersonOffsetY.m_Var;
+			pView->origin += vUp * Vars::Visuals::ThirdpersonOffsetZ.m_Var;
+
+		}
+	}
+}
+
 void CVisuals::FOV(CViewSetup *pView)
 {
 	CBaseEntity *pLocal = g_EntityCache.m_pLocal;
@@ -143,7 +161,7 @@ void CVisuals::FOV(CViewSetup *pView)
 			return;
 
 		pView->fov = Vars::Visuals::FieldOfView.m_Var;
-
+		
 		if (pLocal->IsAlive())
 			pLocal->SetFov(Vars::Visuals::FieldOfView.m_Var);
 	}
@@ -171,7 +189,9 @@ void CVisuals::ViewmodelXYZ() {
 
 	static auto customview = g_Interfaces.CVars->FindVar(_("tf_viewmodels_offset_override"));
 	customview->m_fnChangeCallback = 0;
-	customview->SetValue(buff);
+	if (!(Vars::Visuals::ViewModelX.m_Var == 0 && Vars::Visuals::ViewModelY.m_Var == 0 && Vars::Visuals::ViewModelZ.m_Var == 0)) {
+		customview->SetValue(buff);
+	}
 }
 
 void CVisuals::ThirdPerson()
