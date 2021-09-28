@@ -111,7 +111,7 @@ public:
 	IKeyValuesSystem*			KeyValuesSystem				= nullptr;
 	IUniformRandomStream*		UniformRandomStream			= nullptr;
 	IDirect3DDevice9*			directx						= nullptr;
-	void *						StudioRender				= nullptr;
+	void*						StudioRender				= nullptr;
 	void Init();
 };
 

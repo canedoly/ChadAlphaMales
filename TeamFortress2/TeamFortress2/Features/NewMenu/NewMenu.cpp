@@ -507,7 +507,7 @@ void TriggerbotTab() {
         ImGui::EndGroup();
     }
 }
-int whatthefuck = 1;
+int nESPTab = 1;
 
 void ESPTab() {
     {//left upper
@@ -597,9 +597,15 @@ void ESPTab() {
             plsfix(23);
             ColorPicker(_("Ammopack ESP"), Colors::Ammo, false);
 
-            ImGui::Checkbox(_("World modulation"), &Vars::Visuals::WorldModulation.m_Var);
+            /*ImGui::Checkbox(_("World modulation"), &Vars::Visuals::WorldModulation.m_Var);
             plsfix(23);
-            ColorPicker(_("World modulation"), Colors::WorldModulation, false);
+            ColorPicker(_("World modulation"), Colors::WorldModulation, false);*/
+
+            ImGui::Checkbox(_("World modulation"), &Vars::Visuals::WorldModulation.m_Var);
+            plsfix(43);
+            ColorPicker(_("World"), Colors::WorldModulation, false);
+            plsfix(23);
+            ColorPicker(_("Props"), Colors::StaticPropModulation, false);
         }
         ImGui::EndChild();
         ImGui::EndGroup();
@@ -611,7 +617,7 @@ void ESPTab() {
     ImGui::SetCursorPosY(ImGui::GetContentRegionMax().y - 20);
     ImGui::SetCursorPosX(ImGui::GetContentRegionMax().x - 43);
     if (ImGui::Button(_(">>"), ImVec2(35,0)))
-        whatthefuck = 2;
+        nESPTab = 2;
 }
 
 void ESPTab2() { // Chams
@@ -717,7 +723,7 @@ void ESPTab2() { // Chams
     ImGui::SetCursorPosX(15);
     ImGui::SetCursorPosY(ImGui::GetContentRegionMax().y - 20);
     if (ImGui::Button(_("<<"), ImVec2(35, 0)))
-        whatthefuck = 1;
+        nESPTab = 1;
 
     ImGui::SameLine();
 
@@ -727,7 +733,7 @@ void ESPTab2() { // Chams
     ImGui::SameLine();
     ImGui::SetCursorPosX(ImGui::GetContentRegionMax().x - 43);
     if (ImGui::Button(_(">>"), ImVec2(35, 0)))
-        whatthefuck = 3;
+        nESPTab = 3;
 }
 
 void ESPTab3() {
@@ -785,7 +791,7 @@ void ESPTab3() {
     ImGui::SetCursorPosX(15);
     ImGui::SetCursorPosY(ImGui::GetContentRegionMax().y - 20);
     if (ImGui::Button(_("<<"), ImVec2(35, 0)))
-        whatthefuck = 2;
+        nESPTab = 2;
 
     ImGui::SameLine();
     ImGui::SetCursorPosX((ImGui::GetContentRegionMax().x / 1.9) - ImGui::CalcTextSize(_("Glow Tab")).x);
@@ -1235,27 +1241,27 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
             }
 
             ImGui::SetCursorPosY(40);
-            if (ImGui::Button("Force SV_Cheats", ImVec2(120, 0))) {
+            if (ImGui::Button("Force SV_Cheats", ImVec2(120, 20))) {
                 ConVar* sv_cheats = g_Interfaces.CVars->FindVar("sv_cheats");
                 sv_cheats->SetValue(1);
             }
 
-            if(ImGui::Button("CL_FullUpdate",ImVec2(120,0)))
+            if(ImGui::Button("CL_FullUpdate",ImVec2(120,20)))
                 g_Interfaces.Engine->ClientCmd_Unrestricted("cl_fullupdate");
 
-            if (ImGui::Button("SND_Restart", ImVec2(120, 0)))
+            if (ImGui::Button("SND_Restart", ImVec2(120, 20)))
                 g_Interfaces.Engine->ClientCmd_Unrestricted("snd_restart");
 
-            if (ImGui::Button("StopSound", ImVec2(120, 0)))
+            if (ImGui::Button("StopSound", ImVec2(120, 20)))
                 g_Interfaces.Engine->ClientCmd_Unrestricted("stopsound");
 
-            if (ImGui::Button("Status", ImVec2(120, 0)))
+            if (ImGui::Button("Status", ImVec2(120, 20)))
                 g_Interfaces.Engine->ClientCmd_Unrestricted("status");
 
-            if (ImGui::Button("Ping", ImVec2(120, 0)))
+            if (ImGui::Button("Ping", ImVec2(120, 20)))
                 g_Interfaces.Engine->ClientCmd_Unrestricted("ping");
 
-            if (ImGui::Button("Retry", ImVec2(120, 0)))
+            if (ImGui::Button("Retry", ImVec2(120, 20)))
                 g_Interfaces.Engine->ClientCmd_Unrestricted("retry");
 
             ImGui::End();
@@ -1409,11 +1415,11 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
                     }
                     case 2: {
                         // Probably inefficient, how unfortunate.
-                        if (whatthefuck == 1)
+                        if (nESPTab == 1)
                             ESPTab();
-                        if (whatthefuck == 2)
+                        if (nESPTab == 2)
                             ESPTab2();
-                        if (whatthefuck == 3)
+                        if (nESPTab == 3)
                             ESPTab3();
                         break;
                     }
