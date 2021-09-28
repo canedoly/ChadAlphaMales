@@ -8,6 +8,8 @@
 void __stdcall ClientHook::PreEntity::Hook(char const *szMapName)
 {
 	Table.Original<fn>(index)(g_Interfaces.Client, szMapName);
+
+	g_Visuals.DevTextures();
 }
 
 void __stdcall ClientHook::PostEntity::Hook()

@@ -937,14 +937,12 @@ void MiscTab() {
         {
             ImGui::Checkbox(_("Instant Respawn MVM"), &Vars::Misc::InstantRespawn.m_Var);
             ImGui::Checkbox(_("Anti AFK"), &Vars::Misc::AntiAFK.m_Var);
-            ImGui::Checkbox(_("Taunt Slide"), &Vars::Misc::TauntSlide.m_Var);
-            ImGui::Checkbox(_("Taunt Control"), &Vars::Misc::TauntControl.m_Var);
             ImGui::Checkbox(_("Bypass sv_pure"), &Vars::Misc::BypassPure.m_Var);
             ImGui::Checkbox(_("Medal flip"), &Vars::Misc::MedalFlip.m_Var);
             ImGui::Checkbox(_("Noisemaker spam"), &Vars::Misc::NoisemakerSpam.m_Var);
             ImGui::Checkbox(_("Chat Spam"), &Vars::Misc::ChatSpam.m_Var);
-            ImGui::Checkbox(_("No Push"), &Vars::Misc::NoPush.m_Var);
             ImGui::Checkbox(_("No Interp"), &Vars::Misc::DisableInterpolation.m_Var);
+            ImGui::Checkbox(_("Dev Textures"), &Vars::Visuals::DevTextures.m_Var);
         }
         ImGui::EndChild();
         ImGui::EndGroup();
@@ -958,6 +956,9 @@ void MiscTab() {
             ImGui::Checkbox(_("Bhop"), &Vars::Misc::AutoJump.m_Var);
             ImGui::Checkbox(_("AutoStrafer"), &Vars::Misc::AutoStrafe.m_Var);
             ImGui::Checkbox(_("Auto RocketJump"), &Vars::Misc::AutoRocketJump.m_Var);
+            ImGui::Checkbox(_("Taunt Slide"), &Vars::Misc::TauntSlide.m_Var);
+            ImGui::Checkbox(_("Taunt Control"), &Vars::Misc::TauntControl.m_Var);
+            ImGui::Checkbox(_("No Push"), &Vars::Misc::NoPush.m_Var);
         }
         ImGui::EndChild();
         ImGui::EndGroup();
