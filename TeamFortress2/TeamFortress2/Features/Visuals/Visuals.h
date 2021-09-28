@@ -31,6 +31,7 @@ public:
 	void SkyboxChanger();
 	void RunEventLogs();
 	bool RemoveScope(int nPanel);
+	void OffsetCamera(CViewSetup* pView);
 	void FOV(CViewSetup *pView);
 	//void Fullbright();
 	void ARatio();
