@@ -408,6 +408,8 @@ namespace Vars
 		inline CVar<bool> WorldModulation			{ false, L"World Modulation" };
 		inline CVar<bool> SkyboxChanger				{ true, L"Skybox changer" };
 
+		inline CVar<bool> DevTextures				{ false, L"Dev Textures" };
+
 		inline CVar<bool> PlayerList				{ false, L"Playerlist" };
 
 		namespace Skins
