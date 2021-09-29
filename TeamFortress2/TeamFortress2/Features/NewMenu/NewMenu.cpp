@@ -13,20 +13,6 @@
 // Try to fit in as much features as possible without making it look out of place / not user friendly (if that makes sense)
 // If you have b1g problems with the menu then message me on discord
 
-void CNMenu::updateMenuFont(OPENFILENAME * fileName) {
-    ImFontConfig font_config;
-    font_config.OversampleH = 1;
-    font_config.OversampleV = 1;
-    font_config.PixelSnapH = 1;
-    static const ImWchar ranges[] =
-    {
-        0x0020, 0x00FF, // Basic Latin + Latin Supplement
-        0x0400, 0x044F, // Cyrillic
-        0,
-    };
-    this->font = ImGui::GetIO().Fonts->AddFontFromFileTTF((const char *)fileName->lpstrFile, 19.0f, &font_config, ranges);
-}
-
 static int tab = 0;
 
 auto s = ImVec2{};
