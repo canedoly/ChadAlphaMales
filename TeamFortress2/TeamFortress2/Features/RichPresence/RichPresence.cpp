@@ -1,4 +1,5 @@
 #include "RichPresence.h"
+#include "../Vars.h"
 
 namespace source
 {
@@ -12,7 +13,8 @@ namespace source
 			g_SteamInterfaces.Friends015->ClearRichPresence(); // Clear the previous RPC
 			g_SteamInterfaces.Friends015->SetRichPresence(_("steam_display"), _("#TF_RichPresence_State_PlayingGeneric"));
 			g_SteamInterfaces.Friends015->SetRichPresence(_("state"), _("PlayingMatchGroup"));
-			g_SteamInterfaces.Friends015->SetRichPresence(_("currentmap"), _("Currently Pwning with CAM"));
+			g_SteamInterfaces.Friends015->SetRichPresence(_("currentmap"), Vars::Misc::SteamRPC.c_str());
+			//g_SteamInterfaces.Friends015->SetRichPresence(_("currentmap"), _("Currently Pwning with CAM"));
 
 			return true;
 		}

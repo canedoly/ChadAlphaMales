@@ -411,6 +411,8 @@ namespace Vars
 		inline CVar<bool> WorldModulation			{ false, L"World Modulation" };
 		inline CVar<bool> SkyboxChanger				{ true, L"Skybox changer" };
 
+		inline CVar<bool> DevTextures				{ false, L"Dev Textures" };
+
 		inline CVar<bool> PlayerList				{ false, L"Playerlist" };
 
 		namespace Skins
@@ -449,6 +451,8 @@ namespace Vars
 		inline CVar<bool> VoteRevealer			{ false, L"Reveal votes" };
 		inline CVar<bool> VotesInChat			{ false, L"Reveal votes to party" };
 		inline CVar<bool> CheatsBypass			{ false, L"cum" };
+		inline std::string SteamRPC = "";
+    
 		namespace CL_Move
 		{
 			inline CVar<bool> Doubletap{ true, L"Doubletap" };

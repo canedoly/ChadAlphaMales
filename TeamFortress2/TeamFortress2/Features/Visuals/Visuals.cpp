@@ -52,6 +52,40 @@ void CVisuals::SkyboxChanger() {
 	}
 }
 
+//Legacy want
+void CVisuals::DevTextures()
+{
+	if (!Vars::Visuals::DevTextures.m_Var)
+		return;
+
+	static KeyValues* KV = nullptr;
+
+	if (!KV)
+	{
+		KV = new KeyValues("LightmappedGeneric");
+		KV->SetString("$basetexture", "dev/dev_measuregeneric01b");
+	}
+
+	for (MaterialHandle_t i = g_Interfaces.MatSystem->First(); i != g_Interfaces.MatSystem->Invalid(); i = g_Interfaces.MatSystem->Next(i))
+	{
+		IMaterial* pMaterial = g_Interfaces.MatSystem->Get(i);
+
+		if (pMaterial->IsErrorMaterial() || !pMaterial->IsPrecached() || pMaterial->IsTranslucent() || pMaterial->IsSpriteCard() || std::string(pMaterial->GetTextureGroupName()).find("World") == std::string::npos)
+			continue;
+
+		std::string sName = std::string(pMaterial->GetName());
+
+		if (sName.find("water") != std::string::npos || sName.find("glass") != std::string::npos
+			|| sName.find("door") != std::string::npos || sName.find("tools") != std::string::npos
+			|| sName.find("player") != std::string::npos || sName.find("wall28") != std::string::npos
+			|| sName.find("wall26") != std::string::npos || sName.find("decal") != std::string::npos
+			|| sName.find("overlay") != std::string::npos || sName.find("hay") != std::string::npos)
+			continue;
+
+		pMaterial->SetShaderAndParams(KV);
+	}
+}
+
 void CVisuals::AddToEventLog(const char* string...) {
 	va_list va_alist;
 	char cbuffer[1024] = { '\0' };
@@ -165,7 +199,7 @@ void CVisuals::ThirdPerson()
 	{
 		if (Vars::Visuals::ThirdPersonKey.m_Var)
 		{
-			if (!g_Interfaces.EngineVGui->IsGameUIVisible() && !g_Interfaces.Surface->IsCursorVisible() && !g_Menu.m_bTyping)
+			if (!g_Interfaces.EngineVGui->IsGameUIVisible() && !g_Interfaces.Surface->IsCursorVisible())
 			{
 				static float flPressedTime = g_Interfaces.Engine->Time();
 				float flElapsed = g_Interfaces.Engine->Time() - flPressedTime;
