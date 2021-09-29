@@ -13,6 +13,20 @@
 // Try to fit in as much features as possible without making it look out of place / not user friendly (if that makes sense)
 // If you have b1g problems with the menu then message me on discord
 
+void CNMenu::updateMenuFont(OPENFILENAME * fileName) {
+    ImFontConfig font_config;
+    font_config.OversampleH = 1;
+    font_config.OversampleV = 1;
+    font_config.PixelSnapH = 1;
+    static const ImWchar ranges[] =
+    {
+        0x0020, 0x00FF, // Basic Latin + Latin Supplement
+        0x0400, 0x044F, // Cyrillic
+        0,
+    };
+    this->font = ImGui::GetIO().Fonts->AddFontFromFileTTF((const char *)fileName->lpstrFile, 19.0f, &font_config, ranges);
+}
+
 static int tab = 0;
 
 auto s = ImVec2{};
@@ -548,7 +562,6 @@ void ESPTab() {
             ImGui::Combo(_("Player box"), &Vars::ESP::Players::Box.m_Var, boxESP, IM_ARRAYSIZE(boxESP));
 
             ImGui::SliderFloat(_("DLight radius"), &Vars::ESP::Players::DlightRadius.m_Var, 5.0f, 400.f, _("%.0f"), ImGuiSliderFlags_Logarithmic | ImGuiSliderFlags_AlwaysClamp);
-
         }
         ImGui::EndChild();
         ImGui::EndGroup();
@@ -600,7 +613,46 @@ void ESPTab() {
             ImGui::Checkbox(_("World modulation"), &Vars::Visuals::WorldModulation.m_Var);
             plsfix(23);
             ColorPicker(_("World modulation"), Colors::WorldModulation, false);
+
+            ImGui::Text(_("Custom ESP font"));
+            ImGui::SetCursorPosX(5);
+            ImGui::PushItemWidth(ImGui::GetContentRegionMax().x - 10);
+            std::string customFont;
+            if (ImGui::InputText(_("###CustomFont"), &customFont, ImGuiInputTextFlags_EnterReturnsTrue)) {
+                g_Draw.ReInitFonts({
+                    //FONT_ESP
+                    { 0x0, customFont.c_str(), 12, 0, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS },
+                    //FONT_ESP_OUTLINED
+                    { 0x0, customFont.c_str(), 12, 0, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS },
+
+                    //FONT_ESP_NAME
+                    { 0x0, customFont.c_str(), 12, 0, FONTFLAG_DROPSHADOW },
+                    //FONT_ESP_NAME_OUTLINED
+
+                    { 0x0, customFont.c_str(), 13, 100, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS},
+
+                    //FONT_ESP_COND
+                    { 0x0, customFont.c_str(), 12, 100, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS },
+                    //FONT_ESP_COND_OUTLINED
+                    { 0x0, customFont.c_str(), 10, 0, FONTFLAG_OUTLINE },
+
+                    //FONT_ESP_PICKUPS
+                    { 0x0, customFont.c_str(), 13, 0, FONTFLAG_NONE },
+                    //FONT_ESP_PICKUPS_OUTLINED
+                    { 0x0, customFont.c_str(), 13, 100, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS},
+
+                    //FONT_MENU
+                    { 0x0, customFont.c_str(), 12, 0, FONTFLAG_NONE | FONTFLAG_DROPSHADOW },
+                    //FONT_MENU_OUTLINED
+                    { 0x0, customFont.c_str(), 12, 0, FONTFLAG_OUTLINE },
+
+                    //FONT_DEBUG
+                    { 0x0, customFont.c_str(), 16, 0, FONTFLAG_OUTLINE }
+                    });
+            }
         }
+        ImGui::PopItemWidth();
+        ImGui::SetCursorPosX(5);
         ImGui::EndChild();
         ImGui::EndGroup();
     }
@@ -1157,6 +1209,17 @@ std::vector<float> frames;
 static auto s2 = ImVec2{};
 static auto p2 = ImVec2{};
 
+void wtoc(CHAR* Dest, const WCHAR* Source)
+{
+    int i = 0;
+
+    while (Source[i] != '\0')
+    {
+        Dest[i] = (CHAR)Source[i];
+        ++i;
+    }
+}
+
 void CNMenu::Render(IDirect3DDevice9* pDevice) {
     static bool bInitImGui = false;
     static bool bColumnsWidthened = false;
@@ -1174,7 +1237,6 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
         ImGui::CreateContext();
         ImGui_ImplWin32_Init(FindWindowA(0, _("Team Fortress 2")));
         ImGui_ImplDX9_Init(pDevice);
-
         auto& io = ImGui::GetIO();
         io.IniFilename = NULL;
         io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
