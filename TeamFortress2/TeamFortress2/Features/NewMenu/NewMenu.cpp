@@ -950,6 +950,7 @@ void MiscTab() {
             ImGui::Checkbox(_("Chat Spam"), &Vars::Misc::ChatSpam.m_Var);
             ImGui::Checkbox(_("No Push"), &Vars::Misc::NoPush.m_Var);
             ImGui::Checkbox(_("No Interp"), &Vars::Misc::DisableInterpolation.m_Var);
+            ImGui::Checkbox(_("Force sv_cheats"), &Vars::Misc::CheatsBypass.m_Var);
         }
         ImGui::EndChild();
         ImGui::EndGroup();

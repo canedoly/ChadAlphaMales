@@ -464,6 +464,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Misc::AutoStrafe);
 			SAVE_VAR(Vars::Misc::EdgeJump);
 			SAVE_VAR(Vars::Misc::AntiAFK);
+			SAVE_VAR(Vars::Misc::CheatsBypass);
 			// CL_Move
 			{
 				SAVE_VAR(Vars::Misc::CL_Move::Doubletap);// { true, L"Doubletap" };
@@ -867,6 +868,8 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::ThirdpersonOffsetY);
 			LOAD_VAR(Vars::Visuals::ThirdpersonOffsetZ);
 			LOAD_VAR(Vars::Visuals::ThirdpersonCrosshair);
+			LOAD_VAR(Vars::Misc::CheatsBypass);
+
 
 			LOAD_VAR(Vars::Visuals::WorldModulation);
 
