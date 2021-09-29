@@ -403,9 +403,15 @@ namespace Vars
 		inline CVar<int> ThirdPersonKey				{ 0x0, L"Toggle Key"};
 		inline CVar<bool> ThirdPersonSilentAngles	{ true, L"Silent Angles" };
 		inline CVar<bool> ThirdPersonInstantYaw		{ true, L"Instant Yaw" };
+		inline CVar<bool> ThirdpersonCrosshair{ 0.f, L"cum" };
+		inline CVar<float> ThirdpersonOffsetX{ 0.f, L"cum" };
+		inline CVar<float> ThirdpersonOffsetY{ 0.f, L"cum" };
+		inline CVar<float> ThirdpersonOffsetZ{ 0.f, L"cum" };
 
 		inline CVar<bool> WorldModulation			{ false, L"World Modulation" };
 		inline CVar<bool> SkyboxChanger				{ true, L"Skybox changer" };
+
+		inline CVar<bool> DevTextures				{ false, L"Dev Textures" };
 
 		inline CVar<bool> PlayerList				{ false, L"Playerlist" };
 
@@ -444,6 +450,7 @@ namespace Vars
 		inline CVar<bool> AntiAFK{ false, L"Anti AFK" };
 		inline CVar<bool> VoteRevealer			{ false, L"Reveal votes" };
 		inline CVar<bool> VotesInChat			{ false, L"Reveal votes to party" };
+		inline std::string SteamRPC = "";
 		namespace CL_Move
 		{
 			inline CVar<bool> Doubletap{ true, L"Doubletap" };

@@ -52,6 +52,40 @@ void CVisuals::SkyboxChanger() {
 	}
 }
 
+//Legacy want
+void CVisuals::DevTextures()
+{
+	if (!Vars::Visuals::DevTextures.m_Var)
+		return;
+
+	static KeyValues* KV = nullptr;
+
+	if (!KV)
+	{
+		KV = new KeyValues("LightmappedGeneric");
+		KV->SetString("$basetexture", "dev/dev_measuregeneric01b");
+	}
+
+	for (MaterialHandle_t i = g_Interfaces.MatSystem->First(); i != g_Interfaces.MatSystem->Invalid(); i = g_Interfaces.MatSystem->Next(i))
+	{
+		IMaterial* pMaterial = g_Interfaces.MatSystem->Get(i);
+
+		if (pMaterial->IsErrorMaterial() || !pMaterial->IsPrecached() || pMaterial->IsTranslucent() || pMaterial->IsSpriteCard() || std::string(pMaterial->GetTextureGroupName()).find("World") == std::string::npos)
+			continue;
+
+		std::string sName = std::string(pMaterial->GetName());
+
+		if (sName.find("water") != std::string::npos || sName.find("glass") != std::string::npos
+			|| sName.find("door") != std::string::npos || sName.find("tools") != std::string::npos
+			|| sName.find("player") != std::string::npos || sName.find("wall28") != std::string::npos
+			|| sName.find("wall26") != std::string::npos || sName.find("decal") != std::string::npos
+			|| sName.find("overlay") != std::string::npos || sName.find("hay") != std::string::npos)
+			continue;
+
+		pMaterial->SetShaderAndParams(KV);
+	}
+}
+
 void CVisuals::AddToEventLog(const char* string...) {
 	va_list va_alist;
 	char cbuffer[1024] = { '\0' };
@@ -99,6 +133,23 @@ bool CVisuals::RemoveScope(int nPanel)
 	return (Vars::Visuals::RemoveScope.m_Var && nPanel == m_nHudZoom);
 }
 
+void CVisuals::OffsetCamera(CViewSetup* pView) {
+	CBaseEntity* pLocal = g_EntityCache.m_pLocal;
+
+	if (pLocal && pView)
+	{
+		if (g_Interfaces.Input->CAM_IsThirdPerson()) {
+			Vec3 pViewangles = g_Interfaces.Engine->GetViewAngles();
+			Vec3 vForward{}, vRight{}, vUp{};
+			Math::AngleVectors(pViewangles, &vForward, &vRight, &vUp);
+
+			pView->origin += vForward * Vars::Visuals::ThirdpersonOffsetX.m_Var;
+			pView->origin += vRight * Vars::Visuals::ThirdpersonOffsetY.m_Var;
+			pView->origin += vUp * Vars::Visuals::ThirdpersonOffsetZ.m_Var;
+		}
+	}
+}
+
 void CVisuals::FOV(CViewSetup *pView)
 {
 	CBaseEntity *pLocal = g_EntityCache.m_pLocal;
@@ -109,7 +160,7 @@ void CVisuals::FOV(CViewSetup *pView)
 			return;
 
 		pView->fov = Vars::Visuals::FieldOfView.m_Var;
-
+		
 		if (pLocal->IsAlive())
 			pLocal->SetFov(Vars::Visuals::FieldOfView.m_Var);
 	}
@@ -137,7 +188,9 @@ void CVisuals::ViewmodelXYZ() {
 
 	static auto customview = g_Interfaces.CVars->FindVar(_("tf_viewmodels_offset_override"));
 	customview->m_fnChangeCallback = 0;
-	customview->SetValue(buff);
+	if (!(Vars::Visuals::ViewModelX.m_Var == 0 && Vars::Visuals::ViewModelY.m_Var == 0 && Vars::Visuals::ViewModelZ.m_Var == 0)) {
+		customview->SetValue(buff);
+	}
 }
 
 void CVisuals::ThirdPerson()
@@ -146,7 +199,7 @@ void CVisuals::ThirdPerson()
 	{
 		if (Vars::Visuals::ThirdPersonKey.m_Var)
 		{
-			if (!g_Interfaces.EngineVGui->IsGameUIVisible() && !g_Interfaces.Surface->IsCursorVisible() && !g_Menu.m_bTyping)
+			if (!g_Interfaces.EngineVGui->IsGameUIVisible() && !g_Interfaces.Surface->IsCursorVisible())
 			{
 				static float flPressedTime = g_Interfaces.Engine->Time();
 				float flElapsed = g_Interfaces.Engine->Time() - flPressedTime;
@@ -198,7 +251,7 @@ void ApplyModulation(const Color_t &clr)
 
 			std::string_view group(pMaterial->GetTextureGroupName());
 
-			if (group.find(_(TEXTURE_GROUP_WORLD)) != group.npos || group.find(_(TEXTURE_GROUP_SKYBOX)) != group.npos)
+			if (group.find(_(TEXTURE_GROUP_WORLD)) != group.npos /* || group.find(_(TEXTURE_GROUP_SKYBOX)) != group.npos*/)
 			{
 				bool bFound = false;
 				IMaterialVar *pVar = pMaterial->FindVar(_("$color2"), &bFound);

@@ -28,6 +28,12 @@ bool CAimbot::ShouldRun(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 	default: break;
 	}
 
+	if (Vars::Triggerbot::Stab::Active.m_Var && Vars::Triggerbot::Global::Active.m_Var && Vars::Triggerbot::Global::TriggerKey.m_Var) {
+		if (pWeapon->GetWeaponID() == TF_WEAPON_KNIFE) {
+			return false;
+		}
+	}
+
 	switch (pWeapon->GetWeaponID())
 	{
 	case TF_WEAPON_PDA:

@@ -17,6 +17,7 @@ void __stdcall ClientModeHook::OverrideView::Hook(CViewSetup* pView)
 {
 	Table.Original<fn>(index)(g_Interfaces.ClientMode, pView);
 	g_Visuals.FOV(pView);
+	g_Visuals.OffsetCamera(pView);
 }
 
 bool __stdcall ClientModeHook::ShouldDrawViewModel::Hook()
@@ -25,6 +26,21 @@ bool __stdcall ClientModeHook::ShouldDrawViewModel::Hook()
 	{
 		if (pLocal->IsScoped() && Vars::Visuals::RemoveScope.m_Var && Vars::Visuals::RemoveZoom.m_Var && !g_Interfaces.Input->CAM_IsThirdPerson())
 			return true;
+
+		/*if (g_GlobalInfo.m_bAAActive) {
+			CTFPlayerAnimState* pAnimState = pLocal->GetAnimState();
+
+			static CTFPlayerAnimState* AnimStateBackup();
+			memcpy(&AnimStateBackup, pAnimState, sizeof(CTFPlayerAnimState));
+			std::array<float, 24> PoseParamBackup = pLocal->GetPoseParam();
+
+			pAnimState->Update(g_GlobalInfo.m_vFakeViewAngles.y, g_GlobalInfo.m_vFakeViewAngles.x);
+			matrix3x4 cumcumcucmucumcum[128];
+			pLocal->SetupBones(cumcumcucmucumcum, 128, BONE_USED_BY_ANYTHING, 0.0f);
+
+			memcpy(pAnimState, &AnimStateBackup, sizeof(CTFPlayerAnimState));
+			pLocal->GetPoseParam() = PoseParamBackup;
+		}*/
 	}
 
 	return Table.Original<fn>(index)(g_Interfaces.ClientMode);
