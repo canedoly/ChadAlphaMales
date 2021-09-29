@@ -28,6 +28,8 @@ private:
 public:
 	std::vector<EventLogging_t> vecEventVector;
 	void AddToEventLog(const char* string, ...);
+	void FreecamCM(CUserCmd* pCmd);
+	void Freecam(CViewSetup* pView);
 	void SkyboxChanger();
 	void DevTextures();
 	void RunEventLogs();
