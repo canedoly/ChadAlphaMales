@@ -1209,17 +1209,6 @@ std::vector<float> frames;
 static auto s2 = ImVec2{};
 static auto p2 = ImVec2{};
 
-void wtoc(CHAR* Dest, const WCHAR* Source)
-{
-    int i = 0;
-
-    while (Source[i] != '\0')
-    {
-        Dest[i] = (CHAR)Source[i];
-        ++i;
-    }
-}
-
 void CNMenu::Render(IDirect3DDevice9* pDevice) {
     static bool bInitImGui = false;
     static bool bColumnsWidthened = false;

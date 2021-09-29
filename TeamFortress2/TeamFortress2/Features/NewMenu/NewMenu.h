@@ -17,7 +17,6 @@ private:
 public:
 	bool menuOpen = false;
 	bool menuUnload = false;
-	void updateMenuFont(OPENFILENAME* filename);
 	void Render(IDirect3DDevice9* pDevice);
 };
 
