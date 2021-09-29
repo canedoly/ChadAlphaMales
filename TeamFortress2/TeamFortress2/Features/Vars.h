@@ -451,7 +451,9 @@ namespace Vars
 		inline CVar<bool> AntiAFK{ false, L"Anti AFK" };
 		inline CVar<bool> VoteRevealer			{ false, L"Reveal votes" };
 		inline CVar<bool> VotesInChat			{ false, L"Reveal votes to party" };
+		inline CVar<bool> CheatsBypass			{ false, L"cum" };
 		inline std::string SteamRPC = "";
+    
 		namespace CL_Move
 		{
 			inline CVar<bool> Doubletap{ true, L"Doubletap" };

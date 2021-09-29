@@ -176,6 +176,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	}
 	g_EnginePrediction.End(pCmd);
 	g_Misc.AutoRocketJump(pCmd);
+	g_Misc.CheatsBypass();
 	g_GlobalInfo.m_vViewAngles = pCmd->viewangles;
 
 

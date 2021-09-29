@@ -39,6 +39,7 @@ struct Draw_t
 	std::map<uint64, int> m_mapAvatars = { };
 
 	void InitFonts(const std::vector<Font_t> &fonts);
+	void ReInitFonts(const std::vector<Font_t>& fonts);
 	void ReloadFonts();
 	RECT GetTextSize(unsigned long font, std::string string);
 	void String(const size_t &font_idx, int x, int y, const Color_t &clr, const EStringAlign &align, const char *str, ...);

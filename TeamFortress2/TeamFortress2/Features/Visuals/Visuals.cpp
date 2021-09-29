@@ -99,7 +99,7 @@ void CVisuals::AddToEventLog(const char* string...) {
 
 void CVisuals::RunEventLogs()
 {
-	for (auto i = 0; i < vecEventVector.size(); i++) {
+	for (auto i = 0; i < (int)vecEventVector.size(); i++) {
 		auto log = vecEventVector[i];
 		auto time_delta = fabs(g_Interfaces.GlobalVars->realtime - log.flTime);
 
@@ -307,3 +307,4 @@ void CVisuals::RestoreWorldModulation()
 	ApplyModulation({ 255, 255, 255, 255 });
 	bWorldIsModulated = false;
 }
+
