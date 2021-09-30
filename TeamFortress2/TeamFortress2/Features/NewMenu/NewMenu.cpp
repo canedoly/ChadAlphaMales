@@ -1249,8 +1249,7 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
     }
 
     if (GetAsyncKeyState(VK_INSERT) & 1) { // Can we please fix this in WndProcHook...? :(
-        menuOpen = !menuOpen;
-        g_Interfaces.Surface->SetCursorAlwaysVisible(menuOpen);
+        g_Interfaces.Surface->SetCursorAlwaysVisible(menuOpen = !menuOpen);
         //g_Interfaces.Surface->ResetInputState();
         g_Menu.flTimeOnChange = g_Interfaces.Engine->Time();
 
@@ -1262,6 +1261,7 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
 
     ImGui::NewFrame();
 
+    ImGui::GetIO().MouseDrawCursor = menuOpen;
     Handle();
 	if (menuOpen)
 	{
