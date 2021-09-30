@@ -645,6 +645,15 @@ void ESPTab() {
             }
         }
         ImGui::PopItemWidth();
+        ImGui::Checkbox(_("Freecam"), &Vars::Misc::Freecam.m_Var);
+        //ImGui::Checkbox("Autoshoot", &Vars::Aimbot::Global::AutoShoot.m_Var); // We don't really need auto shoot atm.
+        plsfix(50);
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(MenuCol.x / 1.5, MenuCol.y / 1.5, MenuCol.z / 1.5, 255));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(MenuCol.x, MenuCol.y, MenuCol.z, 255));
+        InputKeybind(_("Freecam key"), Vars::Misc::FreecamKey, false);
+        ImGui::PopStyleColor(3);
+        ImGui::SliderFloat("Freecam speed", &Vars::Misc::FreecamSpeed.m_Var, 0.01f, 10.f, _("%.2f"), ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_Logarithmic);
         ImGui::SetCursorPosX(5);
         ImGui::EndChild();
         ImGui::EndGroup();

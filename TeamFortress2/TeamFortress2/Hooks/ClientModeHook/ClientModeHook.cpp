@@ -18,6 +18,7 @@ void __stdcall ClientModeHook::OverrideView::Hook(CViewSetup* pView)
 	Table.Original<fn>(index)(g_Interfaces.ClientMode, pView);
 	g_Visuals.FOV(pView);
 	g_Visuals.OffsetCamera(pView);
+	g_Visuals.Freecam(pView);
 }
 
 bool __stdcall ClientModeHook::ShouldDrawViewModel::Hook()
@@ -119,6 +120,8 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	if (g_GlobalInfo.fast_stop) {
 		AntiWarp(pCmd);
 	}
+
+	g_Visuals.FreecamCM(pCmd);
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{

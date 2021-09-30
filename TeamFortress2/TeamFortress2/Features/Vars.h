@@ -438,6 +438,9 @@ namespace Vars
 		inline CVar<bool> AutoStrafe			{ true, L"Auto Strafe" };
 		inline CVar<bool> TauntSlide			{ false, L"Taunt Slide" };
 		inline CVar<bool> TauntControl			{ false, L"Taunt Control" };
+		inline CVar<bool> Freecam				{ false, L"freecam" };
+		inline CVar<int>  FreecamKey			{ 0x48, L"freecam key" };
+		inline CVar<float>  FreecamSpeed { 3.f, L"freecam speed" };
 		inline CVar<bool> BypassPure            { false, L"Bypass Pure" };
 		inline CVar<bool> NoisemakerSpam        { false, L"Noisemaker Spam" };
 		inline CVar<bool> DisableInterpolation	{ true, L"Disable Interpolation" };

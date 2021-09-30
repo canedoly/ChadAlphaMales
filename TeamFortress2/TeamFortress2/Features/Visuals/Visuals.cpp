@@ -8,6 +8,75 @@ char buffer[256];
 typedef bool(_cdecl* LoadNamedSkiesFn)(const char*);
 static LoadNamedSkiesFn LoadSkies = (LoadNamedSkiesFn)g_Pattern.Find(_(L"engine.dll"), _(L"55 8B EC 81 EC ? ? ? ? 8B 0D ? ? ? ? 53 56 57 8B 01 C7 45"));
 
+
+static bool viewanglesCopied = false;
+static Vec3 viewangles;
+static Vec3 pViewangles;
+static Vec3 vForward{}, vRight{}, vUp{};
+Vec3 originBackup{};
+Vec3 pCmdViewangles;
+
+void CVisuals::FreecamCM(CUserCmd* pCmd) {
+	if (Vars::Misc::Freecam.m_Var) {
+		if (GetAsyncKeyState(Vars::Misc::FreecamKey.m_Var)) {
+			pCmd->forwardmove = pCmd->sidemove = 0.0f;
+			if (!g_GlobalInfo.m_bAttacking) {
+				pCmd->viewangles = pCmdViewangles;
+			}
+		}
+		else {
+			pCmdViewangles = pCmd->viewangles;
+		}
+	}
+}
+
+void CVisuals::Freecam(CViewSetup* pView)
+{
+	float moveSpeed = Vars::Misc::FreecamSpeed.m_Var;
+	if (Vars::Misc::Freecam.m_Var) {
+		if (pView) {
+			if (auto pLocal = g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetLocalPlayer())) {
+				if (GetAsyncKeyState(Vars::Misc::FreecamKey.m_Var)) {
+					if (!viewanglesCopied) {
+						viewangles = pLocal->GetEyeAngles();
+
+						originBackup = pView->origin;
+						viewanglesCopied = true;
+
+					}
+					pViewangles = g_Interfaces.Engine->GetViewAngles();
+					Math::AngleVectors(pViewangles, &vForward, &vRight, &vUp);
+					pLocal->SetEyeAngles(viewangles);
+					pView->origin = originBackup;
+					if (GetAsyncKeyState(VK_W)) {
+						pView->origin += vForward * moveSpeed;
+					}
+					if (GetAsyncKeyState(VK_S)) {
+						pView->origin -= vForward * moveSpeed;
+					}
+					if (GetAsyncKeyState(VK_A)) {
+						pView->origin -= vRight * moveSpeed;
+					}
+					if (GetAsyncKeyState(VK_D)) {
+						pView->origin += vRight * moveSpeed;
+					}
+					if (GetAsyncKeyState(VK_SPACE)) {
+						pView->origin += vUp * moveSpeed;
+					}
+					if (GetAsyncKeyState(VK_CONTROL)) {
+						pView->origin -= vUp * moveSpeed;
+					}
+					originBackup = pView->origin;
+				}
+				else {
+					viewanglesCopied = false;
+				}
+			}
+		}
+	}
+}
+
+
 void CVisuals::SkyboxChanger() {
 	const char* skybNames[] = {
 		"Custom",
@@ -52,7 +121,6 @@ void CVisuals::SkyboxChanger() {
 	}
 }
 
-//Legacy want
 void CVisuals::DevTextures()
 {
 	if (!Vars::Visuals::DevTextures.m_Var)
