@@ -9,6 +9,7 @@
 #include "Main/ConVars/ConVars.h"
 #include "Main/KeyValues/KeyValues.h"
 #include "Main/TraceFilters/TraceFilters.h"
+#include "../Features/Playerlist/Playerlist.h"
 
 #define VK_0              0x30
 #define VK_1              0x31
@@ -133,6 +134,7 @@ namespace Colors
 	inline Color_t Bones = { 255, 255, 255, 255 };
 	inline Color_t FresnelBase = { 0,0,0,255 };
 	inline Color_t FresnelTop = { 0,255,0,255 };
+	inline Color_t IgnoredTarget = { 65,65,65,255 };
 }
 
 namespace Utils
@@ -263,6 +265,14 @@ namespace Utils
 
 			if (!pEntity->IsVulnerable())
 				out = Colors::Invuln;
+
+			PlayerInfo_t pi{};
+
+			if (g_Interfaces.Engine->GetPlayerInfo(pEntity->GetIndex(), &pi))
+			{
+				if (g_Playerlist.IsIgnored(pi.friendsID))
+					out = Colors::IgnoredTarget;
+			}
 		}
 
 		if (pEntity->GetIndex() == g_GlobalInfo.m_nCurrentTargetIdx)

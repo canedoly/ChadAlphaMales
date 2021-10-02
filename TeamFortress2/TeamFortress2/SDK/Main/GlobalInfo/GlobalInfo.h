@@ -34,6 +34,7 @@ struct GlobalInfo_t
 	bool fast_stop						= false;
 	bool Unload							= false;
 	float m_flCurAimFOV					= 0.0f;
+	const char* uname					= _("null"); // for later y know
 	Vec3 m_vPredictedPos				= {};
 	Vec3 m_vAimPos						= {};
 	VMatrix m_WorldToProjection			= {};

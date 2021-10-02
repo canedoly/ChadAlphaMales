@@ -288,6 +288,7 @@ bool CAimbotHitscan::VerifyTarget(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapo
 		break;
 	}
 
+	
 	case ETargetType::BUILDING:
 	{
 		if (!Utils::VisPos(pLocal, Target.m_pEntity, pLocal->GetShootPos(), Target.m_vPos))

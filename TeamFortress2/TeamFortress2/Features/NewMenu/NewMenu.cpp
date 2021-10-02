@@ -585,6 +585,32 @@ void ESPTab() {
         ImGui::SetCursorPosX(532);
         ImGui::MenuChild(_("World"), ImVec2(253, 446), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
+            const char* skyNames[] = {
+                "Custom",
+                "sky_tf2_04",
+                "sky_upward",
+                "sky_dustbowl_01",
+                "sky_goldrush_01",
+                "sky_granary_01",
+                "sky_well_01",
+                "sky_gravel_01",
+                "sky_badlands_01",
+                "sky_hydro_01",
+                "sky_night_01",
+                "sky_nightfall_01",
+                "sky_trainyard_01",
+                "sky_stormfront_01",
+                "sky_morningsnow_01",
+                "sky_alpinestorm_01",
+                "sky_harvest_01",
+                "sky_harvest_night_01",
+                "sky_halloween",
+                "sky_halloween_night_01",
+                "sky_halloween_night2014_01",
+                "sky_island_01",
+                "sky_rainbow_01"
+            };
+
             ImGui::Checkbox(_("Pickups ESP"), &Vars::ESP::World::Active.m_Var);
             plsfix(23);
             ColorPicker(_("Pickup ESP"), Colors::Weapon, false);
@@ -606,6 +632,56 @@ void ESPTab() {
             ColorPicker(_("World"), Colors::WorldModulation, false);
             plsfix(23);
             ColorPicker(_("Props"), Colors::StaticPropModulation, false);
+
+            ImGui::Checkbox(_("Dev Textures"), &Vars::Visuals::DevTextures.m_Var);
+
+            ImGui::Checkbox(_("Skybox changer"), &Vars::Visuals::SkyboxChanger.m_Var);
+            ImGui::Combo(_("Skybox"), &Vars::Skybox::skyboxnum, skyNames, IM_ARRAYSIZE(skyNames), 6);
+            if (Vars::Skybox::skyboxnum == 0) { // God damnit, this made the menu look a bit more messier :(
+                ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0));
+                ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.23f, 0.23f, 0.23f, 1.f));
+                ImGui::SetCursorPosX(8);
+                ImGui::PushItemWidth(ImGui::GetContentRegionMax().x - 16);
+                ImGui::InputTextWithHint(_("##Custom skybox"), _("Custom skybox name"), &Vars::Skybox::SkyboxName);
+                ImGui::PopStyleColor(2);
+            }
+
+            ImGui::SetCursorPosX(5);
+            ImGui::Text(_("Custom ESP font"));
+            ImGui::SetCursorPosX(5);
+            ImGui::PushItemWidth(ImGui::GetContentRegionMax().x - 10);
+            std::string customFont;
+            if (ImGui::InputText(_("###CustomFont"), &customFont, ImGuiInputTextFlags_EnterReturnsTrue)) {
+                g_Draw.ReInitFonts(
+                    {
+                        //FONT_ESP
+                        { 0x0, customFont.c_str(), 12, 0, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS },
+                        //FONT_ESP_OUTLINED
+                        { 0x0, customFont.c_str(), 12, 0, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS },
+
+                        //FONT_ESP_NAME
+                        { 0x0, customFont.c_str(), 12, 0, FONTFLAG_DROPSHADOW },
+                        //FONT_ESP_NAME_OUTLINED
+
+                        { 0x0, customFont.c_str(), 13, 100, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS},
+
+                        //FONT_ESP_COND
+                        { 0x0, customFont.c_str(), 12, 100, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS },
+                        //FONT_ESP_COND_OUTLINED
+                        { 0x0, customFont.c_str(), 10, 0, FONTFLAG_OUTLINE },
+
+                        //FONT_ESP_PICKUPS
+                        { 0x0, customFont.c_str(), 13, 0, FONTFLAG_NONE },
+                        //FONT_ESP_PICKUPS_OUTLINED
+                        { 0x0, customFont.c_str(), 13, 100, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS},
+
+                        //FONT_MENU
+                        { 0x0, _("Verdana"), 12, 0, FONTFLAG_NONE | FONTFLAG_DROPSHADOW },
+                        //FONT_MENU_OUTLINED
+                        { 0x0, _("Verdana"), 12, 0, FONTFLAG_OUTLINE },
+                    }
+                );
+            }
         }
         ImGui::EndChild();
         ImGui::EndGroup();
@@ -616,8 +692,11 @@ void ESPTab() {
     ImGui::SameLine();
     ImGui::SetCursorPosY(ImGui::GetContentRegionMax().y - 20);
     ImGui::SetCursorPosX(ImGui::GetContentRegionMax().x - 43);
+    ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(MenuCol.x, MenuCol.y, MenuCol.z, 255));
+
     if (ImGui::Button(_(">>"), ImVec2(35,0)))
         nESPTab = 2;
+    ImGui::PopStyleColor();
 }
 
 void ESPTab2() { // Chams
@@ -722,9 +801,10 @@ void ESPTab2() { // Chams
     }
     ImGui::SetCursorPosX(15);
     ImGui::SetCursorPosY(ImGui::GetContentRegionMax().y - 20);
+    ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(MenuCol.x, MenuCol.y, MenuCol.z, 255));
+
     if (ImGui::Button(_("<<"), ImVec2(35, 0)))
         nESPTab = 1;
-
     ImGui::SameLine();
 
     ImGui::SetCursorPosX((ImGui::GetContentRegionMax().x / 1.9) - ImGui::CalcTextSize(_("Chams Tab")).x);
@@ -732,8 +812,10 @@ void ESPTab2() { // Chams
 
     ImGui::SameLine();
     ImGui::SetCursorPosX(ImGui::GetContentRegionMax().x - 43);
+
     if (ImGui::Button(_(">>"), ImVec2(35, 0)))
         nESPTab = 3;
+    ImGui::PopStyleColor();
 }
 
 void ESPTab3() {
@@ -790,12 +872,14 @@ void ESPTab3() {
     }
     ImGui::SetCursorPosX(15);
     ImGui::SetCursorPosY(ImGui::GetContentRegionMax().y - 20);
+    ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(MenuCol.x, MenuCol.y, MenuCol.z, 255));
     if (ImGui::Button(_("<<"), ImVec2(35, 0)))
         nESPTab = 2;
-
+    ImGui::PopStyleColor();
     ImGui::SameLine();
     ImGui::SetCursorPosX((ImGui::GetContentRegionMax().x / 1.9) - ImGui::CalcTextSize(_("Glow Tab")).x);
     ImGui::Text(_("Glow Tab"));
+
 }
 
 void VisualsTab() {
@@ -806,45 +890,10 @@ void VisualsTab() {
         ImGui::SetCursorPosX(15);
         ImGui::MenuChild(_("Local"), ImVec2(253, 465), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
-            const char* skyNames[] = {
-                "Custom",
-                "sky_tf2_04",
-                "sky_upward",
-                "sky_dustbowl_01",
-                "sky_goldrush_01",
-                "sky_granary_01",
-                "sky_well_01",
-                "sky_gravel_01",
-                "sky_badlands_01",
-                "sky_hydro_01",
-                "sky_night_01",
-                "sky_nightfall_01",
-                "sky_trainyard_01",
-                "sky_stormfront_01",
-                "sky_morningsnow_01",
-                "sky_alpinestorm_01",
-                "sky_harvest_01",
-                "sky_harvest_night_01",
-                "sky_halloween",
-                "sky_halloween_night_01",
-                "sky_halloween_night2014_01",
-                "sky_island_01",
-                "sky_rainbow_01"
-            };
 
             ImGui::SliderInt(_("Field of view"), &Vars::Visuals::FieldOfView.m_Var, 70, 150, _("%d"), ImGuiSliderFlags_AlwaysClamp);
             ImGui::SliderFloat(_("Aspect Ratio"), &Vars::Visuals::AspectRatioValue.m_Var, 0.f, 200.f, _("%.f"), ImGuiSliderFlags_AlwaysClamp);
             ImGui::SliderInt(_("Aim FOV Alpha"), &Vars::Visuals::AimFOVAlpha.m_Var, 0, 255, _("%d"), ImGuiSliderFlags_AlwaysClamp);
-            ImGui::Checkbox(_("Skybox changer"), &Vars::Visuals::SkyboxChanger.m_Var);
-            ImGui::Combo(_("Skybox"), &Vars::Skybox::skyboxnum, skyNames, IM_ARRAYSIZE(skyNames), 6);
-            if (Vars::Skybox::skyboxnum == 0) { // God damnit, this made the menu look a bit more messier :(
-                ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0));
-                ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.23f, 0.23f, 0.23f, 1.f));
-                ImGui::SetCursorPosX(8);
-                ImGui::PushItemWidth(ImGui::GetContentRegionMax().x - 16);
-                ImGui::InputTextWithHint(_("##Custom skybox"),_("Custom skybox name"), &Vars::Skybox::SkyboxName);
-                ImGui::PopStyleColor(2);
-            }
             static char buff[12];
             snprintf(buff, sizeof(buff), _("%i, %i, %i"), Vars::Visuals::ViewModelX.m_Var, Vars::Visuals::ViewModelY.m_Var, Vars::Visuals::ViewModelZ.m_Var);
             if (ImGui::BeginCombo(_("Viewmodel XYZ"), _(buff), 0, true))
@@ -858,12 +907,9 @@ void VisualsTab() {
             ImGui::Checkbox(_("Remove zoom"), &Vars::Visuals::RemoveZoom.m_Var);
             ImGui::Checkbox(_("Remove recoil"), &Vars::Visuals::RemovePunch.m_Var);
             ImGui::Checkbox(_("Aimbot crosshair"), &Vars::Visuals::CrosshairAimPos.m_Var);
-            ImGui::InputTextWithHint(_("##customsteamrpc"), _("Custom Steam RPC"), &Vars::Misc::SteamRPC);
             ImGui::Checkbox(_("Chat info"), &Vars::Visuals::ChatInfo.m_Var);
             ImGui::Checkbox(_("PlayerList"), &Vars::Visuals::PlayerList.m_Var);
             ImGui::Checkbox(_("Vote revealer"), &Vars::Misc::VoteRevealer.m_Var);
-            ImGui::Checkbox(_("Dev Textures"), &Vars::Visuals::DevTextures.m_Var);
-
         }
         ImGui::EndChild();
         ImGui::EndGroup();
@@ -942,7 +988,7 @@ void MiscTab() {
         ImGui::SetCursorPosY(50);
         ImGui::BeginGroup();
         ImGui::SetCursorPosX(15);
-        ImGui::MenuChild(_("General"), ImVec2(300, 295), false, ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::MenuChild(_("General"), ImVec2(300, 265), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Instant Respawn MVM"), &Vars::Misc::InstantRespawn.m_Var);
             ImGui::Checkbox(_("Anti AFK"), &Vars::Misc::AntiAFK.m_Var);
@@ -951,15 +997,18 @@ void MiscTab() {
             ImGui::Checkbox(_("Noisemaker spam"), &Vars::Misc::NoisemakerSpam.m_Var);
             ImGui::Checkbox(_("Chat Spam"), &Vars::Misc::ChatSpam.m_Var);
             ImGui::Checkbox(_("No Interp"), &Vars::Misc::DisableInterpolation.m_Var);
+            ImGui::Checkbox(_("Steam RPC"), &Vars::Misc::SteamRPC.m_Var);
+            ImGui::SameLine();
+            ImGui::InputTextWithHint(_("##customsteamrpc"), _("Custom Steam RPC"), &Vars::Misc::SteamRPCText);
         }
         ImGui::EndChild();
         ImGui::EndGroup();
     }
     {//left bottom
-        ImGui::SetCursorPosY(345);
+        ImGui::SetCursorPosY(315);
         ImGui::BeginGroup();
         ImGui::SetCursorPosX(15);
-        ImGui::MenuChild(_("Movement"), ImVec2(300, 175), false, ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::MenuChild(_("Movement"), ImVec2(300, 205), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Bhop"), &Vars::Misc::AutoJump.m_Var);
             ImGui::Checkbox(_("AutoStrafer"), &Vars::Misc::AutoStrafe.m_Var);
@@ -1245,28 +1294,29 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
             }
 
             ImGui::SetCursorPosY(40);
-            if (ImGui::Button("Force SV_Cheats", ImVec2(120, 20))) {
-                ConVar* sv_cheats = g_Interfaces.CVars->FindVar("sv_cheats");
-                sv_cheats->SetValue(1);
+            if (ImGui::Button(_("Force SV_Cheats"), ImVec2(120, 20))) {
+                //ConVar* sv_cheats = g_Interfaces.CVars->FindVar("sv_cheats");
+                //sv_cheats->SetValue(1);
+                Vars::Misc::CheatsBypass.m_Var = 1;
             }
 
-            if(ImGui::Button("CL_FullUpdate",ImVec2(120,20)))
-                g_Interfaces.Engine->ClientCmd_Unrestricted("cl_fullupdate");
+            if(ImGui::Button(_("CL_FullUpdate"),ImVec2(120,20)))
+                g_Interfaces.Engine->ClientCmd_Unrestricted(_("cl_fullupdate"));
 
-            if (ImGui::Button("SND_Restart", ImVec2(120, 20)))
-                g_Interfaces.Engine->ClientCmd_Unrestricted("snd_restart");
+            if (ImGui::Button(_("SND_Restart"), ImVec2(120, 20)))
+                g_Interfaces.Engine->ClientCmd_Unrestricted(_("snd_restart"));
 
-            if (ImGui::Button("StopSound", ImVec2(120, 20)))
-                g_Interfaces.Engine->ClientCmd_Unrestricted("stopsound");
+            if (ImGui::Button(_("StopSound"), ImVec2(120, 20)))
+                g_Interfaces.Engine->ClientCmd_Unrestricted(_("stopsound"));
 
-            if (ImGui::Button("Status", ImVec2(120, 20)))
-                g_Interfaces.Engine->ClientCmd_Unrestricted("status");
+            if (ImGui::Button(_("Status"), ImVec2(120, 20)))
+                g_Interfaces.Engine->ClientCmd_Unrestricted(_("status"));
 
-            if (ImGui::Button("Ping", ImVec2(120, 20)))
-                g_Interfaces.Engine->ClientCmd_Unrestricted("ping");
+            if (ImGui::Button(_("Ping"), ImVec2(120, 20)))
+                g_Interfaces.Engine->ClientCmd_Unrestricted(_("ping"));
 
-            if (ImGui::Button("Retry", ImVec2(120, 20)))
-                g_Interfaces.Engine->ClientCmd_Unrestricted("retry");
+            if (ImGui::Button(_("Retry"), ImVec2(120, 20)))
+                g_Interfaces.Engine->ClientCmd_Unrestricted(_("retry"));
 
             ImGui::End();
         }

@@ -8,6 +8,75 @@ char buffer[256];
 typedef bool(_cdecl* LoadNamedSkiesFn)(const char*);
 static LoadNamedSkiesFn LoadSkies = (LoadNamedSkiesFn)g_Pattern.Find(_(L"engine.dll"), _(L"55 8B EC 81 EC ? ? ? ? 8B 0D ? ? ? ? 53 56 57 8B 01 C7 45"));
 
+
+static bool viewanglesCopied = false;
+static Vec3 viewangles;
+static Vec3 pViewangles;
+static Vec3 vForward{}, vRight{}, vUp{};
+Vec3 originBackup{};
+Vec3 pCmdViewangles;
+
+void CVisuals::FreecamCM(CUserCmd* pCmd) {
+	if (Vars::Misc::Freecam.m_Var) {
+		if (GetAsyncKeyState(Vars::Misc::FreecamKey.m_Var)) {
+			pCmd->forwardmove = pCmd->sidemove = 0.0f;
+			if (!g_GlobalInfo.m_bAttacking) {
+				pCmd->viewangles = pCmdViewangles;
+			}
+		}
+		else {
+			pCmdViewangles = pCmd->viewangles;
+		}
+	}
+}
+
+void CVisuals::Freecam(CViewSetup* pView)
+{
+	float moveSpeed = Vars::Misc::FreecamSpeed.m_Var;
+	if (Vars::Misc::Freecam.m_Var) {
+		if (pView) {
+			if (auto pLocal = g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetLocalPlayer())) {
+				if (GetAsyncKeyState(Vars::Misc::FreecamKey.m_Var)) {
+					if (!viewanglesCopied) {
+						viewangles = pLocal->GetEyeAngles();
+
+						originBackup = pView->origin;
+						viewanglesCopied = true;
+
+					}
+					pViewangles = g_Interfaces.Engine->GetViewAngles();
+					Math::AngleVectors(pViewangles, &vForward, &vRight, &vUp);
+					pLocal->SetEyeAngles(viewangles);
+					pView->origin = originBackup;
+					if (GetAsyncKeyState(VK_W)) {
+						pView->origin += vForward * moveSpeed;
+					}
+					if (GetAsyncKeyState(VK_S)) {
+						pView->origin -= vForward * moveSpeed;
+					}
+					if (GetAsyncKeyState(VK_A)) {
+						pView->origin -= vRight * moveSpeed;
+					}
+					if (GetAsyncKeyState(VK_D)) {
+						pView->origin += vRight * moveSpeed;
+					}
+					if (GetAsyncKeyState(VK_SPACE)) {
+						pView->origin += vUp * moveSpeed;
+					}
+					if (GetAsyncKeyState(VK_CONTROL)) {
+						pView->origin -= vUp * moveSpeed;
+					}
+					originBackup = pView->origin;
+				}
+				else {
+					viewanglesCopied = false;
+				}
+			}
+		}
+	}
+}
+
+
 void CVisuals::SkyboxChanger() {
 	const char* skybNames[] = {
 		"Custom",
@@ -52,7 +121,6 @@ void CVisuals::SkyboxChanger() {
 	}
 }
 
-//Legacy want
 void CVisuals::DevTextures()
 {
 	if (!Vars::Visuals::DevTextures.m_Var)
@@ -99,7 +167,7 @@ void CVisuals::AddToEventLog(const char* string...) {
 
 void CVisuals::RunEventLogs()
 {
-	for (auto i = 0; i < vecEventVector.size(); i++) {
+	for (auto i = 0; i < (int)vecEventVector.size(); i++) {
 		auto log = vecEventVector[i];
 		auto time_delta = fabs(g_Interfaces.GlobalVars->realtime - log.flTime);
 
@@ -108,12 +176,15 @@ void CVisuals::RunEventLogs()
 			continue;
 		}
 
-		 auto height = flIdealHeight + (14 * i),
+		auto height = flIdealHeight + (20 * i),
 			width = flIdealWidth;
+
+		auto w2 = 0;
 
 		if (time_delta < flTextFadeInTime) {
 			log.flAlpha = ((time_delta / flTextFadeInTime) * 255.f);
 			width = (time_delta / flTextFadeInTime) * (float)(flSlideInDistance)+(flIdealWidth - flSlideInDistance);
+			w2 = width;
 		}
 
 		if (time_delta > flTextTime - flTextFadeOutTime) {
@@ -121,7 +192,12 @@ void CVisuals::RunEventLogs()
 			width = flIdealWidth + (((time_delta - (flTextTime - flTextFadeOutTime)) / flTextFadeOutTime) * (float)(flSlideOutDistance));
 		}
 		// Idk i put flAlpha on everything, looks cooler lol
-		g_Draw.String(FONT_MENU_OUTLINED, width, height, Color_t(255,255,255, log.flAlpha), ALIGN_DEFAULT, Utils::ConvertUtf8ToWide(log.szText.c_str()).data());
+		static int w, h;
+		g_Interfaces.Surface->GetTextSize(FONT_MENU_OUTLINED, Utils::ConvertUtf8ToWide(log.szText.c_str()).data(), w, h);
+		Color_t color = Vars::Menu::Colors::WidgetActive;
+		g_Draw.GradientRect(width, height - 2, w, height + 15, Color_t(0, 0, 0, 0), Color_t(0, 0, 0, 255), true);
+		g_Draw.Rect(w2, height - 2, 2, 17, Vars::Menu::Colors::WidgetActive);
+		g_Draw.String(FONT_MENU_OUTLINED, width, height, Color_t(log.flAlpha, log.flAlpha, log.flAlpha, log.flAlpha), ALIGN_DEFAULT, Utils::ConvertUtf8ToWide(log.szText.c_str()).data());
 	}
 }
 
@@ -307,3 +383,4 @@ void CVisuals::RestoreWorldModulation()
 	ApplyModulation({ 255, 255, 255, 255 });
 	bWorldIsModulated = false;
 }
+

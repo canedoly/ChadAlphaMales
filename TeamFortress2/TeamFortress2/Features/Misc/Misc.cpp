@@ -163,25 +163,20 @@ void ReplaceSpecials(std::string& str)
 	str.resize(len - c);
 }
 
-/* // This made me feel like killing myself because of SEOwned shit source...
-void CMisc::ChangeName(std::string name)
+void CMisc::CheatsBypass()
 {
-	auto custom_name = settings::Manager::instance().lookup("name.custom");
-	if (custom_name != nullptr)
-		custom_name->fromString(name);
-
-	ReplaceSpecials(name);
-	//ConVar setname("name", name.c_str());
-	NET_SetConVar setname("name", name.c_str());
-	INetChannel* ch = (INetChannel*)g_Interfaces.Engine->GetNetChannelInfo();
-	if (ch)
-	{
-		setname.SetNetChannel(ch);
-		setname.SetReliable(false);
-		ch->SendNetMsg(setname, false);
+	if (Vars::Misc::CheatsBypass.m_Var) {
+		auto cheats = g_Interfaces.CVars->FindVar(_("sv_cheats"));
+		if (cheats) {
+			if (cheats->GetInt() == 0) {
+				cheats->SetValue(1);
+			}
+		}
 	}
 }
-*/
+
+// This made me feel like killing myself because of SEOwned shit source...
+// TODO add a fucking name changer how hard can this shit be i wanna hang myself looking at this wtf is NET_SetConVar and why does it not fucking work i hate this source
 
 void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 {

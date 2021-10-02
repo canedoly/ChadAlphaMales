@@ -15,8 +15,8 @@ void __stdcall ClientHook::PreEntity::Hook(char const *szMapName)
 void __stdcall ClientHook::PostEntity::Hook()
 {
 	Table.Original<fn>(index)(g_Interfaces.Client);
-	if (!source::features::steamrichpresence.Update())
-		//LOG(_("Failed to SteamRichPresence::Update!"));
+	if (Vars::Misc::SteamRPC.m_Var)
+		source::features::steamrichpresence.Update();
 
 	g_Interfaces.Engine->ClientCmd_Unrestricted(_("r_maxdlights 69420"));
 	g_Interfaces.Engine->ClientCmd_Unrestricted(_("r_dynamic 1"));

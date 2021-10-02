@@ -19,7 +19,7 @@ struct Rect {
 struct Font_t
 {
 	DWORD dwFont = 0x0;
-	const char *szName = 0;
+	const char* szName = 0;
 	int nTall = 0;
 	int nWeight = 0;
 	int nFlags = 0;
@@ -35,20 +35,21 @@ enum EStringAlign
 
 struct Draw_t
 {
-	std::vector<Font_t>   m_vecFonts   = { };
+	std::vector<Font_t>   m_vecFonts = { };
 	std::map<uint64, int> m_mapAvatars = { };
 
-	void InitFonts(const std::vector<Font_t> &fonts);
+	void InitFonts(const std::vector<Font_t>& fonts);
+	void ReInitFonts(const std::vector<Font_t>& fonts);
 	void ReloadFonts();
 	RECT GetTextSize(unsigned long font, std::string string);
-	void String(const size_t &font_idx, int x, int y, const Color_t &clr, const EStringAlign &align, const char *str, ...);
-	void String(const size_t &font_idx, int x, int y, const Color_t &clr, const EStringAlign &align, const wchar_t *str, ...);
-	void Line(int x, int y, int x1, int y1, const Color_t &clr);
-	void Rect(int x, int y, int w, int h, const Color_t &clr);
-	void OutlinedRect(int x, int y, int w, int h, const Color_t &clr);
-	void GradientRect(int x, int y, int x1, int y1, const Color_t &top_clr, const Color_t &bottom_clr, bool horizontal);
-	void OutlinedCircle(int x, int y, float radius, int segments, const Color_t &clr);
-	void CornerRect(int x, int y, int w, int h, int _x, int _y, const Color_t &color);
+	void String(const size_t& font_idx, int x, int y, const Color_t& clr, const EStringAlign& align, const char* str, ...);
+	void String(const size_t& font_idx, int x, int y, const Color_t& clr, const EStringAlign& align, const wchar_t* str, ...);
+	void Line(int x, int y, int x1, int y1, const Color_t& clr);
+	void Rect(int x, int y, int w, int h, const Color_t& clr);
+	void OutlinedRect(int x, int y, int w, int h, const Color_t& clr);
+	void GradientRect(int x, int y, int x1, int y1, const Color_t& top_clr, const Color_t& bottom_clr, bool horizontal);
+	void OutlinedCircle(int x, int y, float radius, int segments, const Color_t& clr);
+	void CornerRect(int x, int y, int w, int h, int _x, int _y, const Color_t& color);
 	void Texture(int x, int y, int w, int h, const Color_t& clr, int nIndex);
 	void Avatar(const int x, const int y, const int w, const int h, const uint32 nFriendID);
 
@@ -70,8 +71,7 @@ enum EFonts
 	FONT_ESP_PICKUPS_OUTLINED,
 
 	FONT_MENU,
-	FONT_MENU_OUTLINED,
-	FONT_DEBUG
+	FONT_MENU_OUTLINED
 };
 
 inline Draw_t g_Draw;

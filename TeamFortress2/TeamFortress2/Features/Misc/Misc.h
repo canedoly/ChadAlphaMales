@@ -51,7 +51,7 @@ public:
 
 	void Run(CUserCmd *pCmd);
     Vector predPosAt(float flTime, CBaseEntity* target);
-    void ChangeName(std::string name);
+    void CheatsBypass();
     void EdgeJump(CUserCmd* pCmd, const int nOldFlags);
 	void BypassPure();
 	void AutoRocketJump(CUserCmd *pCmd);

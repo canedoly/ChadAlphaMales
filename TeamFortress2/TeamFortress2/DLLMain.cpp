@@ -55,18 +55,18 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		{ 0x0, _("Segoe UI"), 12, 0, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS },
 		//FONT_ESP_OUTLINED
 		{ 0x0, _("Segoe UI"), 12, 0, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS },
-	
+
 		//FONT_ESP_NAME
 		{ 0x0, _("Verdana"), 12, 0, FONTFLAG_DROPSHADOW },
 		//FONT_ESP_NAME_OUTLINED
 
 		{ 0x0, _("Segoe UI"), 13, 100, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS},
-	
+
 		//FONT_ESP_COND
 		{ 0x0, _("Segoe UI"), 12, 100, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS },
 		//FONT_ESP_COND_OUTLINED
 		{ 0x0, _("Consolas"), 10, 0, FONTFLAG_OUTLINE },
-	
+
 		//FONT_ESP_PICKUPS
 		{ 0x0, _("Consolas"), 13, 0, FONTFLAG_NONE },
 		//FONT_ESP_PICKUPS_OUTLINED
@@ -76,10 +76,8 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		{ 0x0, _("Verdana"), 12, 0, FONTFLAG_NONE | FONTFLAG_DROPSHADOW },
 		//FONT_MENU_OUTLINED
 		{ 0x0, _("Verdana"), 12, 0, FONTFLAG_OUTLINE },
-	
-		//FONT_DEBUG
-		{ 0x0, _("Arial"), 16, 0, FONTFLAG_OUTLINE }
 	});
+
 	//Initialize ignored set
 	g_Playerlist.GetIgnoredPlayers();
 	g_Events.Setup({ "vote_cast", "player_changeclass", "player_connect", "player_hurt", "localplayer_respawn", "achievement_earned" });
@@ -104,7 +102,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		g_Visuals.AddToEventLog(_("Default config loaded!"));
 	}
 
-	while (!GetAsyncKeyState(VK_F24))
+	while (!GetAsyncKeyState(VK_F11))
 		std::this_thread::sleep_for(420ms);
 
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 200, 0, 255 }, _("[-] Unloading CAM...\n"));

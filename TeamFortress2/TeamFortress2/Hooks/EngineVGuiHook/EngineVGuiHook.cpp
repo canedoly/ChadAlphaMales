@@ -144,17 +144,20 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 			static wchar_t buff[512];
 			int label_w, label_h;
 			static int nignog = 0;
-			auto fps = 0;
+			static auto fps = 0;
+			static auto nme = g_GlobalInfo.uname;
 
-			if (nignog == 100) { // I tried to make it slower, I failed so hard. How unfortunate :(
+			static float flPressedTime = g_Interfaces.Engine->Time();
+			float flElapsed = g_Interfaces.Engine->Time() - flPressedTime;
+
+			if (flElapsed > 0.4f) {
 				fps = static_cast<int>(1.f / g_Interfaces.GlobalVars->frametime);
+				flPressedTime = g_Interfaces.Engine->Time();
 			}
-			else {
-				nignog++;
-			}
-			int ms = std::max(0, (int)std::round(g_GlobalInfo.m_Latency * 1000.f));
 
-			_snwprintf(buff, sizeof(buff), _(L"CAM [v1.1b] | fps: %i | delay: %ims"), fps, ms);
+			int ms = std::max(0, (int)std::round(g_GlobalInfo.m_Latency * 1000.f));
+			// Change admin to something else if you really need to, it was for the protection thing
+			_snwprintf(buff, sizeof(buff), _(L"CAM [v1.2] | admin | fps: %i | delay: %ims") ,fps, ms);
 
 			g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_MENU].dwFont, buff, label_w, label_h);
 

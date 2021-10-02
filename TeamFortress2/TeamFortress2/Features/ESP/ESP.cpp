@@ -571,6 +571,11 @@ void CESP::DrawWorld()
 		}
 	}
 
+	for (const auto& Projectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
+	{
+		if (Utils::W2S(Projectile->GetWorldSpaceCenter(), vScreen))
+			g_Draw.String(FONT, vScreen.x, vScreen.y, { 255,0,0,255 }, ALIGN_CENTER, _(L"!"));
+	}
 	g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
 }
 

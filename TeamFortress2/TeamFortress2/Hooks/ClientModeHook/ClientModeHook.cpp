@@ -18,6 +18,7 @@ void __stdcall ClientModeHook::OverrideView::Hook(CViewSetup* pView)
 	Table.Original<fn>(index)(g_Interfaces.ClientMode, pView);
 	g_Visuals.FOV(pView);
 	g_Visuals.OffsetCamera(pView);
+	g_Visuals.Freecam(pView);
 }
 
 bool __stdcall ClientModeHook::ShouldDrawViewModel::Hook()
@@ -120,6 +121,8 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		AntiWarp(pCmd);
 	}
 
+	g_Visuals.FreecamCM(pCmd);
+
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
 		g_GlobalInfo.m_Latency = g_Interfaces.ClientState->m_NetChannel->GetLatency(0);
@@ -176,6 +179,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	}
 	g_EnginePrediction.End(pCmd);
 	g_Misc.AutoRocketJump(pCmd);
+	g_Misc.CheatsBypass();
 	g_GlobalInfo.m_vViewAngles = pCmd->viewangles;
 
 

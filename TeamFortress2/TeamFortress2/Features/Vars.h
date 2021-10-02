@@ -438,6 +438,9 @@ namespace Vars
 		inline CVar<bool> AutoStrafe			{ true, L"Auto Strafe" };
 		inline CVar<bool> TauntSlide			{ false, L"Taunt Slide" };
 		inline CVar<bool> TauntControl			{ false, L"Taunt Control" };
+		inline CVar<bool> Freecam				{ false, L"freecam" };
+		inline CVar<int>  FreecamKey			{ 0x48, L"freecam key" };
+		inline CVar<float>  FreecamSpeed { 3.f, L"freecam speed" };
 		inline CVar<bool> BypassPure            { false, L"Bypass Pure" };
 		inline CVar<bool> NoisemakerSpam        { false, L"Noisemaker Spam" };
 		inline CVar<bool> DisableInterpolation	{ true, L"Disable Interpolation" };
@@ -447,10 +450,12 @@ namespace Vars
 		inline CVar<bool> NoPush				{ false, L"No Push" };
 		inline CVar<bool> InstantRespawn		{ false, L"MvM Instant Respawn" };
 		inline CVar<bool> EdgeJump				{ false, L"Edge Jump" };
-		inline CVar<bool> AntiAFK{ false, L"Anti AFK" };
+		inline CVar<bool> AntiAFK				{ false, L"Anti AFK" };
 		inline CVar<bool> VoteRevealer			{ false, L"Reveal votes" };
 		inline CVar<bool> VotesInChat			{ false, L"Reveal votes to party" };
-		inline std::string SteamRPC = "";
+		inline CVar<bool> SteamRPC				{ true, L"Self explanatory" };
+		inline CVar<bool> CheatsBypass			{ false, L"cum" };
+		inline std::string SteamRPCText	= "Currently Pwning with CAM";
 		namespace CL_Move
 		{
 			inline CVar<bool> Doubletap{ true, L"Doubletap" };
