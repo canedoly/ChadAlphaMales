@@ -27,6 +27,7 @@ private:
 
 public:
 	std::vector<EventLogging_t> vecEventVector;
+	void DrawHitboxMatrix(CBaseEntity* nigga, Color_t col, float time);
 	void AddToEventLog(const char* string, ...);
 	void FreecamCM(CUserCmd* pCmd);
 	void Freecam(CViewSetup* pView);

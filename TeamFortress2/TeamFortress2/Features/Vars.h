@@ -263,6 +263,8 @@ namespace Vars
 			inline CVar<int> Material{ 1, L"Material" }; //0 - None, 1 - Shaded, 2 - Shiny, 3 - Flat
 			inline CVar<bool> IgnoreZ{ false , L"IgnoreZ" };
 			inline CVar<float> Alpha{ 1.0f, L"Alpha" };
+			inline CVar<bool> HitboxThing{ false, L"xd" };
+			inline CVar<float> HitboxTimeThing{ 5.0f, L"balls" };
 		}
 
 		namespace Buildings

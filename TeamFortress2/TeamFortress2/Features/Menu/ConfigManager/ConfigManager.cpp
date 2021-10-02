@@ -298,6 +298,8 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Chams::Players::Material);
 				SAVE_VAR(Vars::Chams::Players::IgnoreZ);
 				SAVE_VAR(Vars::Chams::Players::Alpha);
+				SAVE_VAR(Vars::Chams::Players::HitboxThing);
+				SAVE_VAR(Vars::Chams::Players::HitboxTimeThing);
 			}
 
 			//Buildings
@@ -532,6 +534,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::Bones);
 			SAVE_OTHER(Colors::HealthBarTopColor);
 			SAVE_OTHER(Colors::HealthBarBottomColor);
+			SAVE_OTHER(Colors::hitboxColor);
 
 			SAVE_OTHER(g_Radar.m_nRadarX);
 			SAVE_OTHER(g_Radar.m_nRadarY);
@@ -737,6 +740,8 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Chams::Players::Material);
 				LOAD_VAR(Vars::Chams::Players::IgnoreZ);
 				LOAD_VAR(Vars::Chams::Players::Alpha);
+				LOAD_VAR(Vars::Chams::Players::HitboxThing);
+				LOAD_VAR(Vars::Chams::Players::HitboxTimeThing);
 			}
 
 			//Buildings
@@ -972,6 +977,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::Bones);
 			LOAD_OTHER(Colors::HealthBarTopColor);
 			LOAD_OTHER(Colors::HealthBarBottomColor);
+			LOAD_OTHER(Colors::hitboxColor);
 
 			LOAD_OTHER(g_Radar.m_nRadarX);
 			LOAD_OTHER(g_Radar.m_nRadarY);

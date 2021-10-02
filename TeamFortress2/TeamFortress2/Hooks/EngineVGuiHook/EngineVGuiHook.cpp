@@ -149,7 +149,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 
 			int ms = std::max(0, (int)std::round(g_GlobalInfo.m_Latency * 1000.f));
 			// Change admin to something else if you really need to, it was for the protection thing
-			_snwprintf(buff, sizeof(buff), _(L"CAM [v1.2] | admin | fps: %i | delay: %ims") ,fps, ms);
+			_snwprintf(buff, sizeof(buff), _(L"CAM [v1.2b] | admin | fps: %i | delay: %ims") ,fps, ms);
 
 			g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_MENU].dwFont, buff, label_w, label_h);
 

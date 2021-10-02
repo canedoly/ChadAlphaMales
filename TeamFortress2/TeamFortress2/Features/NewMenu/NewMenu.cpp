@@ -520,10 +520,10 @@ void ESPTab() {
         ImGui::MenuChild(_("Player"), ImVec2(253, 446), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             if (ImGui::BeginPopup(_("PlayerHealthBar"))) {
-                ImGui::Text(ICON_FA_EYE " Player Health Bar");
+                ImGui::Text(_(ICON_FA_EYE " Player Health Bar"));
                 ImGui::Separator();
-                ColorPicker2("Healthbar top color", Colors::HealthBarTopColor, false);
-                ColorPicker2("Healthbar bottom color", Colors::HealthBarBottomColor, false);
+                ColorPicker2(_("Healthbar top color"), Colors::HealthBarTopColor, false);
+                ColorPicker2(_("Healthbar bottom color"), Colors::HealthBarBottomColor, false);
 
                 ImGui::EndPopup();
             }
@@ -743,6 +743,10 @@ void ESPTab2() { // Chams
             static const char* ignoreTeammatesChams[]{ "Off", "All", "Keep friends" };
             ImGui::Combo(_("Ignore teammates###chamsteam"), &Vars::Chams::Players::IgnoreTeammates.m_Var, ignoreTeammatesChams, IM_ARRAYSIZE(ignoreTeammatesChams));
             ImGui::SliderFloat(_("Player chams opacity"), &Vars::Chams::Players::Alpha.m_Var, 0.0f, 1.0f, _("%.2f"), ImGuiSliderFlags_Logarithmic | ImGuiSliderFlags_AlwaysClamp);
+            ImGui::Checkbox(_("Hitbox matrix"), &Vars::Chams::Players::HitboxThing.m_Var);
+            plsfix(23);
+            ColorPicker(_("Matrix color"), Colors::hitboxColor, true);
+            ImGui::SliderFloat(_("Matrix time"), &Vars::Chams::Players::HitboxTimeThing.m_Var, 0.1f, 10.0f, _("%.0f"), ImGuiSliderFlags_AlwaysClamp);
         }
         ImGui::EndChild();
         ImGui::EndGroup();
