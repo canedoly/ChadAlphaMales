@@ -1,5 +1,6 @@
 #include "AimbotHitscan.h"
 #include "../../Vars.h"
+
 int CAimbotHitscan::GetHitbox(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 {
 	switch (Vars::Aimbot::Hitscan::AimHitbox.m_Var)
@@ -566,6 +567,7 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 
 		Aim(pCmd, Target.m_vAngleTo);
 
+
 		if (ShouldFire(pLocal, pWeapon, pCmd, Target))
 		{
 			if (nWeaponID == TF_WEAPON_MINIGUN)
@@ -610,8 +612,13 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 
 		bool bIsAttacking = IsAttacking(pCmd, pWeapon);
 
-		if (bIsAttacking)
+		if (bIsAttacking) {
 			g_GlobalInfo.m_bAttacking = true;
+			if (Vars::Chams::Players::HitboxThing.m_Var && abs(pCmd->tick_count - nLastTracerTick) > 1) {
+				g_Visuals.DrawHitboxMatrix(Target.m_pEntity, Vars::Chams::Players::hitboxColor, Vars::Chams::Players::HitboxTimeThing.m_Var);
+				nLastTracerTick = pCmd->tick_count;
+			}
+		}
 
 		/*
 		if (bIsAttacking) {

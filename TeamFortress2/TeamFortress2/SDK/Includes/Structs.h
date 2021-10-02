@@ -16,7 +16,9 @@ struct mstudiobbox_t
 	Vec3 bbmin;
 	Vec3 bbmax;
 	int szhitboxnameindex;
-	int unused[8];
+	Vec3 angle;
+	float m_radius;
+	uint8_t _padding[0x10];
 };
 
 struct mstudiohitboxset_t
