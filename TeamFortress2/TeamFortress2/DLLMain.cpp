@@ -38,6 +38,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	
 	g_SteamInterfaces.Init();
 	g_Interfaces.Init();
+	g_Interfaces.Engine->ClientCmd_Unrestricted("unbind f7"); // for legacy only lmao
 	g_Interfaces.Engine->ClientCmd_Unrestricted("cl_vote_ui_active_after_voting 1");
 	g_Interfaces.Engine->ClientCmd_Unrestricted("cl_timeout 99999");
 	g_Interfaces.Engine->ClientCmd_Unrestricted("clear");

@@ -10,12 +10,40 @@ bool CESP::ShouldRun()
 	return true;
 }
 
+void CESP::AAIndicator() {
+	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	{
+		// TODO: color pickers
+		static const auto real_color = Color_t(255, 0, 0, 255);
+		static const auto fake_color = Color_t(0, 0, 255, 255);
+		static const auto lby_color = Color_t(0, 255, 0, 255);
+
+		// TODO: slider
+		constexpr auto distance = 50.f;
+
+		const auto origin = pLocal->GetAbsOrigin();
+
+		Vec3 screen1, screen2;
+		if (Utils::W2S(origin, screen1))
+		{
+			if (Utils::W2S(Math::GetRotatedPosition(origin, g_GlobalInfo.m_vRealViewAngles.y, distance), screen2))
+				g_Draw.Line(screen1.x, screen1.y, screen2.x, screen2.y, real_color);
+
+			if (Utils::W2S(Math::GetRotatedPosition(origin, g_GlobalInfo.m_vFakeViewAngles.y, distance), screen2))
+				g_Draw.Line(screen1.x, screen1.y, screen2.x, screen2.y, fake_color);
+		}
+	}
+}
+
 void CESP::Run()
 {
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
 		if (ShouldRun())
 		{
+			if(Vars::AntiHack::AntiAim::Active.m_Var)
+				AAIndicator();
+
 			DrawWorld();
 			DrawBuildings(pLocal);
 			DrawPlayers(pLocal);
@@ -157,7 +185,14 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 		if (GetDrawBounds(Player, vTrans, x, y, w, h))
 		{
 			int nHealth = Player->GetHealth(), nMaxHealth = Player->GetMaxHealth();
-			Color_t HealthColor = Utils::GetHealthColor(nHealth, nMaxHealth);
+			//static Color_t HealthColor = { 0,255,0,255 };
+			static Color_t TopColor = { 0,255,0,255 };
+			static Color_t BottomColor = { 255,0,0,255 };
+
+			if(Vars::ESP::Players::Healthbar::HealthBasedColor.m_Var == 1) {
+				TopColor = Colors::HealthBarTopColor;
+				BottomColor = Colors::HealthBarBottomColor;
+			}
 
 			size_t FONT = (Vars::ESP::Main::Outline.m_Var ? FONT_ESP_OUTLINED : FONT_ESP),
 				   FONT_NAME = (Vars::ESP::Main::Outline.m_Var ? FONT_ESP_NAME_OUTLINED : FONT_ESP_NAME);
@@ -173,7 +208,7 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 
 			if (Vars::ESP::Players::Bones.m_Var)
 			{
-				const Color_t clrBone = Vars::ESP::Players::Bones.m_Var == 1 ? Colors::Bones : HealthColor;
+				const Color_t clrBone = Colors::Bones;
 
 				DrawBones(Player, { 8, 7, 6, 4 },	clrBone);
 				DrawBones(Player, { 11, 10, 9, 4 }, clrBone);
@@ -217,13 +252,7 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 				if (Utils::W2S(Player->GetAbsOrigin(), vScreen))
 					g_Draw.Line(vOrigin.x, vOrigin.y, vScreen.x, vScreen.y, DrawColor);
 			}
-			/* // Health text
-			if (Vars::ESP::Players::Health.m_Var)
-			{
-				g_Draw.String(FONT, nTextX, (y + nTextOffset), nHealth > nMaxHealth ? Colors::Overheal : HealthColor, ALIGN_DEFAULT, L"%d", nHealth);
-				nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
-			}
-			*/
+
 			if (Vars::ESP::Players::Uber.m_Var && nClassNum == ETFClass::CLASS_MEDIC)
 			{
 				if (const auto& pMedGun = Player->GetWeaponFromSlot(EWeaponSlots::SLOT_SECONDARY))
@@ -307,17 +336,17 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 				}
 			}
 
-			if (Vars::ESP::Players::HealthBar.m_Var)
+			if (Vars::ESP::Players::Healthbar::Enabled.m_Var)
 			{
 				x -= 1;
 
 				float flHealth = static_cast<float>(nHealth);
 				float flMaxHealth = static_cast<float>(nMaxHealth);
 
-				Color_t clr = flHealth > flMaxHealth ? Colors::Overheal : HealthColor;
+				//Color_t clr = flHealth > flMaxHealth ? Colors::Overheal : HealthColor;
 
 				if (!Player->IsVulnerable())
-					clr = Colors::Invuln;
+					TopColor = Colors::Invuln;
 
 				if (flHealth > flMaxHealth)
 					flHealth = flMaxHealth;
@@ -328,8 +357,8 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 
 				float ratio = (flHealth / flMaxHealth);
 				g_Draw.Rect(((x - nWidth) - 2), y, nWidth, nHeight2, { 0,0,0,150 });
-				//g_Draw.Rect(((x - nWidth) - 2), (y + nHeight - (nHeight * ratio)), nWidth, (nHeight * ratio), clr);
-				g_Draw.GradientRect(((x - nWidth) - 2), (y + nHeight - (nHeight * ratio)), ((x - nWidth) - 2) + nWidth, (y + nHeight - (nHeight * ratio)) + (nHeight * ratio), clr, { 255,0,0,255 }, false);
+				g_Draw.GradientRect(((x - nWidth) - 2), (y + nHeight - (nHeight * ratio)), ((x - nWidth) - 2) + nWidth, (y + nHeight - (nHeight * ratio)) + (nHeight * ratio), TopColor, BottomColor, false);
+				//g_Draw.GradientRect(((x - nWidth) - 2), (y + nHeight - (nHeight * ratio)), ((x - nWidth) - 2) + nWidth, (y + nHeight - (nHeight * ratio)) + (nHeight * ratio), clr, { 255,0,0,255 }, false);
 				if (flHealth < flMaxHealth) {
 					g_Draw.String(
 						FONT_ESP_PICKUPS_OUTLINED, (x - 15), (y + nHeight - (nHeight * ratio)), { 255,255,255,255 }, ALIGN_CENTER, L"%d", nHealth
@@ -338,7 +367,7 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 
 				if (Vars::ESP::Main::Outline.m_Var == 2)
 					g_Draw.OutlinedRect(((x - nWidth) - 3), (y - 1), (nWidth + 2), (nHeight2 + 2), { 0,0,0,150 });
-					g_Draw.OutlinedRect(((x - nWidth) - 2) - 1, (y + nHeight - (nHeight * ratio)) - 1, nWidth + 2, (nHeight * ratio) + 2, Colors::OutlineESP);
+					g_Draw.OutlinedRect(((x - nWidth) - 2) - 1, (y + nHeight - (nHeight * ratio)) - 1, nWidth + 2, (nHeight* ratio) + 2, { 0,0,0,255 });
 
 				x += 1;
 			}
@@ -571,11 +600,6 @@ void CESP::DrawWorld()
 		}
 	}
 
-	for (const auto& Projectile : g_EntityCache.GetGroup(EGroupType::WORLD_PROJECTILES))
-	{
-		if (Utils::W2S(Projectile->GetWorldSpaceCenter(), vScreen))
-			g_Draw.String(FONT, vScreen.x, vScreen.y, { 255,0,0,255 }, ALIGN_CENTER, _(L"!"));
-	}
 	g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
 }
 

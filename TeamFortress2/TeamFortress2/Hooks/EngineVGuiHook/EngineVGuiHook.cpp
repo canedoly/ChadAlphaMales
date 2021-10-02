@@ -13,14 +13,6 @@
 int ticksChoked = 0;
 std::time_t CurzTime = std::time(nullptr);
 
-std::string comp_name() {
-
-	char buff[MAX_PATH];
-	GetEnvironmentVariableA(_("USERNAME"), buff, MAX_PATH);
-
-	return std::string(buff);
-}
-
 void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 {
 	static auto StartDrawing = reinterpret_cast<void(__thiscall*)(void*)>(g_Pattern.Find(_(L"vguimatsurface.dll"), _(L"55 8B EC 64 A1 ? ? ? ? 6A FF 68 ? ? ? ? 50 64 89 25 ? ? ? ? 83 EC 14")));

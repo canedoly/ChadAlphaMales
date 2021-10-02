@@ -1449,7 +1449,7 @@ void CMenu::Run()
 						ComboBox(Vars::ESP::Players::Class, { { 0, _(L"Off") }, { 1, _(L"Icon") }, { 2, _(L"Text") }, { 3, _(L"Both") } });
 						//CheckBox(Vars::ESP::Players::Health, _(L"Draw player's health"));
 						CheckBox(Vars::ESP::Players::Cond, _(L"Draw player's condition(s)"));
-						CheckBox(Vars::ESP::Players::HealthBar, _(L"Draw player's health with bar"));
+						CheckBox(Vars::ESP::Players::Healthbar::Enabled, _(L"Draw player's health with bar"));
 						ComboBox(Vars::ESP::Players::Uber, { { 0, _(L"Off") }, { 1, _(L"Text") }, { 2, _(L"Bar") } });
 						ComboBox(Vars::ESP::Players::Box, { { 0, _(L"Off") }, { 1, _(L"Simple") }, { 2, _(L"Corners") }, { 3, _(L"3D") } });
 						ComboBox(Vars::ESP::Players::Bones, { {0, _(L"Off")}, {1, _(L"Custom")}, {2, _(L"Health")} }); // Off / Custom / Health

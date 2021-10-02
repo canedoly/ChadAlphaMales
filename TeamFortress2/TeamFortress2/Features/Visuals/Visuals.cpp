@@ -189,15 +189,18 @@ void CVisuals::RunEventLogs()
 
 		if (time_delta > flTextTime - flTextFadeOutTime) {
 			log.flAlpha = (255 - (((time_delta - (flTextTime - flTextFadeOutTime)) / flTextFadeOutTime) * 255.f));
-			width = flIdealWidth + (((time_delta - (flTextTime - flTextFadeOutTime)) / flTextFadeOutTime) * (float)(flSlideOutDistance));
+			width = flIdealWidth - (((time_delta - (flTextTime - flTextFadeOutTime)) / flTextFadeOutTime) * (float)(flSlideOutDistance));
 		}
 		// Idk i put flAlpha on everything, looks cooler lol
 		static int w, h;
 		g_Interfaces.Surface->GetTextSize(FONT_MENU_OUTLINED, Utils::ConvertUtf8ToWide(log.szText.c_str()).data(), w, h);
 		Color_t color = Vars::Menu::Colors::WidgetActive;
-		g_Draw.GradientRect(width, height - 2, w, height + 15, Color_t(0, 0, 0, 0), Color_t(0, 0, 0, 255), true);
+
+		// I have to do it the ghetto way because woohooo!!!
+		g_Interfaces.Surface->SetDrawColor(0, 0, 0, log.flAlpha);
+		g_Interfaces.Surface->DrawFilledRectFade(w2 - 5, height - 2, w - 30 + width, height + 15, log.flAlpha, 0, true);
 		g_Draw.Rect(w2, height - 2, 2, 17, Vars::Menu::Colors::WidgetActive);
-		g_Draw.String(FONT_MENU_OUTLINED, width, height, Color_t(log.flAlpha, log.flAlpha, log.flAlpha, log.flAlpha), ALIGN_DEFAULT, Utils::ConvertUtf8ToWide(log.szText.c_str()).data());
+		g_Draw.String(FONT_MENU_OUTLINED, width + 5, height, Color_t(log.flAlpha, log.flAlpha, log.flAlpha, log.flAlpha), ALIGN_DEFAULT, Utils::ConvertUtf8ToWide(log.szText.c_str()).data());
 	}
 }
 

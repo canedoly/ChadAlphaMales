@@ -244,7 +244,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::ESP::Players::Class);
 				//SAVE_VAR(Vars::ESP::Players::Health);
 				SAVE_VAR(Vars::ESP::Players::Cond);
-				SAVE_VAR(Vars::ESP::Players::HealthBar);
+				SAVE_VAR(Vars::ESP::Players::Healthbar::Enabled);
 				SAVE_VAR(Vars::ESP::Players::Box);
 				SAVE_VAR(Vars::ESP::Players::GUID);
 				SAVE_VAR(Vars::ESP::Players::Alpha);
@@ -275,6 +275,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::ESP::World::Active);
 				SAVE_VAR(Vars::ESP::World::HealthText);
 				SAVE_VAR(Vars::ESP::World::AmmoText);
+				SAVE_VAR(Vars::ESP::World::Projectiles);
 				SAVE_VAR(Vars::ESP::World::Alpha);
 			}
 		}
@@ -442,6 +443,8 @@ void CConfigManager::Save(const wchar_t *name)
 
 			SAVE_VAR(Vars::Visuals::WorldModulation);
 
+			SAVE_VAR(Vars::Visuals::DevTextures);
+
 			SAVE_VAR(Vars::Visuals::PlayerList);
 //#ifdef DEVELOPER_BUILD
 			SAVE_VAR(Vars::Visuals::Skins::Enabled);
@@ -523,9 +526,12 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::Hands);
 			SAVE_OTHER(Colors::Weapon);
 			SAVE_OTHER(Colors::WorldModulation);
+			SAVE_OTHER(Colors::FresnelBase);
 			SAVE_OTHER(Colors::StaticPropModulation);
 			SAVE_OTHER(Colors::FOVCircle);
 			SAVE_OTHER(Colors::Bones);
+			SAVE_OTHER(Colors::HealthBarTopColor);
+			SAVE_OTHER(Colors::HealthBarBottomColor);
 
 			SAVE_OTHER(g_Radar.m_nRadarX);
 			SAVE_OTHER(g_Radar.m_nRadarY);
@@ -676,7 +682,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::ESP::Players::Class);
 				//LOAD_VAR(Vars::ESP::Players::Health);
 				LOAD_VAR(Vars::ESP::Players::Cond);
-				LOAD_VAR(Vars::ESP::Players::HealthBar);
+				LOAD_VAR(Vars::ESP::Players::Healthbar::Enabled);
 				LOAD_VAR(Vars::ESP::Players::Box);
 				LOAD_VAR(Vars::ESP::Players::GUID);
 				LOAD_VAR(Vars::ESP::Players::Alpha);
@@ -707,6 +713,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::ESP::World::Active);
 				LOAD_VAR(Vars::ESP::World::HealthText);
 				LOAD_VAR(Vars::ESP::World::AmmoText);
+				LOAD_VAR(Vars::ESP::World::Projectiles);
 				LOAD_VAR(Vars::ESP::World::Alpha);
 			}
 		}
@@ -875,6 +882,8 @@ void CConfigManager::Load(const wchar_t *name)
 
 			LOAD_VAR(Vars::Visuals::WorldModulation);
 
+			LOAD_VAR(Vars::Visuals::DevTextures);
+
 			LOAD_VAR(Vars::Visuals::PlayerList);
 //#ifdef DEVELOPER_BUILD
 			LOAD_VAR(Vars::Visuals::Skins::Enabled);
@@ -957,9 +966,12 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::Hands);
 			LOAD_OTHER(Colors::Weapon);
 			LOAD_OTHER(Colors::WorldModulation);
+			LOAD_OTHER(Colors::FresnelBase);
 			LOAD_OTHER(Colors::StaticPropModulation);
 			LOAD_OTHER(Colors::FOVCircle);
 			LOAD_OTHER(Colors::Bones);
+			LOAD_OTHER(Colors::HealthBarTopColor);
+			LOAD_OTHER(Colors::HealthBarBottomColor);
 
 			LOAD_OTHER(g_Radar.m_nRadarX);
 			LOAD_OTHER(g_Radar.m_nRadarY);

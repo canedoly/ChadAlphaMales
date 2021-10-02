@@ -644,6 +644,15 @@ namespace Math
 		n = std::max(lower, std::min(n, upper));
 	}
 
+	inline auto GetRotatedPosition(Vec3 start, const float rotation, const float distance)
+	{
+		const auto rad = DEG2RAD(rotation);
+		start.x += cosf(rad) * distance;
+		start.y += sinf(rad) * distance;
+
+		return start;
+	}
+
 	inline void VectorTransform(const Vec3& input, const matrix3x4& matrix, Vec3& output)
 	{
 		for (auto i = 0; i < 3; i++)

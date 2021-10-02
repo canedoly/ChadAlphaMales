@@ -15,8 +15,6 @@ void __stdcall ClientHook::PreEntity::Hook(char const *szMapName)
 void __stdcall ClientHook::PostEntity::Hook()
 {
 	Table.Original<fn>(index)(g_Interfaces.Client);
-	if (Vars::Misc::SteamRPC.m_Var)
-		source::features::steamrichpresence.Update();
 
 	g_Interfaces.Engine->ClientCmd_Unrestricted(_("r_maxdlights 69420"));
 	g_Interfaces.Engine->ClientCmd_Unrestricted(_("r_dynamic 1"));
@@ -44,7 +42,6 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 				}
 			}
 			g_Visuals.ViewmodelXYZ();
-			//g_Visuals.Fullbright();
 			g_Visuals.ARatio();
 			g_Visuals.ThirdPerson();
 			g_Visuals.SkyboxChanger();
@@ -55,6 +52,9 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 	}
 	
 	Table.Original<fn>(index)(g_Interfaces.Client, FrameStage);
+
+	if (Vars::Misc::SteamRPC.m_Var)
+		source::features::steamrichpresence.Update();
 
 	switch (FrameStage)
 	{

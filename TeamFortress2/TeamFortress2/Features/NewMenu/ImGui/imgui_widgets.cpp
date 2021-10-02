@@ -1064,7 +1064,7 @@ bool ImGui::ImageButton(ImTextureID user_texture_id, const ImVec2& size, const I
     return ImageButtonEx(id, user_texture_id, size, uv0, uv1, padding, bg_col, tint_col);
 }
 
-bool ImGui::tab(const char* label, bool selected)
+bool ImGui::tab(const char* label, bool selected, int width)
 {
     ImGuiWindow* window = GetCurrentWindow();
     if (window->SkipItems)
@@ -1074,7 +1074,7 @@ bool ImGui::tab(const char* label, bool selected)
     const ImGuiID id = window->GetID(label);
     const ImVec2 label_size = CalcTextSize(label, NULL, true);
     ImVec2 pos = window->DC.CursorPos;
-    ImVec2 size = CalcItemSize(ImVec2(75, 40), 50 + style.FramePadding.x, label_size.y + style.FramePadding.y);
+    ImVec2 size = CalcItemSize(ImVec2(width, 40), 50 + style.FramePadding.x, label_size.y + style.FramePadding.y);
     const ImRect bb(pos, pos + size);
     ItemSize(size, style.FramePadding.y);
     if (!ItemAdd(bb, id))
@@ -1086,7 +1086,7 @@ bool ImGui::tab(const char* label, bool selected)
     auto draw = GetWindowDrawList();
     const ImU32 col = GetColorU32((held && hovered) ? ImGuiCol_ButtonActive : hovered ? ImGuiCol_ButtonHovered : ImGuiCol_Button);
     float t = selected ? 1.0f : 0.0f;
-    float ANIM_SPEED = 0.39f; // Bigger = Slower
+    float ANIM_SPEED = 0.25f; // Bigger = Slower
     if (g.LastActiveId == g.CurrentWindow->GetID(label)) {
         float t_anim = ImSaturate(g.LastActiveIdTimer / ANIM_SPEED);
         t = selected ? (t_anim) : (0);
@@ -1098,7 +1098,7 @@ bool ImGui::tab(const char* label, bool selected)
     //ImGui::ColorConvertFloat4ToU32(ImGui::GetStyle().Colors[ImGuiCol_MenuBarBg])
     draw->AddRectFilledMultiColor(ImVec2(bb.Min.x, bb.Min.y - 2), ImVec2(bb.Max.x, bb.Max.y), ImColor(0,0,0,0), ImColor(0, 0, 0, 0), ImColor(MenuBarCol.x / 2, MenuBarCol.y / 2, MenuBarCol.z / 2, a / 255.f), ImColor(MenuBarCol.x / 2, MenuBarCol.y / 2, MenuBarCol.z / 2, a / 255.f));
     draw->AddRectFilled(ImVec2(bb.Min.x, bb.Max.y - 2), bb.Max, ImColor(MenuBarCol.x, MenuBarCol.y, MenuBarCol.z, (float)a));
-    draw->AddText(ImVec2(pos.x + 75 / 2 - label_size.x / 2, pos.y + 22 - label_size.y / 2), text_color, label);
+    draw->AddText(ImVec2(pos.x + width / 2 - label_size.x / 2, pos.y + 22 - label_size.y / 2), text_color, label);
     IMGUI_TEST_ENGINE_ITEM_INFO(id, label, window->DC.LastItemStatusFlags);
     return pressed;
 }
