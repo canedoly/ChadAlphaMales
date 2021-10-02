@@ -686,10 +686,6 @@ void ESPTab2() { // Chams
             static const char* ignoreTeammatesChams[]{ "Off", "All", "Keep friends" };
             ImGui::Combo(_("Ignore teammates###chamsteam"), &Vars::Chams::Players::IgnoreTeammates.m_Var, ignoreTeammatesChams, IM_ARRAYSIZE(ignoreTeammatesChams));
             ImGui::SliderFloat(_("Player chams opacity"), &Vars::Chams::Players::Alpha.m_Var, 0.0f, 1.0f, _("%.2f"), ImGuiSliderFlags_Logarithmic | ImGuiSliderFlags_AlwaysClamp);
-            ImGui::Checkbox(_("Hitbox matrix"), &Vars::Chams::Players::HitboxThing.m_Var);
-            plsfix(23);
-            ColorPicker(_("Matrix color"), Vars::Chams::Players::hitboxColor, true);
-            ImGui::SliderFloat(_("Matrix time"), &Vars::Chams::Players::HitboxTimeThing.m_Var, 0.1f, 10.0f, _("%.0f"), ImGuiSliderFlags_AlwaysClamp);
         }
         ImGui::EndChild();
         ImGui::EndGroup();

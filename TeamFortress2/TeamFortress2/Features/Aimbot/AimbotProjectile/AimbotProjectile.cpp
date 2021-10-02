@@ -682,13 +682,6 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 
 		bool bIsAttacking = IsAttacking(pCmd, pWeapon);
 
-		if (bIsAttacking) {
-			if (Vars::Chams::Players::HitboxThing.m_Var && abs(pCmd->tick_count - nLastTracerTick) > 1) {
-				g_Visuals.DrawHitboxMatrix(Target.m_pEntity, Vars::Chams::Players::hitboxColor, Vars::Chams::Players::HitboxTimeThing.m_Var);
-				nLastTracerTick = pCmd->tick_count;
-			}
-		}
-
 		if (Vars::Aimbot::Projectile::AimMethod.m_Var == 1)
 		{
 			if (m_bIsFlameThrower) {

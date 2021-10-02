@@ -297,9 +297,6 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Chams::Players::Material);
 				SAVE_VAR(Vars::Chams::Players::IgnoreZ);
 				SAVE_VAR(Vars::Chams::Players::Alpha);
-				SAVE_VAR(Vars::Chams::Players::HitboxThing);
-				SAVE_VAR(Vars::Chams::Players::HitboxTimeThing);
-				SAVE_OTHER(Vars::Chams::Players::hitboxColor);
 			}
 
 			//Buildings
@@ -733,9 +730,6 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Chams::Players::Material);
 				LOAD_VAR(Vars::Chams::Players::IgnoreZ);
 				LOAD_VAR(Vars::Chams::Players::Alpha);
-				LOAD_VAR(Vars::Chams::Players::HitboxThing);
-				LOAD_VAR(Vars::Chams::Players::HitboxTimeThing);
-				LOAD_OTHER(Vars::Chams::Players::hitboxColor);
 			}
 
 			//Buildings
@@ -908,7 +902,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Misc::AutoStrafe);
 			LOAD_VAR(Vars::Misc::EdgeJump);
 			LOAD_VAR(Vars::Misc::AntiAFK);
-			LOAD_VAR(Vars::Misc::VoteRevealer);
+			SAVE_VAR(Vars::Misc::VoteRevealer);
 
 			// CL_Move
 			{

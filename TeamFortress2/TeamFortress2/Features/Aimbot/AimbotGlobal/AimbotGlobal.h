@@ -1,6 +1,6 @@
 #pragma once
 #include "../../../SDK/SDK.h"
-#include "../../Visuals/Visuals.h"
+
 enum struct ETargetType {
 	UNKNOWN, PLAYER, BUILDING
 };
