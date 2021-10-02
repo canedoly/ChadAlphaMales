@@ -433,6 +433,14 @@ typedef float matrix3x4[3][4];
 
 namespace Math
 {
+	//return { m_flMatVal[ 0 ][ 3 ], m_flMatVal[ 1 ][ 3 ], m_flMatVal[ 2 ][ 3 ] };
+	// x = matrix[0][3], y = matrix[1][3], z = matrix[2][3]
+	inline void GetMatrixOrigin(const matrix3x4& source, Vec3& target) {
+		target.x = source[0][3];
+		target.y = source[1][3];
+		target.z = source[2][3];
+	}
+
 	inline void SinCos(float radians, float *sine, float *cosine)
 	{
 		_asm
@@ -505,6 +513,31 @@ namespace Math
 		matrix[0][3] = 0.0f;
 		matrix[1][3] = 0.0f;
 		matrix[2][3] = 0.0f;
+	}
+
+	inline void MatrixAngles(const matrix3x4& matrix, Vec3& angles) {
+		Vec3 forward, left, up;
+
+		// extract the basis vectors from the matrix. since we only need the z
+		// component of the up vector, we don't get x and y.
+		forward = { matrix[0][0], matrix[1][0], matrix[2][0] };
+		left = { matrix[0][1], matrix[1][1], matrix[2][1] };
+		up = { 0.f, 0.f, matrix[2][2] };
+
+		float len = forward.Lenght2D();
+
+		// enough here to get angles?
+		if (len > 0.001f) {
+			angles.x = RAD2DEG(std::atan2(-forward.z, len));
+			angles.y = RAD2DEG(std::atan2(forward.y, forward.x));
+			angles.z = RAD2DEG(std::atan2(left.z, up.z));
+		}
+
+		else {
+			angles.x = RAD2DEG(std::atan2(-forward.z, len));
+			angles.y = RAD2DEG(std::atan2(-left.x, left.y));
+			angles.z = 0.f;
+		}
 	}
 
 	inline void AngleMatrix(const Vec3 &angles, const Vec3 &origin, matrix3x4 &matrix)
