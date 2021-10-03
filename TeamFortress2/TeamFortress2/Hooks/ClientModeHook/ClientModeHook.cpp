@@ -18,6 +18,7 @@ void __stdcall ClientModeHook::OverrideView::Hook(CViewSetup* pView)
 	Table.Original<fn>(index)(g_Interfaces.ClientMode, pView);
 	g_Visuals.FOV(pView);
 	g_Visuals.OffsetCamera(pView);
+	g_Visuals.Freecam(pView);
 }
 
 bool __stdcall ClientModeHook::ShouldDrawViewModel::Hook()
@@ -60,9 +61,9 @@ static void updateAntiAfk(CUserCmd* pCmd)
 			bool flip = false;
 			pCmd->buttons |= flip ? IN_FORWARD : IN_BACK;
 			flip = !flip;
-			g_Visuals.AddToEventLog(_("Attempting to prevent Anti-AFK kick...")); 
-			g_Interfaces.CVars->ConsoleColorPrintf({ 150, 255, 0, 255 }, _("Attempting to prevent Anti-AFK kick...\n"));
-			g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, "\x4[CAM]\x1 Attempting to prevent Anti-AFK kick...");
+			g_Visuals.AddToEventLog(_("Attempting to prevent AFK kick...")); 
+			g_Interfaces.CVars->ConsoleColorPrintf({ 150, 255, 0, 255 }, _("Attempting to prevent AFK kick...\n"));
+			g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, "\x4[CAM]\x1 Attempting to prevent AFK kick...");
 			if (AntiAfkTimer.check(g_ConVars.afkTimer->GetInt() * 60 * 1000 + 1000))
 			{
 				AntiAfkTimer.update();
@@ -71,6 +72,7 @@ static void updateAntiAfk(CUserCmd* pCmd)
 		last_buttons = pCmd->buttons;
 	}
 }
+
 int badcode = 0;
 bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CUserCmd* pCmd)
 {
@@ -119,6 +121,8 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	if (g_GlobalInfo.fast_stop) {
 		AntiWarp(pCmd);
 	}
+
+	g_Visuals.FreecamCM(pCmd);
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
@@ -179,7 +183,17 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	g_Misc.CheatsBypass();
 	g_GlobalInfo.m_vViewAngles = pCmd->viewangles;
 
+	if (const auto& pLocal = g_EntityCache.m_pLocal) {
+		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) {
+			if (Vars::Misc::CL_Move::Fakelag.m_Var) {
+				*pSendPacket = ((g_Interfaces.Engine->GetNetChannelInfo()->m_nChokedPackets < Vars::Misc::CL_Move::FakelagValue.m_Var) ||
+					(pWeapon->CanShoot(pLocal) && (pCmd->buttons & IN_ATTACK))) && pLocal->IsAlive() ? Vars::Misc::CL_Move::FakelagOnKey.m_Var &&
+					GetAsyncKeyState(Vars::Misc::CL_Move::FakelagKey.m_Var) ? false : false : true;
+			}
+		}
+	}
 
+	/*
 	if (const auto& pLocal = g_EntityCache.m_pLocal) {
 		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) {
 			if (pLocal->IsAlive())
@@ -201,7 +215,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			}
 		}
 	}
-
+	*/
 	if (Vars::Misc::TauntSlide.m_Var)
 	{
 		if (const auto& pLocal = g_EntityCache.m_pLocal)

@@ -201,7 +201,13 @@ namespace Vars
 			inline CVar<int> Class				{ 1, L"Class" }; // 0 - Off, 1 - Icon, 2 - Text, 3 - Both
 			inline CVar<bool> Health			{ false, L"Health" };
 			inline CVar<bool> Cond				{ true, L"Cond" };
-			inline CVar<bool> HealthBar			{ true, L"Health Bar" };
+
+			namespace Healthbar {
+				inline CVar<bool> Enabled{ true, L"Health Bar" };
+				inline CVar<bool> HealthBasedColor{ true, L"Health Based Color" };
+				inline CVar<int> Style{ 0, L"Style" };	//0 - Solid, 1 - Gradient
+			}
+
 			inline CVar<int> Box				{ 0, L"Box" };	//0 - OFF, 1 - Simple, 2 - Corners
 			inline CVar<int> Bones				{ 0, L"Bones" };
 			inline CVar<bool> GUID              { false, L"GUID" };
@@ -233,6 +239,7 @@ namespace Vars
 			inline CVar<bool> Active		{ true, L"Active" };
 			inline CVar<bool> HealthText	{ true, L"Health Text" };
 			inline CVar<bool> AmmoText		{ true, L"Ammo Text" };
+			inline CVar<int> Projectiles	{ 0, L"Projectiles" }; //0 - Off, 1 - All, 2 - Enemy Only
 			inline CVar<float> Alpha		{ 1.0f, L"Alpha" };
 		}
 	}
@@ -256,6 +263,8 @@ namespace Vars
 			inline CVar<int> Material{ 1, L"Material" }; //0 - None, 1 - Shaded, 2 - Shiny, 3 - Flat
 			inline CVar<bool> IgnoreZ{ false , L"IgnoreZ" };
 			inline CVar<float> Alpha{ 1.0f, L"Alpha" };
+			inline CVar<bool> HitboxThing{ false, L"xd" };
+			inline CVar<float> HitboxTimeThing{ 5.0f, L"balls" };
 		}
 
 		namespace Buildings
@@ -323,7 +332,7 @@ namespace Vars
 			inline CVar<bool> Active{ false, L"Active" };
 			inline CVar<bool> Health{ true, L"Health" };
 			inline CVar<bool> Ammo{ true, L"Ammo" };
-			inline CVar<int> Projectiles{ 1, L"Projectiles" }; //0 - Off, 1 - All, 2 - Enemy Only
+			inline CVar<int> Projectiles{ 2, L"Projectiles" }; //0 - Off, 1 - All, 2 - Enemy Only
 			inline CVar<float> Alpha{ 1.0f, L"Alpha" };
 		}
 	}
@@ -439,6 +448,9 @@ namespace Vars
 		inline CVar<bool> AutoStrafe			{ true, L"Auto Strafe" };
 		inline CVar<bool> TauntSlide			{ false, L"Taunt Slide" };
 		inline CVar<bool> TauntControl			{ false, L"Taunt Control" };
+		inline CVar<bool> Freecam				{ false, L"freecam" };
+		inline CVar<int>  FreecamKey			{ 0x48, L"freecam key" };
+		inline CVar<float> FreecamSpeed			{ 3.f, L"freecam speed" };
 		inline CVar<bool> BypassPure            { false, L"Bypass Pure" };
 		inline CVar<bool> NoisemakerSpam        { false, L"Noisemaker Spam" };
 		inline CVar<bool> DisableInterpolation	{ true, L"Disable Interpolation" };
@@ -448,12 +460,12 @@ namespace Vars
 		inline CVar<bool> NoPush				{ false, L"No Push" };
 		inline CVar<bool> InstantRespawn		{ false, L"MvM Instant Respawn" };
 		inline CVar<bool> EdgeJump				{ false, L"Edge Jump" };
-		inline CVar<bool> AntiAFK{ false, L"Anti AFK" };
+		inline CVar<bool> AntiAFK				{ false, L"Anti AFK" };
 		inline CVar<bool> VoteRevealer			{ false, L"Reveal votes" };
 		inline CVar<bool> VotesInChat			{ false, L"Reveal votes to party" };
+		inline CVar<bool> SteamRPC				{ true, L"Self explanatory" };
 		inline CVar<bool> CheatsBypass			{ false, L"cum" };
-		inline std::string SteamRPC = "";
-    
+		inline std::string SteamRPCText	= "ChadAlphaMales.club";
 		namespace CL_Move
 		{
 			inline CVar<bool> Doubletap{ true, L"Doubletap" };

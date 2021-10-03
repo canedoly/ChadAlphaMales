@@ -105,6 +105,9 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 	if (g_GlobalInfo.m_bShouldShift)
 	{
 		const auto& pLocal = g_EntityCache.m_pLocal;
+		if (!pLocal) // lol.
+			return;
+
 		int nClass = pLocal->GetClassNum();
 		int dtTicks;
 		if (nClass == CLASS_HEAVY) {

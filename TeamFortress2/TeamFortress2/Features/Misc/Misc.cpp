@@ -178,7 +178,6 @@ void CMisc::CheatsBypass()
 // This made me feel like killing myself because of SEOwned shit source...
 // TODO add a fucking name changer how hard can this shit be i wanna hang myself looking at this wtf is NET_SetConVar and why does it not fucking work i hate this source
 
-
 void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 {
 	if ((nOldFlags & FL_ONGROUND) && Vars::Misc::EdgeJump.m_Var)

@@ -1,8 +1,8 @@
 #pragma once
 #include "../../../SDK/SDK.h"
-
+#include "../../Visuals/Visuals.h"
 enum struct ETargetType {
-	UNKNOWN, PLAYER, BUILDING
+	UNKNOWN, PLAYER, BUILDING, PROJECTILE, NPC
 };
 
 enum struct ESortMethod {

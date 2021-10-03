@@ -54,7 +54,7 @@ RECT Draw_t::GetTextSize(unsigned long font, std::string string) {
 }
 
 
-void Draw_t::String(const size_t& font_idx, int x, int y, const Color_t& clr, const EStringAlign &align, const char* str, ...)
+void Draw_t::String(const size_t& font_idx, int x, int y, const Color_t& clr, const EStringAlign& align, const char* str, ...)
 {
 	if (str == 0)
 		return;
@@ -71,26 +71,26 @@ void Draw_t::String(const size_t& font_idx, int x, int y, const Color_t& clr, co
 
 	switch (align)
 	{
-		case ALIGN_DEFAULT: break;
-		case ALIGN_CENTER: {
-			int w = 0, h = 0;
-			g_Interfaces.Surface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
-			x -= (w / 2);
-			y -= (h / 2);
-			break;
-		}
-		case ALIGN_CENTERVERTICAL: {
-			int w = 0, h = 0;
-			g_Interfaces.Surface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
-			y -= (h / 2);
-			break;
-		}
-		case ALIGN_CENTERHORIZONTAL: {
-			int w = 0, h = 0;
-			g_Interfaces.Surface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
-			x -= (w / 2);
-			break;
-		}
+	case ALIGN_DEFAULT: break;
+	case ALIGN_CENTER: {
+		int w = 0, h = 0;
+		g_Interfaces.Surface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
+		x -= (w / 2);
+		y -= (h / 2);
+		break;
+	}
+	case ALIGN_CENTERVERTICAL: {
+		int w = 0, h = 0;
+		g_Interfaces.Surface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
+		y -= (h / 2);
+		break;
+	}
+	case ALIGN_CENTERHORIZONTAL: {
+		int w = 0, h = 0;
+		g_Interfaces.Surface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
+		x -= (w / 2);
+		break;
+	}
 	}
 
 	g_Interfaces.Surface->SetTextPos(x, y);
@@ -99,7 +99,7 @@ void Draw_t::String(const size_t& font_idx, int x, int y, const Color_t& clr, co
 	g_Interfaces.Surface->PrintText(wstr, wcslen(wstr));
 }
 
-void Draw_t::String(const size_t &font_idx, int x, int y, const Color_t &clr, const EStringAlign &align, const wchar_t *str, ...)
+void Draw_t::String(const size_t& font_idx, int x, int y, const Color_t& clr, const EStringAlign& align, const wchar_t* str, ...)
 {
 	if (str == 0)
 		return;
@@ -115,26 +115,26 @@ void Draw_t::String(const size_t &font_idx, int x, int y, const Color_t &clr, co
 
 	switch (align)
 	{
-		case ALIGN_DEFAULT: break;
-		case ALIGN_CENTER: {
-			int w = 0, h = 0;
-			g_Interfaces.Surface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
-			x -= (w / 2);
-			y -= (h / 2);
-			break;
-		}
-		case ALIGN_CENTERVERTICAL: {
-			int w = 0, h = 0;
-			g_Interfaces.Surface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
-			y -= (h / 2);
-			break;
-		}
-		case ALIGN_CENTERHORIZONTAL: {
-			int w = 0, h = 0;
-			g_Interfaces.Surface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
-			x -= (w / 2);
-			break;
-		}
+	case ALIGN_DEFAULT: break;
+	case ALIGN_CENTER: {
+		int w = 0, h = 0;
+		g_Interfaces.Surface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
+		x -= (w / 2);
+		y -= (h / 2);
+		break;
+	}
+	case ALIGN_CENTERVERTICAL: {
+		int w = 0, h = 0;
+		g_Interfaces.Surface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
+		y -= (h / 2);
+		break;
+	}
+	case ALIGN_CENTERHORIZONTAL: {
+		int w = 0, h = 0;
+		g_Interfaces.Surface->GetTextSize(m_vecFonts.at(font_idx).dwFont, wstr, w, h);
+		x -= (w / 2);
+		break;
+	}
 	}
 
 	g_Interfaces.Surface->SetTextPos(x, y);
@@ -173,7 +173,7 @@ void Draw_t::OutlinedCircle(int x, int y, float radius, int segments, const Colo
 {
 	float Step = PI * 2.0 / segments;
 
-	for (float a = 0; a < (PI * 2.0); a += Step) 
+	for (float a = 0; a < (PI * 2.0); a += Step)
 	{
 		float x1 = radius * cos(a) + x;
 		float y1 = radius * sin(a) + y;
@@ -256,7 +256,7 @@ void Draw_t::Avatar(const int x, const int y, const int w, const int h, const ui
 
 void Draw_t::ClearAvatarCache()
 {
-	for (auto &Avatar : m_mapAvatars) // lol fix warning by adding &
+	for (auto& Avatar : m_mapAvatars) // lol fix warning by adding &
 	{
 		g_Interfaces.Surface->DeleteTextureByID(Avatar.second);
 		g_Interfaces.Surface->DestroyTextureID(Avatar.second);

@@ -33,6 +33,36 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 				Exploits::cathook.run_auth();
 			}
 			
+			if (uNameHash == FNV1A::HashConst("achievement_earned")) { // We do a little pasting :troll:
+				const int player = pEvent->GetInt("player", 0xDEAD);
+				const int achievement = pEvent->GetInt("achievement", 0xDEAD);
+
+				// 0xCA7 is an identify and mark request.
+				// 0xCA8 is a mark request.
+
+				PlayerInfo_t info;
+				if (g_Interfaces.Engine->GetPlayerInfo(player, &info) && (achievement == 0xCA7 || achievement == 0xCA8) && pLocal->GetIndex() != player) {
+					if (m_known_bots.find(info.friendsID) == m_known_bots.end()) {
+						char szBuff[255];
+						g_Visuals.AddToEventLog(_("CAT detected: %s"), info.name);
+
+						sprintf(szBuff, _("\x4[CAM]\x1 CAT detected: \x3%s"), info.name);
+						g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(GET_INDEX_USERID(pEvent->GetInt(_("userid"))), szBuff);
+						{ // marked by other bots. r.i.p cl_drawline :(
+							// this will be detected by fedoraware and lmaobox easily.
+							// use 0xCA7 if you want to make more bots do the thing,
+							// most only care about being marked.
+							KeyValues* kv = new KeyValues(_("AchievementEarned"));
+							kv->SetInt(_("achievementID"), 0xCA8);
+							g_Interfaces.Engine->ServerCmdKeyValues(kv);
+						}
+
+						m_known_bots[info.friendsID] = true;
+					}
+				}
+			}
+
+			/*
 			if (uNameHash == FNV1A::HashConst(_("achievement_earned"))) {
 				int nPlayer = pEvent->GetInt(_("player"), 0xDEAD);
 				int achievement = pEvent->GetInt(_("achievement"), 0xDEAD);
@@ -52,30 +82,8 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 					}
 				}
 			}
-
-			/*
-			if (uNameHash == FNV1A::HashConst("cl_drawline")) {
-				const int nPlayer = pEvent->GetInt("player", 0xDEAD);
-				PlayerInfo_t info;
-				if (g_Interfaces.Engine->GetPlayerInfo(nPlayer, &info)) {
-					Exploits::cathook.run_auth(); // I know this might be dumb as fuck but It should work better if it waits for a response first and then send it back.
-					if (m_known_bots.find(info.friendsID) == m_known_bots.end()) {
-						if (Vars::Visuals::ChatInfo.m_Var) {
-							char szBuff[255];
-							//sprintf(szBuff, _("CAT detected: %s"), info.name);
-							//g_Visuals.vecEventVector.push_back(EventLogging_t{ szBuff });
-
-							g_Visuals.AddToEventLog(_("CAT detected: %s"), info.name);
-
-							sprintf(szBuff, _("\x4[CAM]\x1 CAT detected: \x3%s"), info.name);
-							g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(GET_INDEX_USERID(pEvent->GetInt(_("userid"))), szBuff);
-							g_GlobalInfo.storedmis.push_back(info.userID);
-						}
-						m_known_bots[info.friendsID] = true;
-					}
-				}
-			}
 			*/
+
 			if (uNameHash == FNV1A::HashConst(_("player_changeclass"))) {
 				if (const auto& pEntity = g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetPlayerForUserID(pEvent->GetInt(_("userid"))))) {
 					int nIndex = pEntity->GetIndex();

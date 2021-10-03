@@ -3,6 +3,7 @@
 #include "../Menu/ConfigManager/ConfigManager.h"
 #include "../Visuals/Visuals.h"
 #include "../Playerlist/Playerlist.h"
+#include "font_awesome_5.h"
 
 // I know this might sound dumb but here are the rules before messing with the menu
 // Before you add stuff here please tell me first what you're going to add and we'll discuss about it
@@ -113,6 +114,7 @@ void CustomStyle() {
     style.Colors[ImGuiCol_Header] = style.Colors[ImGuiCol_MenuBarBg];
     style.Colors[ImGuiCol_HeaderHovered] = style.Colors[ImGuiCol_MenuBarBg];
     style.Colors[ImGuiCol_HeaderActive] = style.Colors[ImGuiCol_MenuBarBg];
+    style.Colors[ImGuiCol_Separator] = style.Colors[ImGuiCol_MenuBarBg];
     style.Colors[ImGuiCol_SeparatorHovered] = style.Colors[ImGuiCol_MenuBarBg];
     style.Colors[ImGuiCol_SeparatorActive] = style.Colors[ImGuiCol_MenuBarBg];
     style.Colors[ImGuiCol_ResizeGrip] = style.Colors[ImGuiCol_MenuBarBg];
@@ -500,7 +502,7 @@ void TriggerbotTab() {
         ImGui::MenuChild(_("Auto Uber"), ImVec2(220, 180), false, ImGuiWindowFlags_NoScrollWithMouse);
         ImGui::Checkbox(_("Active###gAU"), &Vars::Triggerbot::Uber::Active.m_Var);
         ImGui::Checkbox(_("Only on friends###gAUf"), &Vars::Triggerbot::Uber::OnlyFriends.m_Var);
-        ImGui::Checkbox(_("Uber self###gAUs"), &Vars::Triggerbot::Detonate::Flares.m_Var);
+        ImGui::Checkbox(_("Uber self###gAUs"), &Vars::Triggerbot::Uber::PopLocal.m_Var);
         ImGui::SliderFloat(_("Health left###gAUhp"), &Vars::Triggerbot::Uber::HealthLeft.m_Var, 1.f, 99.f, _("%.0f%%"), ImGuiSliderFlags_AlwaysClamp);
 
         ImGui::EndChild();
@@ -511,11 +513,20 @@ int nESPTab = 1;
 
 void ESPTab() {
     {//left upper
+
         ImGui::SetCursorPosY(50);
         ImGui::BeginGroup();
         ImGui::SetCursorPosX(15);
         ImGui::MenuChild(_("Player"), ImVec2(253, 446), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
+            if (ImGui::BeginPopup(_("PlayerHealthBar"))) {
+                ImGui::Text(_(ICON_FA_EYE " Player Health Bar"));
+                ImGui::Separator();
+                ColorPicker2(_("Healthbar top color"), Colors::HealthBarTopColor, false);
+                ColorPicker2(_("Healthbar bottom color"), Colors::HealthBarBottomColor, false);
+
+                ImGui::EndPopup();
+            }
             ImGui::Checkbox(_("Enabled"), &Vars::ESP::Players::Active.m_Var);
             plsfix(23);
             ColorPicker(_("Team Blu"), Colors::TeamBlu,false);
@@ -525,7 +536,14 @@ void ESPTab() {
             plsfix(23);
             ColorPicker(_("Local / Friend"), Colors::Friend);
             //ImGui::Checkbox(_("Player health"), &Vars::ESP::Players::Health.m_Var);
-            ImGui::Checkbox(_("Player health bar"), &Vars::ESP::Players::HealthBar.m_Var);
+            ImGui::Checkbox(_("Player health bar"), &Vars::ESP::Players::Healthbar::Enabled.m_Var);
+            plsfix(20);
+            ImGui::Text(ICON_FA_COG);
+            plsfix(23);
+            if (ImGui::InvisibleButton(_("PlayerHealthBar"), ImVec2(20, 20))) {
+                ImGui::OpenPopup(_("PlayerHealthBar"));
+            }
+
             ImGui::Checkbox(_("Player conditions"), &Vars::ESP::Players::Cond.m_Var);
             plsfix(23);
             ColorPicker(_("Conditions"), Colors::Cond);
@@ -548,6 +566,7 @@ void ESPTab() {
             ImGui::Combo(_("Player box"), &Vars::ESP::Players::Box.m_Var, boxESP, IM_ARRAYSIZE(boxESP));
 
             ImGui::SliderFloat(_("DLight radius"), &Vars::ESP::Players::DlightRadius.m_Var, 5.0f, 400.f, _("%.0f"), ImGuiSliderFlags_Logarithmic | ImGuiSliderFlags_AlwaysClamp);
+
         }
         ImGui::EndChild();
         ImGui::EndGroup();
@@ -584,6 +603,32 @@ void ESPTab() {
         ImGui::SetCursorPosX(532);
         ImGui::MenuChild(_("World"), ImVec2(253, 446), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
+            const char* skyNames[] = {
+                "Custom",
+                "sky_tf2_04",
+                "sky_upward",
+                "sky_dustbowl_01",
+                "sky_goldrush_01",
+                "sky_granary_01",
+                "sky_well_01",
+                "sky_gravel_01",
+                "sky_badlands_01",
+                "sky_hydro_01",
+                "sky_night_01",
+                "sky_nightfall_01",
+                "sky_trainyard_01",
+                "sky_stormfront_01",
+                "sky_morningsnow_01",
+                "sky_alpinestorm_01",
+                "sky_harvest_01",
+                "sky_harvest_night_01",
+                "sky_halloween",
+                "sky_halloween_night_01",
+                "sky_halloween_night2014_01",
+                "sky_island_01",
+                "sky_rainbow_01"
+            };
+
             ImGui::Checkbox(_("Pickups ESP"), &Vars::ESP::World::Active.m_Var);
             plsfix(23);
             ColorPicker(_("Pickup ESP"), Colors::Weapon, false);
@@ -596,15 +641,26 @@ void ESPTab() {
             plsfix(23);
             ColorPicker(_("Ammopack ESP"), Colors::Ammo, false);
 
-            /*ImGui::Checkbox(_("World modulation"), &Vars::Visuals::WorldModulation.m_Var);
-            plsfix(23);
-            ColorPicker(_("World modulation"), Colors::WorldModulation, false);*/
-
             ImGui::Checkbox(_("World modulation"), &Vars::Visuals::WorldModulation.m_Var);
             plsfix(43);
             ColorPicker(_("World"), Colors::WorldModulation, false);
             plsfix(23);
             ColorPicker(_("Props"), Colors::StaticPropModulation, false);
+
+            ImGui::Checkbox(_("Dev Textures"), &Vars::Visuals::DevTextures.m_Var);
+
+            ImGui::Checkbox(_("Skybox changer"), &Vars::Visuals::SkyboxChanger.m_Var);
+            ImGui::Combo(_("Skybox"), &Vars::Skybox::skyboxnum, skyNames, IM_ARRAYSIZE(skyNames), 6);
+            if (Vars::Skybox::skyboxnum == 0) { // God damnit, this made the menu look a bit more messier :(
+                ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0));
+                ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.23f, 0.23f, 0.23f, 1.f));
+                ImGui::SetCursorPosX(8);
+                ImGui::PushItemWidth(ImGui::GetContentRegionMax().x - 16);
+                ImGui::InputTextWithHint(_("##Custom skybox"), _("Custom skybox name"), &Vars::Skybox::SkyboxName);
+                ImGui::PopStyleColor(2);
+            }
+
+            ImGui::SetCursorPosX(5);
             ImGui::Text(_("Custom ESP font"));
             ImGui::SetCursorPosX(5);
             ImGui::PushItemWidth(ImGui::GetContentRegionMax().x - 10);
@@ -634,18 +690,23 @@ void ESPTab() {
                         { 0x0, customFont.c_str(), 13, 100, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS},
 
                         //FONT_MENU
-                        { 0x0, customFont.c_str(), 12, 0, FONTFLAG_NONE | FONTFLAG_DROPSHADOW },
+                        { 0x0, _("Verdana"), 12, 0, FONTFLAG_NONE | FONTFLAG_DROPSHADOW },
                         //FONT_MENU_OUTLINED
-                        { 0x0, customFont.c_str(), 12, 0, FONTFLAG_OUTLINE },
-
-                        //FONT_DEBUG
-                        { 0x0, customFont.c_str(), 16, 0, FONTFLAG_OUTLINE }
+                        { 0x0, _("Verdana"), 12, 0, FONTFLAG_OUTLINE },
                     }
                 );
             }
+            ImGui::PopItemWidth();
+            ImGui::Checkbox(_("Freecam"), &Vars::Misc::Freecam.m_Var);
+            //ImGui::Checkbox("Autoshoot", &Vars::Aimbot::Global::AutoShoot.m_Var); // We don't really need auto shoot atm.
+            plsfix(50);
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(MenuCol.x / 1.5, MenuCol.y / 1.5, MenuCol.z / 1.5, 255));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(MenuCol.x, MenuCol.y, MenuCol.z, 255));
+            InputKeybind(_("Freecam key"), Vars::Misc::FreecamKey, false);
+            ImGui::PopStyleColor(3);
+            ImGui::SliderFloat("Freecam speed", &Vars::Misc::FreecamSpeed.m_Var, 0.01f, 10.f, _("%.2f"), ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_Logarithmic);
         }
-        ImGui::PopItemWidth();
-        ImGui::SetCursorPosX(5);
         ImGui::EndChild();
         ImGui::EndGroup();
     }
@@ -655,8 +716,11 @@ void ESPTab() {
     ImGui::SameLine();
     ImGui::SetCursorPosY(ImGui::GetContentRegionMax().y - 20);
     ImGui::SetCursorPosX(ImGui::GetContentRegionMax().x - 43);
+    ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(MenuCol.x, MenuCol.y, MenuCol.z, 255));
+
     if (ImGui::Button(_(">>"), ImVec2(35,0)))
         nESPTab = 2;
+    ImGui::PopStyleColor();
 }
 
 void ESPTab2() { // Chams
@@ -668,6 +732,8 @@ void ESPTab2() { // Chams
         ImGui::MenuChild(_("Player Chams"), ImVec2(253, 446), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Player chams"), &Vars::Chams::Players::Active.m_Var);
+            plsfix(23);
+            ColorPicker(_("Fresnel Base"), Colors::FresnelBase, false);
             ImGui::Checkbox(_("Local chams"), &Vars::Chams::Players::ShowLocal.m_Var);
             ImGui::Checkbox(_("Chams on cosmetics"), &Vars::Chams::Players::Wearables.m_Var);
             ImGui::Checkbox(_("Chams on weapons"), &Vars::Chams::Players::Weapons.m_Var);
@@ -677,6 +743,10 @@ void ESPTab2() { // Chams
             static const char* ignoreTeammatesChams[]{ "Off", "All", "Keep friends" };
             ImGui::Combo(_("Ignore teammates###chamsteam"), &Vars::Chams::Players::IgnoreTeammates.m_Var, ignoreTeammatesChams, IM_ARRAYSIZE(ignoreTeammatesChams));
             ImGui::SliderFloat(_("Player chams opacity"), &Vars::Chams::Players::Alpha.m_Var, 0.0f, 1.0f, _("%.2f"), ImGuiSliderFlags_Logarithmic | ImGuiSliderFlags_AlwaysClamp);
+            ImGui::Checkbox(_("Hitbox matrix"), &Vars::Chams::Players::HitboxThing.m_Var);
+            plsfix(23);
+            ColorPicker(_("Matrix color"), Colors::hitboxColor, true);
+            ImGui::SliderFloat(_("Matrix time"), &Vars::Chams::Players::HitboxTimeThing.m_Var, 0.1f, 10.0f, _("%.0f"), ImGuiSliderFlags_AlwaysClamp);
         }
         ImGui::EndChild();
         ImGui::EndGroup();
@@ -761,9 +831,10 @@ void ESPTab2() { // Chams
     }
     ImGui::SetCursorPosX(15);
     ImGui::SetCursorPosY(ImGui::GetContentRegionMax().y - 20);
+    ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(MenuCol.x, MenuCol.y, MenuCol.z, 255));
+
     if (ImGui::Button(_("<<"), ImVec2(35, 0)))
         nESPTab = 1;
-
     ImGui::SameLine();
 
     ImGui::SetCursorPosX((ImGui::GetContentRegionMax().x / 1.9) - ImGui::CalcTextSize(_("Chams Tab")).x);
@@ -771,8 +842,10 @@ void ESPTab2() { // Chams
 
     ImGui::SameLine();
     ImGui::SetCursorPosX(ImGui::GetContentRegionMax().x - 43);
+
     if (ImGui::Button(_(">>"), ImVec2(35, 0)))
         nESPTab = 3;
+    ImGui::PopStyleColor();
 }
 
 void ESPTab3() {
@@ -829,12 +902,14 @@ void ESPTab3() {
     }
     ImGui::SetCursorPosX(15);
     ImGui::SetCursorPosY(ImGui::GetContentRegionMax().y - 20);
+    ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(MenuCol.x, MenuCol.y, MenuCol.z, 255));
     if (ImGui::Button(_("<<"), ImVec2(35, 0)))
         nESPTab = 2;
-
+    ImGui::PopStyleColor();
     ImGui::SameLine();
     ImGui::SetCursorPosX((ImGui::GetContentRegionMax().x / 1.9) - ImGui::CalcTextSize(_("Glow Tab")).x);
     ImGui::Text(_("Glow Tab"));
+
 }
 
 void VisualsTab() {
@@ -845,45 +920,10 @@ void VisualsTab() {
         ImGui::SetCursorPosX(15);
         ImGui::MenuChild(_("Local"), ImVec2(253, 465), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
-            const char* skyNames[] = {
-                "Custom",
-                "sky_tf2_04",
-                "sky_upward",
-                "sky_dustbowl_01",
-                "sky_goldrush_01",
-                "sky_granary_01",
-                "sky_well_01",
-                "sky_gravel_01",
-                "sky_badlands_01",
-                "sky_hydro_01",
-                "sky_night_01",
-                "sky_nightfall_01",
-                "sky_trainyard_01",
-                "sky_stormfront_01",
-                "sky_morningsnow_01",
-                "sky_alpinestorm_01",
-                "sky_harvest_01",
-                "sky_harvest_night_01",
-                "sky_halloween",
-                "sky_halloween_night_01",
-                "sky_halloween_night2014_01",
-                "sky_island_01",
-                "sky_rainbow_01"
-            };
 
             ImGui::SliderInt(_("Field of view"), &Vars::Visuals::FieldOfView.m_Var, 70, 150, _("%d"), ImGuiSliderFlags_AlwaysClamp);
             ImGui::SliderFloat(_("Aspect Ratio"), &Vars::Visuals::AspectRatioValue.m_Var, 0.f, 200.f, _("%.f"), ImGuiSliderFlags_AlwaysClamp);
             ImGui::SliderInt(_("Aim FOV Alpha"), &Vars::Visuals::AimFOVAlpha.m_Var, 0, 255, _("%d"), ImGuiSliderFlags_AlwaysClamp);
-            ImGui::Checkbox(_("Skybox changer"), &Vars::Visuals::SkyboxChanger.m_Var);
-            ImGui::Combo(_("Skybox"), &Vars::Skybox::skyboxnum, skyNames, IM_ARRAYSIZE(skyNames), 6);
-            if (Vars::Skybox::skyboxnum == 0) { // God damnit, this made the menu look a bit more messier :(
-                ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0));
-                ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.23f, 0.23f, 0.23f, 1.f));
-                ImGui::SetCursorPosX(8);
-                ImGui::PushItemWidth(ImGui::GetContentRegionMax().x - 16);
-                ImGui::InputTextWithHint(_("##Custom skybox"),_("Custom skybox name"), &Vars::Skybox::SkyboxName);
-                ImGui::PopStyleColor(2);
-            }
             static char buff[12];
             snprintf(buff, sizeof(buff), _("%i, %i, %i"), Vars::Visuals::ViewModelX.m_Var, Vars::Visuals::ViewModelY.m_Var, Vars::Visuals::ViewModelZ.m_Var);
             if (ImGui::BeginCombo(_("Viewmodel XYZ"), _(buff), 0, true))
@@ -897,13 +937,10 @@ void VisualsTab() {
             ImGui::Checkbox(_("Remove zoom"), &Vars::Visuals::RemoveZoom.m_Var);
             ImGui::Checkbox(_("Remove recoil"), &Vars::Visuals::RemovePunch.m_Var);
             ImGui::Checkbox(_("Aimbot crosshair"), &Vars::Visuals::CrosshairAimPos.m_Var);
-            ImGui::InputTextWithHint(_("##customsteamrpc"), _("Custom Steam RPC"), &Vars::Misc::SteamRPC);
             ImGui::Checkbox(_("Chat info"), &Vars::Visuals::ChatInfo.m_Var);
             ImGui::Checkbox(_("Remove Hats"), &Vars::Visuals::RemoveHats.m_Var);
             ImGui::Checkbox(_("PlayerList"), &Vars::Visuals::PlayerList.m_Var);
             ImGui::Checkbox(_("Vote revealer"), &Vars::Misc::VoteRevealer.m_Var);
-            ImGui::Checkbox(_("Dev Textures"), &Vars::Visuals::DevTextures.m_Var);
-
         }
         ImGui::EndChild();
         ImGui::EndGroup();
@@ -982,7 +1019,7 @@ void MiscTab() {
         ImGui::SetCursorPosY(50);
         ImGui::BeginGroup();
         ImGui::SetCursorPosX(15);
-        ImGui::MenuChild(_("General"), ImVec2(300, 295), false, ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::MenuChild(_("General"), ImVec2(300, 265), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Instant Respawn MVM"), &Vars::Misc::InstantRespawn.m_Var);
             ImGui::Checkbox(_("Anti AFK"), &Vars::Misc::AntiAFK.m_Var);
@@ -991,16 +1028,18 @@ void MiscTab() {
             ImGui::Checkbox(_("Noisemaker spam"), &Vars::Misc::NoisemakerSpam.m_Var);
             ImGui::Checkbox(_("Chat Spam"), &Vars::Misc::ChatSpam.m_Var);
             ImGui::Checkbox(_("No Interp"), &Vars::Misc::DisableInterpolation.m_Var);
-            ImGui::Checkbox(_("Force sv_cheats"), &Vars::Misc::CheatsBypass.m_Var);
+            ImGui::Checkbox(_("Steam RPC"), &Vars::Misc::SteamRPC.m_Var);
+            ImGui::SameLine();
+            ImGui::InputTextWithHint(_("##customsteamrpc"), _("Custom Steam RPC"), &Vars::Misc::SteamRPCText);
         }
         ImGui::EndChild();
         ImGui::EndGroup();
     }
     {//left bottom
-        ImGui::SetCursorPosY(345);
+        ImGui::SetCursorPosY(315);
         ImGui::BeginGroup();
         ImGui::SetCursorPosX(15);
-        ImGui::MenuChild(_("Movement"), ImVec2(300, 175), false, ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::MenuChild(_("Movement"), ImVec2(300, 205), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Bhop"), &Vars::Misc::AutoJump.m_Var);
             ImGui::Checkbox(_("AutoStrafer"), &Vars::Misc::AutoStrafe.m_Var);
@@ -1229,6 +1268,7 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
         ImGui::CreateContext();
         ImGui_ImplWin32_Init(FindWindowA(0, _("Team Fortress 2")));
         ImGui_ImplDX9_Init(pDevice);
+
         auto& io = ImGui::GetIO();
         io.IniFilename = NULL;
         io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
@@ -1236,6 +1276,7 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
         font_config.OversampleH = 1;
         font_config.OversampleV = 1;
         font_config.PixelSnapH = 1;
+        font_config.FontDataOwnedByAtlas = false;
 
         static const ImWchar ranges[] =
         {
@@ -1245,6 +1286,13 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
         };
         name = io.Fonts->AddFontFromMemoryTTF((void*)MuseoFont, sizeof(MuseoFont), 19.0f, &font_config, ranges);
         font = io.Fonts->AddFontFromMemoryTTF((void*)MuseoFont, sizeof(MuseoFont), 13.0f, &font_config, ranges);
+
+        static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
+        ImFontConfig icons_config;
+        icons_config.MergeMode = true;
+        icons_config.PixelSnapH = true;
+        icons_config.FontDataOwnedByAtlas = false;
+        io.Fonts->AddFontFromMemoryTTF((void*)fa_solid_900, sizeof(fa_solid_900), 14.0f, &icons_config, icons_ranges);
         bInitImGui = true;
     }
 
@@ -1269,6 +1317,7 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
         MenuCol = mColor(Vars::Menu::Colors::WidgetActive);
         CustomStyle();
 
+        ImGui::PushStyleColor(ImGuiCol_Separator, MenuCol);
         ImGui::PushFont(font);
         {
             ImGui::Begin(_("##console"), NULL, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_AlwaysAutoResize);
@@ -1281,32 +1330,33 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
                 draw->AddRectFilled(p2, ImVec2(p2.x + s2.x, p2.y + s2.y + 25), ImColor(15, 17, 19, 200), 5); // Titlebar
                 draw->AddRectFilled(ImVec2(p2.x, p2.y + 25), ImVec2(p2.x + s2.x, p2.y + s2.y), ImColor(18, 20, 21, 200), 5, ImDrawCornerFlags_Bot); // Background
                 draw->AddRectFilled(ImVec2(p2.x, p2.y + 24), ImVec2(p2.x + s2.x, p2.y + 25), ImColor(MenuCol)); // Line
-                draw->AddText(ImVec2(p2.x + 15 / 2, p2.y + 13 / 2), ImColor(255, 255, 255, 255), _("Console"));
+                draw->AddText(ImVec2(p2.x + 15 / 2, p2.y + 13 / 2), ImColor(255, 255, 255, 255), _(ICON_FA_COG "  Console"));
             }
 
             ImGui::SetCursorPosY(40);
-            if (ImGui::Button("Force SV_Cheats", ImVec2(120, 20))) {
-                ConVar* sv_cheats = g_Interfaces.CVars->FindVar("sv_cheats");
-                sv_cheats->SetValue(1);
+            if (ImGui::Button(_("Force SV_Cheats"), ImVec2(120, 20))) {
+                //ConVar* sv_cheats = g_Interfaces.CVars->FindVar("sv_cheats");
+                //sv_cheats->SetValue(1);
+                Vars::Misc::CheatsBypass.m_Var = 1;
             }
 
-            if(ImGui::Button("CL_FullUpdate",ImVec2(120,20)))
-                g_Interfaces.Engine->ClientCmd_Unrestricted("cl_fullupdate");
+            if(ImGui::Button(_("CL_FullUpdate"),ImVec2(120,20)))
+                g_Interfaces.Engine->ClientCmd_Unrestricted(_("cl_fullupdate"));
 
-            if (ImGui::Button("SND_Restart", ImVec2(120, 20)))
-                g_Interfaces.Engine->ClientCmd_Unrestricted("snd_restart");
+            if (ImGui::Button(_("SND_Restart"), ImVec2(120, 20)))
+                g_Interfaces.Engine->ClientCmd_Unrestricted(_("snd_restart"));
 
-            if (ImGui::Button("StopSound", ImVec2(120, 20)))
-                g_Interfaces.Engine->ClientCmd_Unrestricted("stopsound");
+            if (ImGui::Button(_("StopSound"), ImVec2(120, 20)))
+                g_Interfaces.Engine->ClientCmd_Unrestricted(_("stopsound"));
 
-            if (ImGui::Button("Status", ImVec2(120, 20)))
-                g_Interfaces.Engine->ClientCmd_Unrestricted("status");
+            if (ImGui::Button(_("Status"), ImVec2(120, 20)))
+                g_Interfaces.Engine->ClientCmd_Unrestricted(_("status"));
 
-            if (ImGui::Button("Ping", ImVec2(120, 20)))
-                g_Interfaces.Engine->ClientCmd_Unrestricted("ping");
+            if (ImGui::Button(_("Ping"), ImVec2(120, 20)))
+                g_Interfaces.Engine->ClientCmd_Unrestricted(_("ping"));
 
-            if (ImGui::Button("Retry", ImVec2(120, 20)))
-                g_Interfaces.Engine->ClientCmd_Unrestricted("retry");
+            if (ImGui::Button(_("Retry"), ImVec2(120, 20)))
+                g_Interfaces.Engine->ClientCmd_Unrestricted(_("retry"));
 
             ImGui::End();
         }
@@ -1322,7 +1372,7 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
                 draw->AddRectFilled(p2, ImVec2(p2.x + s2.x, p2.y + s2.y + 25), ImColor(15, 17, 19, 200), 5); // Titlebar
                 draw->AddRectFilled(ImVec2(p2.x, p2.y + 25), ImVec2(p2.x + s2.x, p2.y + s2.y), ImColor(18, 20, 21, 200), 5, ImDrawCornerFlags_Bot); // Background
                 draw->AddRectFilled(ImVec2(p2.x, p2.y + 24), ImVec2(p2.x + s2.x, p2.y + 25), ImColor(MenuCol)); // Line
-                draw->AddText(ImVec2(p2.x + 15 / 2, p2.y + 13 / 2), ImColor(255, 255, 255, 255), _("Playerlist"));
+                draw->AddText(ImVec2(p2.x + 15 / 2, p2.y + 13 / 2), ImColor(255, 255, 255, 255), _(ICON_FA_USER "  Playerlist"));
             }
 
             ImGui::SetCursorPosY(40);
@@ -1413,6 +1463,7 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
             }
             ImGui::End();
         }
+        ImGui::PopStyleColor();
         ImGui::PopFont();
         
 
@@ -1435,14 +1486,17 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
             }
             {
                 ImGui::PushFont(font);
-                ImGui::SetCursorPosX(ImGui::GetWindowSize().x - 75 * 6.7); // 6 = how much tabs, .7 = how much tabs + 0.1
+                ImGui::SetCursorPosX(ImGui::GetWindowSize().x - 72 * 6.7); // 6 = how much tabs, .7 = how much tabs + 0.1
                 ImGui::BeginGroup();
-                if (ImGui::tab(_("Aimbot"), tab == 0))tab = 0; ImGui::SameLine();
-                if (ImGui::tab(_("Triggerbot"), tab == 1))tab = 1; ImGui::SameLine();
-                if (ImGui::tab(_("ESP"), tab == 2))tab = 2; ImGui::SameLine();
-                if (ImGui::tab(_("Visuals"), tab == 3))tab = 3; ImGui::SameLine();
-                if (ImGui::tab(_("Misc"), tab == 4))tab = 4; ImGui::SameLine();
-                if (ImGui::tab(_("Config"), tab == 5))tab = 5;
+                ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0,0 });
+                if (ImGui::tab(_(ICON_FA_CROSSHAIRS " Aimbot"), tab == 0))tab = 0; ImGui::SameLine();
+                if (ImGui::tab(_(ICON_FA_EXPAND " Triggerbot"), tab == 1, 90))tab = 1; ImGui::SameLine();
+                if (ImGui::tab(_(ICON_FA_EYE " ESP"), tab == 2))tab = 2; ImGui::SameLine();
+                if (ImGui::tab(_(ICON_FA_PALETTE " Visuals"), tab == 3))tab = 3; ImGui::SameLine();
+                if (ImGui::tab(_(ICON_FA_COGS " Misc"), tab == 4))tab = 4; ImGui::SameLine();
+                if (ImGui::tab(_(ICON_FA_FILE " Config"), tab == 5))tab = 5;
+                
+                ImGui::PopStyleVar();
                 ImGui::EndGroup();
                 ImGui::PopFont();
             }

@@ -8,6 +8,120 @@ char buffer[256];
 typedef bool(_cdecl* LoadNamedSkiesFn)(const char*);
 static LoadNamedSkiesFn LoadSkies = (LoadNamedSkiesFn)g_Pattern.Find(_(L"engine.dll"), _(L"55 8B EC 81 EC ? ? ? ? 8B 0D ? ? ? ? 53 56 57 8B 01 C7 45"));
 
+
+static bool viewanglesCopied = false;
+static Vec3 viewangles;
+static Vec3 pViewangles;
+static Vec3 vForward{}, vRight{}, vUp{};
+Vec3 originBackup{};
+Vec3 pCmdViewangles;
+
+void CVisuals::FreecamCM(CUserCmd* pCmd) {
+	if (Vars::Misc::Freecam.m_Var) {
+		if (GetAsyncKeyState(Vars::Misc::FreecamKey.m_Var)) {
+			pCmd->forwardmove = pCmd->sidemove = 0.0f;
+			if (!g_GlobalInfo.m_bAttacking) {
+				pCmd->viewangles = pCmdViewangles;
+			}
+		}
+		else {
+			pCmdViewangles = pCmd->viewangles;
+		}
+	}
+}
+
+void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colour, float time) {
+	const model_t* model;
+	studiohdr_t* hdr;
+	mstudiohitboxset_t* set;
+	mstudiobbox_t* bbox;
+	Vec3 mins{}, maxs{}, origin{};
+	Vec3 angle;
+
+	model = pEntity->GetModel();
+	/*if (!model)
+		return;*/
+
+	hdr = g_Interfaces.ModelInfo->GetStudioModel(model);
+	/*if (!hdr)
+		return;*/
+
+	set = hdr->GetHitboxSet(pEntity->GetHitboxSet());
+	/*if (!set)
+		return;*/
+
+	for (int i{}; i < set->numhitboxes; ++i) {
+		bbox = set->hitbox(i);
+		if (!bbox)
+			continue;
+
+		//nigga balls
+		/*if (bbox->m_radius <= 0.f) {*/
+		matrix3x4 rot_matrix;
+		Math::AngleMatrix(bbox->angle, rot_matrix);
+
+		matrix3x4 matrix;
+		matrix3x4 boneees[128];
+		pEntity->SetupBones(boneees, 128, BONE_USED_BY_ANYTHING, g_Interfaces.GlobalVars->curtime);
+		Math::ConcatTransforms(boneees[bbox->bone], rot_matrix, matrix);
+
+		Vec3 bbox_angle;
+		Math::MatrixAngles(matrix, bbox_angle);
+
+		Vec3 matrix_origin;
+		Math::GetMatrixOrigin(matrix, matrix_origin);
+
+		g_Interfaces.DebugOverlay->AddBoxOverlay(matrix_origin, bbox->bbmin, bbox->bbmax, bbox_angle, colour.r, colour.g, colour.b, colour.a, time);
+	}
+}
+
+void CVisuals::Freecam(CViewSetup* pView)
+{
+	float moveSpeed = Vars::Misc::FreecamSpeed.m_Var;
+	if (Vars::Misc::Freecam.m_Var) {
+		if (pView) {
+			if (auto pLocal = g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetLocalPlayer())) {
+				if (GetAsyncKeyState(Vars::Misc::FreecamKey.m_Var)) {
+					if (!viewanglesCopied) {
+						viewangles = pLocal->GetEyeAngles();
+
+						originBackup = pView->origin;
+						viewanglesCopied = true;
+
+					}
+					pViewangles = g_Interfaces.Engine->GetViewAngles();
+					Math::AngleVectors(pViewangles, &vForward, &vRight, &vUp);
+					pLocal->SetEyeAngles(viewangles);
+					pView->origin = originBackup;
+					if (GetAsyncKeyState(VK_W)) {
+						pView->origin += vForward * moveSpeed;
+					}
+					if (GetAsyncKeyState(VK_S)) {
+						pView->origin -= vForward * moveSpeed;
+					}
+					if (GetAsyncKeyState(VK_A)) {
+						pView->origin -= vRight * moveSpeed;
+					}
+					if (GetAsyncKeyState(VK_D)) {
+						pView->origin += vRight * moveSpeed;
+					}
+					if (GetAsyncKeyState(VK_SPACE)) {
+						pView->origin += vUp * moveSpeed;
+					}
+					if (GetAsyncKeyState(VK_CONTROL)) {
+						pView->origin -= vUp * moveSpeed;
+					}
+					originBackup = pView->origin;
+				}
+				else {
+					viewanglesCopied = false;
+				}
+			}
+		}
+	}
+}
+
+
 void CVisuals::SkyboxChanger() {
 	const char* skybNames[] = {
 		"Custom",
@@ -52,7 +166,6 @@ void CVisuals::SkyboxChanger() {
 	}
 }
 
-//Legacy want
 void CVisuals::DevTextures()
 {
 	if (!Vars::Visuals::DevTextures.m_Var)
@@ -108,20 +221,31 @@ void CVisuals::RunEventLogs()
 			continue;
 		}
 
-		 auto height = flIdealHeight + (14 * i),
+		auto height = flIdealHeight + (20 * i),
 			width = flIdealWidth;
+
+		auto w2 = 0;
 
 		if (time_delta < flTextFadeInTime) {
 			log.flAlpha = ((time_delta / flTextFadeInTime) * 255.f);
 			width = (time_delta / flTextFadeInTime) * (float)(flSlideInDistance)+(flIdealWidth - flSlideInDistance);
+			w2 = width;
 		}
 
 		if (time_delta > flTextTime - flTextFadeOutTime) {
 			log.flAlpha = (255 - (((time_delta - (flTextTime - flTextFadeOutTime)) / flTextFadeOutTime) * 255.f));
-			width = flIdealWidth + (((time_delta - (flTextTime - flTextFadeOutTime)) / flTextFadeOutTime) * (float)(flSlideOutDistance));
+			width = flIdealWidth - (((time_delta - (flTextTime - flTextFadeOutTime)) / flTextFadeOutTime) * (float)(flSlideOutDistance));
 		}
 		// Idk i put flAlpha on everything, looks cooler lol
-		g_Draw.String(FONT_MENU_OUTLINED, width, height, Color_t(255,255,255, log.flAlpha), ALIGN_DEFAULT, Utils::ConvertUtf8ToWide(log.szText.c_str()).data());
+		static int w, h;
+		g_Interfaces.Surface->GetTextSize(FONT_MENU_OUTLINED, Utils::ConvertUtf8ToWide(log.szText.c_str()).data(), w, h);
+		Color_t color = Vars::Menu::Colors::WidgetActive;
+
+		// I have to do it the ghetto way because woohooo!!!
+		g_Interfaces.Surface->SetDrawColor(0, 0, 0, log.flAlpha);
+		g_Interfaces.Surface->DrawFilledRectFade(w2 - 5, height - 2, w - 30 + width, height + 15, log.flAlpha, 0, true);
+		g_Draw.Rect(w2, height - 2, 2, 17, Vars::Menu::Colors::WidgetActive);
+		g_Draw.String(FONT_MENU_OUTLINED, width + 5, height, Color_t(log.flAlpha, log.flAlpha, log.flAlpha, log.flAlpha), ALIGN_DEFAULT, Utils::ConvertUtf8ToWide(log.szText.c_str()).data());
 	}
 }
 
