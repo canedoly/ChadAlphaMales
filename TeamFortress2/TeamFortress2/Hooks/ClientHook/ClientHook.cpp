@@ -5,11 +5,9 @@
 #include "../../Features/Menu/Menu.h"
 #include "../../Features/AttributeChanger/AttributeChanger.h"
 #include "../../Features/RichPresence/RichPresence.h"
-void __stdcall ClientHook::PreEntity::Hook(char const *szMapName)
+void __stdcall ClientHook::PreEntity::Hook(char const* szMapName)
 {
 	Table.Original<fn>(index)(g_Interfaces.Client, szMapName);
-
-	g_Visuals.DevTextures();
 }
 
 void __stdcall ClientHook::PostEntity::Hook()

@@ -24,6 +24,16 @@ void CHooks::Init()
 		Table.Hook(FrameStageNotify::index, &FrameStageNotify::Hook);
 	}
 
+	if (g_Interfaces.ViewRender)
+	{
+		using namespace ViewRenderHook;
+
+		Table.Init(g_Interfaces.ViewRender);
+		Table.Hook(LevelInit::index, &LevelInit::Hook);
+		Table.Hook(LevelShutdown::index, &LevelShutdown::Hook);
+
+	}
+
 	if (g_Interfaces.ClientMode)
 	{
 		using namespace ClientModeHook;

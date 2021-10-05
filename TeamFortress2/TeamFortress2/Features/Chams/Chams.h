@@ -19,6 +19,7 @@ private:
 
 public:
 	void Init();
+	void Delete();
 	void Render();
 
 	inline bool HasDrawn(CBaseEntity* pEntity) {
