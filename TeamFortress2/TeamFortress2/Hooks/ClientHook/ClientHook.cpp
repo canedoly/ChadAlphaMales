@@ -5,6 +5,7 @@
 #include "../../Features/Menu/Menu.h"
 #include "../../Features/AttributeChanger/AttributeChanger.h"
 #include "../../Features/RichPresence/RichPresence.h"
+#include "../../SDK/Includes/bitbuf.h"
 void __stdcall ClientHook::PreEntity::Hook(char const* szMapName)
 {
 	Table.Original<fn>(index)(g_Interfaces.Client, szMapName);
@@ -107,4 +108,38 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 
 		default: break;
 	}
+}
+
+bool __stdcall ClientHook::DispatchUserMessage::Hook(int msg_type, bf_read& msg_data)
+{
+	/*bf_read msg_copy = msg_data;
+	msg_copy.Seek(0);
+	switch (msg_type) {
+	case 3:
+	case 4: 
+		{
+			char msg_name[50], playerName[128] params1 , msg[127] params2 ;
+
+
+			int ent_idx = msg_copy.ReadByte();
+			BOOL chat = msg_copy.ReadShort();
+			msg_copy.ReadString(msg_name, 50);
+			msg_copy.ReadString(playerName, 128);
+			msg_copy.ReadString(msg, 127);
+			BOOL textallchat = msg_copy.ReadShort();
+
+			//std::cout << "msg_name: " << msg_name << std::endl;
+			//std::cout << "player_name: " << playerName << std::endl;
+			//std::cout << "message: " << msg << std::endl;
+			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("msg_type: %d\n"), msg_type);
+			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("msg_type: %d\n"), ent_idx);
+			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("msg_type: %d\n"), chat);
+			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("msg_name: %s\n"), msg_name);
+			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("playerName: %s\n"), playerName);
+			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("msg: %s\n"), msg);
+			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("textallchat: %d\n"), textallchat);
+			break;
+		}
+	}*/
+	return Table.Original<fn>(index)(g_Interfaces.Client, msg_type, msg_data);
 }
