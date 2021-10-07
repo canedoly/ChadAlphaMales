@@ -19,6 +19,8 @@
 #include "Reset/Reset.h"
 #include "Scoreboard/Scoreboard.h"
 #include "InventoryExpander/InventoryExpander.h"
+#include "ViewRenderHook/ViewRenderHook.h"
+#include "ChatPrintfHook/ChatPrintfHook.h"
 
 class CHooks
 {

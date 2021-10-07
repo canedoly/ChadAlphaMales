@@ -1,5 +1,7 @@
 #include "Chams.h"
 #include "../Vars.h"
+#include "../Backtrack/Backtrack.h"
+#include "../Visuals/Visuals.h"
 
 bool CChams::ShouldRun()
 {
@@ -103,6 +105,22 @@ void CChams::Init()
 		\n}\n")
 		});
 
+	m_pMatAA = Utils::CreateMaterial({
+		_("\"UnlitGeneric\"\
+		\n{\
+		\n\t\"$basetexture\" \"vgui/white_additive\"\
+		\n}\n")
+		});
+}
+
+void CChams::Delete() {
+	m_pMatFresnelHDR0 = nullptr;
+	m_pMatFresnelHDR1 = nullptr;
+	m_pMatShaded = nullptr;
+	m_pMatBrick = nullptr;
+	m_pMatShiny = nullptr;
+	m_pMatFlat = nullptr;
+	m_pMatAA = nullptr;
 }
 
 void CChams::Render()
@@ -244,6 +262,8 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 
 
 		DrawModel(Player);
+		
+		
 
 		if (Vars::Chams::Players::Wearables.m_Var)
 		{

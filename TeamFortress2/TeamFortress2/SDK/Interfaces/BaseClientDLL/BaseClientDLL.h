@@ -24,3 +24,4 @@ public:
 };
 
 #define CLIENT_DLL_INTERFACE_VERSION "VClient017"
+

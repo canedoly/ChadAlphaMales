@@ -33,4 +33,11 @@ namespace ClientHook
 		using fn = void(__thiscall *)(CBaseClientDLL *, EClientFrameStage);
 		void __stdcall Hook(EClientFrameStage FrameStage);
 	}
+
+	namespace DispatchUserMessage
+	{
+		const int index = 36;
+		using fn = bool(__thiscall*)(CBaseClientDLL*, int, bf_read&);
+		bool __stdcall Hook(int msg_type, bf_read& msg_data);
+	}
 }

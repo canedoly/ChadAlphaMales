@@ -10,7 +10,7 @@
 typedef unsigned short MaterialVarSym_t;
 class ITexture;
 class IMaterial;
-
+class CMaterial;
 class MaterialPropertyTypes_t;
 class VertexFormat_t;
 
@@ -516,6 +516,7 @@ public:
 	virtual bool			WasReloadedFromWhitelist() = 0;
 	virtual bool			IsPrecached() const = 0;
 };
+
 
 class IMaterialVar
 {

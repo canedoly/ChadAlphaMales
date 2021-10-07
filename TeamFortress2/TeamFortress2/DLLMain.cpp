@@ -33,7 +33,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		Adding "ntdll.dll" seems to fix SOME of the crashing issues which is kind of funny
 	*/
 
-	while (!WinAPI::GetModuleHandleW(_(L"mss32.dll")) && !WinAPI::GetModuleHandleW(_(L"ntdll.dll")))
+	while (!WinAPI::GetModuleHandleW(_(L"mss32.dll")) || !WinAPI::GetModuleHandleW(_(L"ntdll.dll")))
 		std::this_thread::sleep_for(std::chrono::seconds(5));
 	
 	g_SteamInterfaces.Init();
@@ -50,6 +50,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	g_dwDirectXDevice = **reinterpret_cast<DWORD**>(g_Pattern.Find(L"shaderapidx9.dll", L"A1 ? ? ? ? 50 8B 08 FF 51 0C") + 0x1);
 	g_Hooks.Init();
 	g_ConVars.Init();
+	//EFonts
 	g_Draw.InitFonts
 	({
 		//FONT_ESP
@@ -60,7 +61,6 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		//FONT_ESP_NAME
 		{ 0x0, _("Verdana"), 12, 0, FONTFLAG_DROPSHADOW },
 		//FONT_ESP_NAME_OUTLINED
-
 		{ 0x0, _("Segoe UI"), 13, 100, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS},
 
 		//FONT_ESP_COND
@@ -77,6 +77,9 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		{ 0x0, _("Verdana"), 12, 0, FONTFLAG_NONE | FONTFLAG_DROPSHADOW },
 		//FONT_MENU_OUTLINED
 		{ 0x0, _("Verdana"), 12, 0, FONTFLAG_OUTLINE },
+
+		/*FONT_ICONS*/					
+		{ 0x0, _("Tf2weaponicons Regular"), 20, 0, FONTFLAG_NONE},
 	});
 
 	//Initialize ignored set
@@ -85,8 +88,8 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	if (!source::features::steamrichpresence.Update())
 		return false;
 
-	g_DiscordRPC->init();
-	g_DiscordRPC->update();
+	//g_DiscordRPC->init();
+	//g_DiscordRPC->update();
 
 	g_Visuals.AddToEventLog(_("Cheat injected successfully!"));
 	g_Visuals.AddToEventLog(_("Press \"Insert\" to open menu!"));
@@ -108,7 +111,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 200, 0, 255 }, _("[-] Unloading CAM...\n"));
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 200, 0, 255 }, _("[-] Stopping Discord RPC\n"));
-	Discord_Shutdown();
+	//Discord_Shutdown();
 
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 200, 0, 255 }, _("[-] Stopping Steam RPC\n"));
 	source::features::steamrichpresence.Destroy();
