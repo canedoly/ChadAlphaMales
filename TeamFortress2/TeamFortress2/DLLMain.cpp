@@ -88,8 +88,8 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	if (!source::features::steamrichpresence.Update())
 		return false;
 
-	//g_DiscordRPC->init();
-	//g_DiscordRPC->update();
+	g_DiscordRPC->init();
+	g_DiscordRPC->update();
 
 	g_Visuals.AddToEventLog(_("Cheat injected successfully!"));
 	g_Visuals.AddToEventLog(_("Press \"Insert\" to open menu!"));
@@ -111,7 +111,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 200, 0, 255 }, _("[-] Unloading CAM...\n"));
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 200, 0, 255 }, _("[-] Stopping Discord RPC\n"));
-	//Discord_Shutdown();
+	Discord_Shutdown();
 
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 200, 0, 255 }, _("[-] Stopping Steam RPC\n"));
 	source::features::steamrichpresence.Destroy();
