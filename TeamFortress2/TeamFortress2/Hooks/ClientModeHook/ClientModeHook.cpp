@@ -9,7 +9,6 @@
 #include "../../Features/AntiHack/AntiAim.h"
 #include "../../Features/KatzeB0t/AntiCat.h"
 #include "../../SDK/Timer.h"
-#include "../../Features/InstantRespawn/InstantRespawn.h"
 
 //#include "../../Features/KatzeB0t/AntiCat.h"
 
@@ -169,7 +168,6 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		badcode++;
 	}
 
-	g_InstantRespawn.InstantRespawn();
 	g_Misc.Run(pCmd);
 	g_EnginePrediction.Start(pCmd);
 	{

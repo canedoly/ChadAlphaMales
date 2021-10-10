@@ -178,7 +178,6 @@
     <ClCompile Include="TeamFortress2\Features\Chams\DMEChams.cpp" />
     <ClCompile Include="TeamFortress2\Features\ESP\ESP.cpp" />
     <ClCompile Include="TeamFortress2\Features\Glow\Glow.cpp" />
-    <ClCompile Include="TeamFortress2\Features\InstantRespawn\InstantRespawn.cpp" />
     <ClCompile Include="TeamFortress2\Features\KatzeB0t\AntiCat.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ConfigManager\ConfigManager.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\InputHelper\InputHelper.cpp" />
@@ -269,7 +268,6 @@
     <ClInclude Include="TeamFortress2\Features\Chams\DMEChams.h" />
     <ClInclude Include="TeamFortress2\Features\ESP\ESP.h" />
     <ClInclude Include="TeamFortress2\Features\Glow\Glow.h" />
-    <ClInclude Include="TeamFortress2\Features\InstantRespawn\InstantRespawn.h" />
     <ClInclude Include="TeamFortress2\Features\KatzeB0t\AntiCat.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\ConfigManager\ConfigManager.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\InputHelper\InputHelper.h" />

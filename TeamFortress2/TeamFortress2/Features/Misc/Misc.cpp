@@ -16,7 +16,18 @@ void CMisc::Run(CUserCmd* pCmd)
 	AutoStrafe(pCmd);
 	NoiseMakerSpam();
 	ChatSpam();
-	nopush();
+	InstantRespawn();
+	NoPush();
+}
+
+void CMisc::InstantRespawn()
+{
+	if (!Vars::Misc::InstantRespawn.m_Var || !g_EntityCache.m_pLocal || g_EntityCache.m_pLocal->IsAlive())
+		return;
+
+	auto* KV = new KeyValues("MVM_Revive_Response");
+	KV->SetInt("accepted", 1);
+	g_Interfaces.Engine->ServerCmdKeyValues(KV);
 }
 
 void VectorAngles(Vector& forward, Vector& angles)
@@ -449,7 +460,7 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd)
 	}
 }
 
-void CMisc::nopush() {
+void CMisc::NoPush() {
 	ConVar* noPush = g_Interfaces.CVars->FindVar(_("tf_avoidteammates_pushaway"));
 	if (Vars::Misc::NoPush.m_Var) {
 		if (noPush->GetInt() == 1) noPush->SetValue(0);
