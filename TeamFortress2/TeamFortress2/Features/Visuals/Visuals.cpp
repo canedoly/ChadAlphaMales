@@ -31,6 +31,7 @@ void CVisuals::FreecamCM(CUserCmd* pCmd) {
 }
 
 void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colour, float time) {
+	g_Interfaces.DebugOverlay->ClearAllOverlays();
 	const model_t* model;
 	studiohdr_t* hdr;
 	mstudiohitboxset_t* set;
