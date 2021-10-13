@@ -143,3 +143,77 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(int msg_type, bf_read& msg_
 	}*/
 	return Table.Original<fn>(index)(g_Interfaces.Client, msg_type, msg_data);
 }
+
+using WriteUserCmd_t = void(__fastcall*)(void*, CUserCmd*, CUserCmd*);
+
+const int MAX_USERCMD_LOSS = 10;
+const int MAX_USERCMDS_SEND = 62;
+
+uintptr_t WriteUserCmd_offset = g_Pattern.Find(L"client.dll", L"55 8B EC 83 E4 F8 51 53 56 8B D9 8B 0D");
+
+void WriteUserCmd(bf_write* buffer, CUserCmd* to, CUserCmd* from) {
+	static auto WriteUserCmdFn = reinterpret_cast<WriteUserCmd_t>(WriteUserCmd_offset);
+	__asm
+	{
+		mov ecx, buffer;
+		mov edx, to;
+		push from;
+		call WriteUserCmdFn;
+		add esp, 4h;
+	}
+}
+
+
+bool __stdcall ClientHook::WriteUserCmdDeltaToBuffer::Hook(bf_write* buffer, int from, int to, bool isNewCmd) {
+	/*std::cout << from << std::endl;
+	std::cout << buffer << std::endl;
+	std::cout << to << std::endl;
+	std::cout << isNewCmd << std::endl;
+	static auto oWriteUserCmdDeltaToBuffer = Table.Original<fn>(index);
+	if (g_GlobalInfo.m_nShifted >= 0) {
+		return oWriteUserCmdDeltaToBuffer(g_Interfaces.Client, buffer, from, to, isNewCmd);
+	}
+
+	if (from != -1) {
+		return true;
+	}
+
+	int tickbase = g_GlobalInfo.m_nShifted;
+
+	g_GlobalInfo.m_nShifted = 0;
+	//auto state = g_Interfaces.ClientState;
+	int* pNewCmds			= (int*)((uintptr_t)buffer - 0x2C);
+	int* pBackupCmds		= (int*)((uintptr_t)buffer - 0x30);
+	auto newCmds			= pNewCmds;
+
+	*pBackupCmds = 0;
+
+	int iNewCmds			= *pNewCmds;
+	int iNextCmds			= g_Interfaces.ClientState->chokedcommands + g_Interfaces.ClientState->lastoutgoingcommand + 1;
+	int iTotalNewCmds =		std::min(iNewCmds + abs(tickbase), 22);
+
+	*pNewCmds = iTotalNewCmds;
+	for (to = iNextCmds - iNewCmds + 1; to <= iNextCmds; to++)
+	{
+		if (!oWriteUserCmdDeltaToBuffer(g_Interfaces.Client, buffer, from, to, true)) {
+			return false;
+		}
+		from = to;
+	}
+	CUserCmd* pCmd = g_Interfaces.Input->GetUserCmd(from);
+	if (!pCmd) {
+		return true;
+	}
+	CUserCmd toCmd = *pCmd, fromCmd = *pCmd;
+	toCmd.command_number++;
+	toCmd.tick_count += 3 * g_Interfaces.GlobalVars->tickcount;
+	for (int i = 0; i <= abs(tickbase); i++) {
+		WriteUserCmd(buffer, &toCmd, &fromCmd);
+		fromCmd = toCmd;
+		toCmd.command_number++;
+		toCmd.tick_count++;
+	}
+
+	return true;*/
+	return Table.Original<fn>(index)(g_Interfaces.Client, buffer, from, to, isNewCmd);
+}

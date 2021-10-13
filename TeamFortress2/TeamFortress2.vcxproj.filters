@@ -88,7 +88,6 @@
     <ClCompile Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.cpp" />
     <ClCompile Include="TeamFortress2\Features\InstantRespawn\InstantRespawn.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\InventoryExpander\InventoryExpander.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Backtrack\Backtrack.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\ViewRenderHook\ViewRenderHook.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\NetChannel\NetChannel.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\ChatPrintfHook\ChatPrintfHook.cpp" />
@@ -617,9 +616,9 @@
     <ClInclude Include="TeamFortress2\Features\InstantRespawn\InstantRespawn.h" />
     <ClInclude Include="TeamFortress2\Hooks\InventoryExpander\InventoryExpander.h" />
     <ClInclude Include="TeamFortress2\Features\NewMenu\font_awesome_5.h" />
-    <ClInclude Include="TeamFortress2\Features\Backtrack\Backtrack.h" />
     <ClInclude Include="TeamFortress2\Hooks\ViewRenderHook\ViewRenderHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\ChatPrintfHook\ChatPrintfHook.h" />
+    <ClInclude Include="TeamFortress2\SDK\Includes\Typedef.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\Include\D3DX_DXGIFormatConvert.inl" />

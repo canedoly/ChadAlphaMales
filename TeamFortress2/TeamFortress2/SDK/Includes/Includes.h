@@ -5,7 +5,7 @@
 #include "Structs.h"
 #include "bitbuf.h"
 #include "MD5.h"
-
+#include "Typedef.h"
 #include <deque>
 
 class IRefCounted

@@ -59,6 +59,14 @@ private:
 	mstudiobone_t(const mstudiobone_t &vOther);
 };
 
+struct ScreenFade_t
+{
+	unsigned short 	duration;		// FIXED 16 bit, with SCREENFADE_FRACBITS fractional, seconds duration
+	unsigned short 	holdTime;		// FIXED 16 bit, with SCREENFADE_FRACBITS fractional, seconds duration until reset (fade & hold)
+	short			fadeFlags;		// flags
+	byte			r, g, b, a;		// fade to color ( max alpha )
+};
+
 struct studiohdr_t
 {
 	int id;
