@@ -97,28 +97,45 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	auto AntiWarp = [](CUserCmd* cmd) -> void
 	{
-		int shiftcheck = g_GlobalInfo.m_nShifted;
+		if (dt.Charged == 0) {
+			dt.FastStop = false;
+		}
 
-		if (shiftcheck < 19)
-		{
-			if (shiftcheck < 6)
-			{
-				cmd->forwardmove *= -1;
-				cmd->sidemove *= -1;
-			}
-			else
-			{
-				cmd->forwardmove = 0;
-				cmd->sidemove = 0;
+		if (auto& pLocal = g_EntityCache.m_pLocal) {
+			Vec3 velocity = pLocal->GetVelocity();
+			Vec3 direction; Math::VectorAngles(velocity, direction);
+			float speed = velocity.Lenght2D();	
+
+			direction.y = cmd->viewangles.y - direction.y;
+
+			Vec3 negated_direction; Math::AngleVectors(direction, &negated_direction);
+			negated_direction *= -speed;
+			if (dt.Charged > 0) {
+				if (speed > 5.0f) {
+					/*
+					cmd->forwardmove = negated_direction.x;
+					cmd->sidemove = negated_direction.y;*/
+					cmd->forwardmove = cmd->sidemove = 0.0f;
+				}
+				else {
+					cmd->forwardmove = cmd->sidemove = 0.0f;
+				}
+				/*if (speed > 5.0f) {
+					cmd->forwardmove *= -1.f;
+					cmd->sidemove *= -1.f;
+				}
+				else {
+					cmd->forwardmove = cmd->sidemove = 0.f;
+				}*/
 			}
 		}
 		else {
-			g_GlobalInfo.fast_stop = false;
+			dt.FastStop = false;
 		}
 	};
 
 
-	if (g_GlobalInfo.fast_stop) {
+	if (dt.FastStop) {
 		AntiWarp(pCmd);
 	}
 
@@ -134,7 +151,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			const int nItemDefIndex = pWeapon->GetItemDefIndex();
 
 			if (g_GlobalInfo.m_nCurItemDefIndex != nItemDefIndex || !pWeapon->GetClip1())
-				g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS;
+				dt.ToWait = DT_WAIT_CALLS;
 
 			g_GlobalInfo.m_nCurItemDefIndex = nItemDefIndex;
 			g_GlobalInfo.m_bWeaponCanHeadShot = pWeapon->CanWeaponHeadShot();
@@ -277,6 +294,9 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		if (nChoked > 14)
 			*pSendPacket = true;
 	}
+
+	g_GlobalInfo.shiftedCmd = pCmd;
+	
 
 	return g_GlobalInfo.m_bSilentTime
 		|| g_GlobalInfo.m_bAAActive

@@ -9,6 +9,28 @@
 	return GetVFunc<fn>(pBase, index)(pBase); \
 }
 
+class CPlayerSimInfo
+{
+public:
+	CPlayerSimInfo() :
+		m_flTime(0.0f), m_nNumCmds(0), m_nTicksCorrected(0), m_flFinalSimulationTime(0.0f), m_flGameSimulationTime(0.0f), m_flServerFrameTime(0.0f), m_vecAbsOrigin(0, 0, 0)
+	{
+	}
+
+	// realtime of sample
+	float		m_flTime;
+	// # of CUserCmds in this update
+	int			m_nNumCmds;
+	// If clock needed correction, # of ticks added/removed
+	int			m_nTicksCorrected; // +ve or -ve
+	// player's m_flSimulationTime at end of frame
+	float		m_flFinalSimulationTime;
+	float		m_flGameSimulationTime;
+	// estimate of server perf
+	float		m_flServerFrameTime;
+	Vector		m_vecAbsOrigin;
+};
+
 class CBaseEntity
 {
 public: //Netvars & conditions
