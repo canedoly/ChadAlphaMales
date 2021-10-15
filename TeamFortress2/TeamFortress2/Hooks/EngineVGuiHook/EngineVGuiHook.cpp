@@ -87,9 +87,18 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							int ticks = dt.Charged;
 							int tickWidth = 5;
 							int barWidth = (tickWidth * 24) + 2;
-							g_Draw.Rect(g_ScreenSize.c - (barWidth / 2), nY + 50, barWidth, 6, { 40,40,40,255 });
-							g_Draw.OutlinedRect(g_ScreenSize.c - (barWidth / 2),nY + 50, barWidth,6,{ 0, 0, 0, 255 });
-							g_Draw.GradientRect(g_ScreenSize.c - (barWidth / 2) + 1, nY + 51, (g_ScreenSize.c - (barWidth / 2) + 1) + tickWidth * dt.Charged, nY + 51 + 4, { 0,0,0,255 }, Vars::Menu::Colors::WidgetActive, true);
+							
+							
+							g_Draw.Rect(g_ScreenSize.c - (barWidth / 2), nY + 50, barWidth, 6, { 40,40,40,dt.barAlpha });
+							g_Draw.OutlinedRect(g_ScreenSize.c - (barWidth / 2),nY + 50, barWidth,6,{ 0, 0, 0, dt.barAlpha });
+							g_Draw.GradientRect(g_ScreenSize.c - (barWidth / 2) + 1, nY + 51, (g_ScreenSize.c - (barWidth / 2) + 1) + tickWidth * dt.Charged, nY + 51 + 4, { 0,0,0,255 },
+								{
+									Vars::Menu::Colors::WidgetActive.r,
+									Vars::Menu::Colors::WidgetActive.g,
+									Vars::Menu::Colors::WidgetActive.b,
+									255
+								},
+								true);
 						}
 					}
 				}

@@ -12,7 +12,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 	if (Vars::Misc::CL_Move::Doubletap.m_Var) {
 		auto& pLocal = g_EntityCache.m_pLocal;
 		if (!pLocal) {
-			return Func.Original<fn>()(accumulated_extra_samples, bFinalTick);\
+			return Func.Original<fn>()(accumulated_extra_samples, bFinalTick);
 		}
 		/* Recharge */
 
@@ -23,6 +23,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 		}
 
 		if (dt.Recharging && dt.Charged < dt.ToShift) {
+			dt.barAlpha = 255;
 			dt.Charged++;
 			dt.ToWait = DT_WAIT_CALLS;
 			return;

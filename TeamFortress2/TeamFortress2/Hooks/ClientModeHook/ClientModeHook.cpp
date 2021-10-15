@@ -187,6 +187,18 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		badcode++;
 	}
 
+	if (dt.Charged == 0) {
+		if (dt.barAlpha > 0) {
+			dt.barAlpha -= 3;
+		}
+		if (dt.barAlpha < 0) {
+			dt.barAlpha = 0;
+		}
+	}
+	else {
+		dt.barAlpha = 255;
+	}
+
 	g_InstantRespawn.InstantRespawn();
 	g_Misc.Run(pCmd);
 	g_EnginePrediction.Start(pCmd);
