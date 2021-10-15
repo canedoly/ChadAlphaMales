@@ -70,19 +70,20 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 					{
 						if (pLocal->GetLifeState() == LIFE_ALIVE)
 						{
-							auto vel = pLocal->GetVelocity();
+							const int nY = (g_ScreenSize.h / 2) + 20;
+							/*auto vel = pLocal->GetVelocity();
 							vel.z = 0;
 							auto speed = vel.Lenght2D();
 							auto speed2 = vel.Lenght();
 							g_Draw.String(FONT_MENU, g_ScreenSize.c, g_ScreenSize.h / 2, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, std::string("Length2D: " + std::to_string(speed)).c_str());
 							g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 20, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, std::string("Length: " + std::to_string(speed2)).c_str());
-							const int nY = (g_ScreenSize.h / 2) + 20;
+							
 							g_Draw.String(FONT_MENU, 0, nY + 00, { 255,255,255,255 }, ALIGN_DEFAULT, std::string("Charged: " + std::to_string(dt.Charged)).c_str());
 							g_Draw.String(FONT_MENU, 0, nY + 20, { 255,255,255,255 }, ALIGN_DEFAULT, std::string("Fast stop: " + std::to_string(dt.FastStop)).c_str());
 							g_Draw.String(FONT_MENU, 0, nY + 40, { 255,255,255,255 }, ALIGN_DEFAULT, std::string("Recharging: " + std::to_string(dt.Recharging)).c_str());
 							g_Draw.String(FONT_MENU, 0, nY + 60, { 255,255,255,255 }, ALIGN_DEFAULT, std::string("Shifting: " + std::to_string(dt.Shifting)).c_str());
 							g_Draw.String(FONT_MENU, 0, nY + 80, { 255,255,255,255 }, ALIGN_DEFAULT, std::string("Ticks to shift: " + std::to_string(dt.ToShift)).c_str());
-							g_Draw.String(FONT_MENU, 0, nY + 99, { 255,255,255,255 }, ALIGN_DEFAULT, std::string("Wait ticks: " + std::to_string(dt.ToWait)).c_str());
+							g_Draw.String(FONT_MENU, 0, nY + 99, { 255,255,255,255 }, ALIGN_DEFAULT, std::string("Wait ticks: " + std::to_string(dt.ToWait)).c_str());*/
 							int ticks = dt.Charged;
 							int tickWidth = 5;
 							int barWidth = (tickWidth * 24) + 2;

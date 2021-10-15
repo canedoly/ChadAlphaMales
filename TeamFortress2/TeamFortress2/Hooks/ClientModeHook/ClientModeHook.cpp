@@ -112,9 +112,9 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			negated_direction *= -speed;
 			if (dt.Charged > 0) {
 				if (speed > 5.0f) {
-					/*
+					
 					cmd->forwardmove = negated_direction.x;
-					cmd->sidemove = negated_direction.y;*/
+					cmd->sidemove = negated_direction.y;
 					cmd->forwardmove = cmd->sidemove = 0.0f;
 				}
 				else {
@@ -133,6 +133,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			dt.FastStop = false;
 		}
 	};
+
 
 
 	if (dt.FastStop) {

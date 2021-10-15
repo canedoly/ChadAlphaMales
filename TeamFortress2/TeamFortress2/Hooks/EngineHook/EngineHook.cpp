@@ -10,7 +10,10 @@
 void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFinalTick)
 {
 	if (Vars::Misc::CL_Move::Doubletap.m_Var) {
-
+		auto& pLocal = g_EntityCache.m_pLocal;
+		if (!pLocal) {
+			return Func.Original<fn>()(accumulated_extra_samples, bFinalTick);\
+		}
 		/* Recharge */
 
 		if (GetAsyncKeyState(Vars::Misc::CL_Move::RechargeKey.m_Var)) {
@@ -25,6 +28,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 			return;
 		}
 		else {
+			pLocal->SetTickBase(pLocal->GetTickBase() + dt.ToShift + 1);
 			dt.Recharging = false;
 		}
 
@@ -53,17 +57,8 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 					if (dt.Charged <= dt.ToWait) {
 						return;
 					}
-					if (!Vars::Misc::CL_Move::NotInAir.m_Var) {
-						Func.Original<fn>()(accumulated_extra_samples, (dt.Charged == 1));
-						dt.Charged--;
-					}
-					if (Vars::Misc::CL_Move::NotInAir.m_Var) {
-
-						if (pLocal->IsOnGround()) {
-							Func.Original<fn>()(accumulated_extra_samples, (dt.Charged == 1));
-							dt.Charged--;
-						}
-					}
+					Func.Original<fn>()(accumulated_extra_samples, (dt.Charged == 1));
+					dt.Charged--;
 				}
 				dt.Shifting = false;
 				dt.FastStop = false;
