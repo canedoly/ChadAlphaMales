@@ -1089,7 +1089,7 @@ void MiscTab() {
             InputKeybind(_("DoubleTap Key"), Vars::Misc::CL_Move::DoubletapKey);
             ImGui::SliderInt(_("Ticks to shift"), &dt.ToShift, 10, 24, _("%d"), ImGuiSliderFlags_ClampOnInput);
             ImGui::Checkbox(_("Wait for DT"), &Vars::Misc::CL_Move::WaitForDT.m_Var);
-            ImGui::Checkbox(_("Don't DT in air"), &Vars::Misc::CL_Move::NotInAir.m_Var);
+            //ImGui::Checkbox(_("Don't DT in air"), &Vars::Misc::CL_Move::NotInAir.m_Var);
             ImGui::SetCursorPosX(8);
             ImGui::Text(_("Recharge Key"));
             plsfix(50);
