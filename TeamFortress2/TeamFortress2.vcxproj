@@ -22,7 +22,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{D75548B5-A1DB-4EA1-8CC1-3E09C441B4B2}</ProjectGuid>
     <RootNamespace>TeamFortress2</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
     <ProjectName>CAM</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -106,7 +106,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <GenerateMapFile>true</GenerateMapFile>
+      <GenerateMapFile>false</GenerateMapFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -174,6 +174,7 @@
     <ClCompile Include="TeamFortress2\Features\Auto\AutoBlast\AutoBlast.cpp" />
     <ClCompile Include="TeamFortress2\Features\Auto\AutoDetonate\AutoDetonate.cpp" />
     <ClCompile Include="TeamFortress2\Features\Auto\AutoUber\AutoUber.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Backtrack\Backtrack.cpp" />
     <ClCompile Include="TeamFortress2\Features\ChatInfo\ChatInfo.cpp" />
     <ClCompile Include="TeamFortress2\Features\Chams\DMEChams.cpp" />
     <ClCompile Include="TeamFortress2\Features\ESP\ESP.cpp" />
@@ -182,7 +183,6 @@
     <ClCompile Include="TeamFortress2\Features\KatzeB0t\AntiCat.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ConfigManager\ConfigManager.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\InputHelper\InputHelper.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Menu\Menu.cpp" />
     <ClCompile Include="TeamFortress2\Features\Misc\Misc.cpp" />
     <ClCompile Include="TeamFortress2\Features\Chams\Chams.cpp" />
     <ClCompile Include="TeamFortress2\Features\NewMenu\ImGui\imgui.cpp" />
@@ -205,6 +205,8 @@
     <ClCompile Include="TeamFortress2\Features\Auto\AutoStab\AutoStab.cpp" />
     <ClCompile Include="TeamFortress2\Features\Auto\Auto.cpp" />
     <ClCompile Include="TeamFortress2\Features\Visuals\Visuals.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\BulletTracer\BulletTracer.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\ChatPrintfHook\ChatPrintfHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\ClientHook\ClientHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\ClientModeHook\ClientModeHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\DrawStaticPropsHook\DrawStaticPropsHook.cpp" />
@@ -224,11 +226,13 @@
     <ClCompile Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\SurfaceHook\SurfaceHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\UniformRandomStreamHook\UniformRandomStreamHook.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\ViewRenderHook\ViewRenderHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\WndProcHook\WndProcHook.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Includes\bitbuf.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Includes\MD5.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\ConVar\ConVar.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\Interfaces.cpp" />
+    <ClCompile Include="TeamFortress2\SDK\Interfaces\NetChannel\NetChannel.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Main\ConVars\ConVars.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Main\DrawUtils\DrawUtils.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Main\EntityCache\EntityCache.cpp" />
@@ -242,7 +246,7 @@
     <ClCompile Include="TeamFortress2\Utils\DiscordRPC\src\discord_rpc.cpp" />
     <ClCompile Include="TeamFortress2\Utils\DiscordRPC\src\rpc_connection.cpp" />
     <ClCompile Include="TeamFortress2\Utils\DiscordRPC\src\serialization.cpp" />
-    <ClCompile Include="TeamFortress2\Utils\Easings\easing.cpp" />
+    <ClCompile Include="TeamFortress2\Utils\Easings\easings.cpp" />
     <ClCompile Include="TeamFortress2\Utils\Events\Events.cpp" />
     <ClCompile Include="TeamFortress2\Utils\Hash\Hash.cpp" />
     <ClCompile Include="TeamFortress2\Utils\MinHook\buffer.c" />
@@ -262,6 +266,7 @@
     <ClInclude Include="TeamFortress2\Features\Auto\AutoBlast\AutoBlast.h" />
     <ClInclude Include="TeamFortress2\Features\Auto\AutoDetonate\AutoDetonate.h" />
     <ClInclude Include="TeamFortress2\Features\Auto\AutoUber\AutoUber.h" />
+    <ClInclude Include="TeamFortress2\Features\Backtrack\Backtrack.h" />
     <ClInclude Include="TeamFortress2\Features\ChatInfo\ChatInfo.h" />
     <ClInclude Include="TeamFortress2\Features\Chams\DMEChams.h" />
     <ClInclude Include="TeamFortress2\Features\ESP\ESP.h" />
@@ -270,7 +275,6 @@
     <ClInclude Include="TeamFortress2\Features\KatzeB0t\AntiCat.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\ConfigManager\ConfigManager.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\InputHelper\InputHelper.h" />
-    <ClInclude Include="TeamFortress2\Features\Menu\Menu.h" />
     <ClInclude Include="TeamFortress2\Features\Misc\Misc.h" />
     <ClInclude Include="TeamFortress2\Features\Chams\Chams.h" />
     <ClInclude Include="TeamFortress2\Features\NewMenu\font_awesome_5.h" />
@@ -298,6 +302,8 @@
     <ClInclude Include="TeamFortress2\Features\Auto\Auto.h" />
     <ClInclude Include="TeamFortress2\Features\Vars.h" />
     <ClInclude Include="TeamFortress2\Features\Visuals\Visuals.h" />
+    <ClInclude Include="TeamFortress2\Hooks\BulletTracer\BulletTracer.h" />
+    <ClInclude Include="TeamFortress2\Hooks\ChatPrintfHook\ChatPrintfHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\ClientHook\ClientHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\ClientModeHook\ClientModeHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\DrawStaticPropsHook\DrawStaticPropsHook.h" />
@@ -317,6 +323,7 @@
     <ClInclude Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.h" />
     <ClInclude Include="TeamFortress2\Hooks\SurfaceHook\SurfaceHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\UniformRandomStreamHook\UniformRandomStreamHook.h" />
+    <ClInclude Include="TeamFortress2\Hooks\ViewRenderHook\ViewRenderHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\WndProcHook\WndProcHook.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9.h" />
     <ClInclude Include="TeamFortress2\SDK\DirectX\d3dx9anim.h" />
@@ -426,6 +433,7 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\GameEvent\GameEvent.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\GameMovement\GameMovement.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\GlobalVarsBase\GlobalVarsBase.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\IInputSystem\InputSystem.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\Input\Input.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\Interfaces.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\KeyValuesSystem\KeyValuesSystem.h" />
