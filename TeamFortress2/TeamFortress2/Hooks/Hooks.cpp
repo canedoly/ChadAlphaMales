@@ -28,6 +28,13 @@ void CHooks::Init()
 		//Table.Hook(DispatchUserMessage::index, &DispatchUserMessage::Hook);
 	}
 
+	if (g_Interfaces.GameMovement) {
+		using namespace GameMovement;
+
+		Table.Init(g_Interfaces.GameMovement);
+		Table.Hook(ProcessMovement::index, &ProcessMovement::Hook);
+	}
+
 	if (g_Interfaces.ViewRender)
 	{
 		using namespace ViewRenderHook;

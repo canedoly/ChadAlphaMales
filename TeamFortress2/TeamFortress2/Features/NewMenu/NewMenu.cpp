@@ -948,6 +948,16 @@ void VisualsTab() {
                 "Merasmus Zap",
             };
             ImGui::Combo(_("Bullet Tracer"), &Vars::Visuals::TracerEffect.m_Var, weaponTracer, IM_ARRAYSIZE(weaponTracer));
+            static const char* ragdollEffect[]{
+                "None",
+                "Gib",
+                "Burning",
+                "Feign death",
+                "Become ash",
+                "Gold ragdoll",
+                "Ice ragdoll",
+            };
+            ImGui::Combo(_("Ragdoll effect"), &Vars::Visuals::RagdollEffect.m_Var, ragdollEffect, IM_ARRAYSIZE(ragdollEffect));
         }
         ImGui::EndChild();
         ImGui::EndGroup();
