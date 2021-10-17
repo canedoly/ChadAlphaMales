@@ -63,7 +63,9 @@
     <ClCompile Include="TeamFortress2\Hooks\DrawStaticPropsHook\DrawStaticPropsHook.cpp" />
     <ClCompile Include="TeamFortress2\Features\AttributeChanger\AttributeChanger.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\EngineHook\EngineHook.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Menu\Menu.cpp" />
     <ClCompile Include="TeamFortress2\Features\RichPresence\RichPresence.cpp" />
+    <ClCompile Include="TeamFortress2\Utils\Easings\easing.cpp" />
     <ClCompile Include="TeamFortress2\Utils\DiscordRPC\src\connection_win.cpp" />
     <ClCompile Include="TeamFortress2\Utils\DiscordRPC\src\discord_register_win.cpp" />
     <ClCompile Include="TeamFortress2\Utils\DiscordRPC\src\discord_rpc.cpp" />
@@ -86,12 +88,9 @@
     <ClCompile Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.cpp" />
     <ClCompile Include="TeamFortress2\Features\InstantRespawn\InstantRespawn.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\InventoryExpander\InventoryExpander.cpp" />
-    <ClCompile Include="TeamFortress2\Features\Backtrack\Backtrack.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\ChatPrintfHook\ChatPrintfHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\ViewRenderHook\ViewRenderHook.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\NetChannel\NetChannel.cpp" />
-    <ClCompile Include="TeamFortress2\Utils\Easings\easings.cpp" />
-    <ClCompile Include="TeamFortress2\Hooks\BulletTracer\BulletTracer.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\ChatPrintfHook\ChatPrintfHook.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -461,6 +460,7 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\EngineEffects\EngineEffects.h" />
     <ClInclude Include="TeamFortress2\Features\AttributeChanger\AttributeChanger.h" />
     <ClInclude Include="TeamFortress2\Hooks\EngineHook\EngineHook.h" />
+    <ClInclude Include="TeamFortress2\Features\Menu\Menu.h" />
     <ClInclude Include="TeamFortress2\Features\RichPresence\RichPresence.h" />
     <ClInclude Include="TeamFortress2\Utils\Easings\easing.h" />
     <ClInclude Include="TeamFortress2\Utils\DiscordRPC\Include\discord_register.h" />
@@ -616,11 +616,9 @@
     <ClInclude Include="TeamFortress2\Features\InstantRespawn\InstantRespawn.h" />
     <ClInclude Include="TeamFortress2\Hooks\InventoryExpander\InventoryExpander.h" />
     <ClInclude Include="TeamFortress2\Features\NewMenu\font_awesome_5.h" />
-    <ClInclude Include="TeamFortress2\Features\Backtrack\Backtrack.h" />
-    <ClInclude Include="TeamFortress2\Hooks\ChatPrintfHook\ChatPrintfHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\ViewRenderHook\ViewRenderHook.h" />
-    <ClInclude Include="TeamFortress2\SDK\Interfaces\IInputSystem\InputSystem.h" />
-    <ClInclude Include="TeamFortress2\Hooks\BulletTracer\BulletTracer.h" />
+    <ClInclude Include="TeamFortress2\Hooks\ChatPrintfHook\ChatPrintfHook.h" />
+    <ClInclude Include="TeamFortress2\SDK\Includes\Typedef.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\Include\D3DX_DXGIFormatConvert.inl" />
