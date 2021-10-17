@@ -1,6 +1,6 @@
 #include "PredictionHook.h"
 
-void __stdcall PredictionHook::RunCommand2::Hook(CBaseEntity *pEntity, CUserCmd *pCmd, CMoveHelper *pMoveHelper)
+void __stdcall PredictionHook::RunCommand::Hook(CBaseEntity *pEntity, CUserCmd *pCmd, CMoveHelper *pMoveHelper)
 {
 	Table.Original<fn>(index)(g_Interfaces.Prediction, pEntity, pCmd, pMoveHelper);
 
@@ -19,7 +19,7 @@ int CalculateTick(int simTicks, CBaseEntity* player)
 		return nIdealFinalTick - simTicks;
 }
 
-void __stdcall PredictionHook::RunCommand::Hook(CBaseEntity* pEntity, CUserCmd* pCmd, CMoveHelper* pMoveHelper)
+void __stdcall PredictionHook::RunCommand2::Hook(CBaseEntity* pEntity, CUserCmd* pCmd, CMoveHelper* pMoveHelper)
 {
 	if (pMoveHelper && !g_Interfaces.MoveHelper)
 		g_Interfaces.MoveHelper = pMoveHelper;
