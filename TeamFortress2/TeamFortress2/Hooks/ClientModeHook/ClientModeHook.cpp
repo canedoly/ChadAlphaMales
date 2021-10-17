@@ -10,6 +10,7 @@
 #include "../../Features/KatzeB0t/AntiCat.h"
 #include "../../SDK/Timer.h"
 #include "../../Features/InstantRespawn/InstantRespawn.h"
+#include "../../Features/Backtrack/Backtrack.h"
 
 //#include "../../Features/KatzeB0t/AntiCat.h"
 
@@ -61,7 +62,7 @@ static void updateAntiAfk(CUserCmd* pCmd)
 			bool flip = false;
 			pCmd->buttons |= flip ? IN_FORWARD : IN_BACK;
 			flip = !flip;
-			g_Visuals.AddToEventLog(_("Attempting to prevent AFK kick...")); 
+			g_Visuals.AddToEventLog(_("Attempting to prevent AFK kick..."));
 			g_Interfaces.CVars->ConsoleColorPrintf({ 150, 255, 0, 255 }, _("Attempting to prevent AFK kick...\n"));
 			g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, "\x4[CAM]\x1 Attempting to prevent AFK kick...");
 			if (AntiAfkTimer.check(g_ConVars.afkTimer->GetInt() * 60 * 1000 + 1000))
@@ -94,15 +95,16 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	Vec3 vOldAngles = pCmd->viewangles;
 	float fOldSide = pCmd->sidemove;
 	float fOldForward = pCmd->forwardmove;
-
 	auto AntiWarp = [](CUserCmd* cmd) -> void
 	{
 		int shiftcheck = g_GlobalInfo.m_nShifted;
+		auto pLocal = GLOCAL;
 
 		if (shiftcheck < 19)
 		{
 			if (shiftcheck < 6)
 			{
+				// should be -1 btw
 				cmd->forwardmove *= -1;
 				cmd->sidemove *= -1;
 			}
@@ -126,6 +128,9 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
+		if (pLocal->IsAlive())
+			CBacktrack::DoBacktrack(pCmd);
+
 		g_GlobalInfo.m_Latency = g_Interfaces.ClientState->m_NetChannel->GetLatency(0);
 		nOldFlags = pLocal->GetFlags();
 
@@ -168,6 +173,19 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	else {
 		badcode++;
 	}
+
+	if (g_GlobalInfo.m_nticksChoked == 0) {
+		if (g_GlobalInfo.barAlpha > 0) {
+			g_GlobalInfo.barAlpha -= 3;
+		}
+		if (g_GlobalInfo.barAlpha < 0) {
+			g_GlobalInfo.barAlpha = 0;
+		}
+	}
+	else {
+		g_GlobalInfo.barAlpha = 255;
+	}
+
 
 	g_InstantRespawn.InstantRespawn();
 	g_Misc.Run(pCmd);
@@ -216,6 +234,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		}
 	}
 	*/
+
 	if (Vars::Misc::TauntSlide.m_Var)
 	{
 		if (const auto& pLocal = g_EntityCache.m_pLocal)
@@ -271,7 +290,6 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 		if (!*pSendPacket)
 			nChoked++;
-
 		else nChoked = 0;
 
 		if (nChoked > 14)

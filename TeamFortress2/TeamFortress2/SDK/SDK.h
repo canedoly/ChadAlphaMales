@@ -54,6 +54,8 @@
 #define TICKS_TO_TIME( t )	( TICK_INTERVAL * ( t ) )
 #define Q_ARRAYSIZE(A) (sizeof(A)/sizeof((A)[0]))
 
+#define GLOCAL g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetLocalPlayer());
+
 //I for some reason have to include this here, if I don't then one steam header goes apeshit full of errors
 #include "../Utils/CRC/CRC.h"
 
@@ -137,6 +139,9 @@ namespace Colors
 	inline Color_t IgnoredTarget = { 65,65,65,255 };
 	inline Color_t HealthBarTopColor = { 0,255,0,255 };
 	inline Color_t HealthBarBottomColor = { 255,0,0,255 };
+
+	inline Color_t HealthBarbTopColor = { 0,255,0,255 };
+	inline Color_t HealthBarbBottomColor = { 255,0,0,255 };
 	inline Color_t hitboxColor{ 255, 0, 0, 50 };
 }
 

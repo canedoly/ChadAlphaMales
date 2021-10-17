@@ -242,10 +242,12 @@ void CAimbotMelee::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd
 
 		if (bIsAttacking) {
 			g_GlobalInfo.m_bAttacking = true;
+			/*
 			if (Vars::Chams::Players::HitboxThing.m_Var && abs(pCmd->tick_count - nLastTracerTick) > 1) {
 				g_Visuals.DrawHitboxMatrix(Target.m_pEntity, Colors::hitboxColor, Vars::Chams::Players::HitboxTimeThing.m_Var);
 				nLastTracerTick = pCmd->tick_count;
 			}
+			*/
 		}
 
 		if (Vars::Aimbot::Melee::AimMethod.m_Var == 2)

@@ -10,7 +10,7 @@
 typedef unsigned short MaterialVarSym_t;
 class ITexture;
 class IMaterial;
-
+class CMaterial;
 class MaterialPropertyTypes_t;
 class VertexFormat_t;
 
@@ -235,7 +235,12 @@ class CTraceFilter
 {
 public:
 	virtual bool ShouldHitEntity(void* entity, int contents_mask) = 0;
-	virtual ETraceType GetTraceType() const = 0;
+	//virtual ETraceType GetTraceType() const = 0;
+public:
+	virtual ETraceType GetTraceType() const
+	{
+		return TRACE_EVERYTHING;
+	}
 };
 
 class CBaseTrace
@@ -287,6 +292,16 @@ public:
 
 	CGameTrace() { }
 	CGameTrace(const CGameTrace& othr);
+};
+
+using CBaseHandle = unsigned long;
+
+class IHandleEntity
+{
+public:
+	virtual ~IHandleEntity() {}
+	virtual void SetRefEHandle(const CBaseHandle& handle) = 0;
+	virtual const CBaseHandle& GetRefEHandle() const = 0;
 };
 
 struct CHudTexture;
@@ -516,6 +531,7 @@ public:
 	virtual bool			WasReloadedFromWhitelist() = 0;
 	virtual bool			IsPrecached() const = 0;
 };
+
 
 class IMaterialVar
 {

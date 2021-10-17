@@ -12,16 +12,15 @@ public:
 
 namespace Vars
 {
-	namespace Sekret {
-		inline HMODULE dll;
-	}
 	namespace Menu
 	{
 		inline bool Opened			= false;
-		inline Rect_t Position		= { 100, 100, 870, 480 };
+		//inline Rect_t Position		= { 100, 100, 870, 480 };
 		inline const auto Title		= XorStr(L"Team Fortress 2");
 		inline int TitleBarH		= 16;
 
+		inline int ShadowSize		= 128;
+		/*
 		inline int SpacingX = 8;
 		inline int SpacingY = 4;
 		inline int SpacingText = 4;
@@ -45,14 +44,14 @@ namespace Vars
 		inline int InputBoxW = 90;
 		inline int InputBoxH = 14;
 		inline int InputColorBoxW = 30;
+		*/
 
 		namespace Colors
 		{
 			//inline Color_t WindowBackground = { 30, 30, 30, 255 };
-			inline Color_t TitleBar = { 60, 60, 60, 255 };
 			inline Color_t Text = { 255, 255, 255, 190 };
-			inline Color_t Widget = { 20, 20, 20, 255 };
 			inline Color_t WidgetActive = { 150, 0, 255, 255 };
+			inline Color_t ShadowColor = { 150, 0, 255, 255 };
 			inline Color_t OutlineMenu = { 50, 50, 50, 255 };
 		}
 	}
@@ -64,7 +63,7 @@ namespace Vars
 			inline CVar<bool> Active{ true, L"Active" };
 			inline CVar<int> CritKey{ VK_LSHIFT, L"Crit Key" };
 			inline CVar<bool> SaveBucket{ false, L"Save Bucket" };
-			inline CVar<bool> MeeleCrits{ false, L"Meele Crits" };
+			inline CVar<bool> MeleeCrits{ false, L"Meele Crits" };
 			inline CVar<bool> CritBar{ false, L"Crit Bar" };
 		}
 
@@ -424,6 +423,8 @@ namespace Vars
 
 		inline CVar<bool> PlayerList				{ false, L"Playerlist" };
 
+		inline CVar<int> TracerEffect				{ 0, L"Tracer style" };
+
 		namespace Skins
 		{
 			inline CVar<bool> Enabled				{ false, L"Active" };
@@ -462,6 +463,7 @@ namespace Vars
 		inline CVar<bool> AntiAFK				{ false, L"Anti AFK" };
 		inline CVar<bool> VoteRevealer			{ false, L"Reveal votes" };
 		inline CVar<bool> VotesInChat			{ false, L"Reveal votes to party" };
+		inline CVar<bool> CleanScreenshot		{ true, L"l0l" };
 		inline CVar<bool> SteamRPC				{ true, L"Self explanatory" };
 		inline CVar<bool> CheatsBypass			{ false, L"cum" };
 		inline std::string SteamRPCText	= "ChadAlphaMales.club";

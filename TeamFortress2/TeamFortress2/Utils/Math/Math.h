@@ -330,6 +330,10 @@ public:
 		return (x * x + y * y + z * z);
 	}
 
+	__forceinline void Clear() {
+		x = y = z = 0.f;
+	}
+
 	float Normalize()
 	{
 		float fl_lenght = Lenght();
@@ -483,6 +487,19 @@ namespace Math
 		out[0][column] = in.x;
 		out[1][column] = in.y;
 		out[2][column] = in.z;
+	}
+
+	inline float DistPointToLine(const Vec3 point, const Vec3 origin, const Vec3 direction) {
+		auto point_direction = point - origin;
+
+		auto temporary_offset = point_direction.Dot(direction) / (direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
+		if (temporary_offset < 0.000001f) {
+			return FLT_MAX;
+		}
+
+		auto perpendicular_point = origin + (direction * temporary_offset);
+
+		return (point - perpendicular_point).Lenght();
 	}
 
 	inline void AngleMatrix(const Vec3 &angles, matrix3x4 &matrix)

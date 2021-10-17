@@ -89,6 +89,20 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 			if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[Player->GetIndex()])
 				continue;
 
+			if (Vars::Aimbot::Hitscan::AimHitbox.m_Var == 2)
+			{
+				if (pWeapon->GetChargeDamage() >= Player->GetHealth())
+					nHitbox = HITBOX_PELVIS;
+
+				if (g_GlobalInfo.m_nCurItemDefIndex == Spy_m_TheAmbassador || g_GlobalInfo.m_nCurItemDefIndex == Spy_m_FestiveAmbassador)
+				{
+					if (pWeapon->GetWeaponData().m_nDamage >= Player->GetHealth())
+					{
+						nHitbox = HITBOX_PELVIS;
+					}
+				}
+			}
+
 			Vec3 vPos = Player->GetHitboxPos(nHitbox);
 			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
 			float flFOVTo = SortMethod == ESortMethod::FOV ? Math::CalcFov(vLocalAngles, vAngleTo) : 0.0f;
@@ -615,7 +629,6 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 		if (bIsAttacking) {
 			g_GlobalInfo.m_bAttacking = true;
 			if (Vars::Chams::Players::HitboxThing.m_Var && abs(pCmd->tick_count - nLastTracerTick) > 1) {
-				g_Visuals.DrawHitboxMatrix(Target.m_pEntity, Colors::hitboxColor, Vars::Chams::Players::HitboxTimeThing.m_Var);
 				nLastTracerTick = pCmd->tick_count;
 			}
 		}

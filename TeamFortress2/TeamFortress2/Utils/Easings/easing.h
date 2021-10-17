@@ -1,40 +1,13 @@
-#pragma once 
+#pragma once
 
-enum easing_functions
+class Animate
 {
-	EaseInSine,
-	EaseOutSine,
-	EaseInOutSine,
-	EaseInQuad,
-	EaseOutQuad,
-	EaseInOutQuad,
-	EaseInCubic,
-	EaseOutCubic,
-	EaseInOutCubic,
-	EaseInQuart,
-	EaseOutQuart,
-	EaseInOutQuart,
-	EaseInQuint,
-	EaseOutQuint,
-	EaseInOutQuint,
-	EaseInExpo,
-	EaseOutExpo,
-	EaseInOutExpo,
-	EaseInCirc,
-	EaseOutCirc,
-	EaseInOutCirc,
-	EaseInBack,
-	EaseOutBack,
-	EaseInOutBack,
-	EaseInElastic,
-	EaseOutElastic,
-	EaseInOutElastic,
-	EaseInBounce,
-	EaseOutBounce,
-	EaseInOutBounce
+public:
+	float easeOut(float start, float end, float speed);
+	float easeIn(float start, float end, float speed);
+	float linear(float start, float end, float speed);
+private:
+	bool timer();
 };
 
-typedef double(*easingFunction)(double);
-
-easingFunction getEasingFunction( easing_functions function );
-
+extern Animate gAnimate;

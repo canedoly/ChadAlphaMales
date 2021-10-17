@@ -10,8 +10,6 @@
 
 bool CAuto::ShouldRun(CBaseEntity *pLocal)
 {
-	if (!Vars::Triggerbot::Global::Active.m_Var || !g_AutoGlobal.IsKeyDown())
-		return false;
 
 	if (g_Interfaces.EngineVGui->IsGameUIVisible() || g_Interfaces.Surface->IsCursorVisible())
 		return false;
@@ -34,11 +32,15 @@ void CAuto::Run(CUserCmd* pCmd)
 	{
 		if (ShouldRun(pLocal))
 		{
-			g_AutoShoot.Run(pLocal, pWeapon, pCmd);
-			g_AutoStab.Run(pLocal, pWeapon, pCmd);
-			g_AutoDetonate.Run(pLocal, pWeapon, pCmd);
-			g_AutoAirblast.Run(pLocal, pWeapon, pCmd);
-			g_AutoUber.Run(pLocal, pWeapon, pCmd);
+			if (g_AutoGlobal.IsKeyDown()) { // This looks dumb but oh well fuck it
+				if (Vars::Triggerbot::Global::Active.m_Var) { // I had to put the fucking global triggerbot shit here because it's unironically fucking annoying and the auto detonate thingie doesn't want to work because of it
+					g_AutoShoot.Run(pLocal, pWeapon, pCmd);
+				}
+				g_AutoStab.Run(pLocal, pWeapon, pCmd);
+				g_AutoDetonate.Run(pLocal, pWeapon, pCmd);
+				g_AutoAirblast.Run(pLocal, pWeapon, pCmd);
+				g_AutoUber.Run(pLocal, pWeapon, pCmd);
+			}
 		}
 	}
 }

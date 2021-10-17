@@ -451,6 +451,7 @@ void CConfigManager::Save(const wchar_t *name)
 //#ifdef DEVELOPER_BUILD
 			SAVE_VAR(Vars::Visuals::Skins::Enabled);
 //#endif
+			SAVE_VAR(Vars::Visuals::TracerEffect);
 		}
 
 		//Misc
@@ -493,6 +494,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::AntiHack::AntiAim::Pitch);
 				SAVE_VAR(Vars::AntiHack::AntiAim::YawReal);
 				SAVE_VAR(Vars::AntiHack::AntiAim::YawFake);
+				SAVE_VAR(Vars::AntiHack::AntiAim::SpinSpeed);
 			}
 
 			//Fakelag
@@ -511,6 +513,8 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Vars::Menu::Colors::Text);
 			//SAVE_OTHER(Vars::Menu::Colors::Widget);
 			SAVE_OTHER(Vars::Menu::Colors::WidgetActive);
+			SAVE_OTHER(Vars::Menu::Colors::ShadowColor);
+			SAVE_OTHER(Vars::Menu::ShadowSize);
 			SAVE_OTHER(Vars::Menu::Colors::OutlineMenu);
 
 			SAVE_OTHER(Colors::OutlineESP);
@@ -893,6 +897,7 @@ void CConfigManager::Load(const wchar_t *name)
 //#ifdef DEVELOPER_BUILD
 			LOAD_VAR(Vars::Visuals::Skins::Enabled);
 //#endif
+			LOAD_VAR(Vars::Visuals::TracerEffect);
 		}
 
 		//Misc
@@ -936,6 +941,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::AntiHack::AntiAim::Pitch);
 				LOAD_VAR(Vars::AntiHack::AntiAim::YawReal);
 				LOAD_VAR(Vars::AntiHack::AntiAim::YawFake);
+				LOAD_VAR(Vars::AntiHack::AntiAim::SpinSpeed);
 			}
 
 			//Fakelag
@@ -954,6 +960,8 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Vars::Menu::Colors::Text);
 			//LOAD_OTHER(Vars::Menu::Colors::Widget);
 			LOAD_OTHER(Vars::Menu::Colors::WidgetActive);
+			LOAD_OTHER(Vars::Menu::Colors::ShadowColor);
+			LOAD_OTHER(Vars::Menu::ShadowSize);
 			LOAD_OTHER(Vars::Menu::Colors::OutlineMenu);
 
 			LOAD_OTHER(Colors::OutlineESP);

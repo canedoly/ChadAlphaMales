@@ -36,7 +36,6 @@ public:
 	virtual float			GetLookSpring(void) = 0;
 	virtual void			GetFullscreenMousePos(int *mx, int *my, int *unclampedx = 0, int *unclampedy = 0) = 0;
 	virtual void			SetFullscreenMousePos(int mx, int my) = 0;
-	virtual void			ResetMouse(void) = 0;
 	virtual	float			GetLastForwardMove(void) = 0;
 	virtual	float			Joystick_GetForward(void) = 0;
 	virtual	float			Joystick_GetSide(void) = 0;

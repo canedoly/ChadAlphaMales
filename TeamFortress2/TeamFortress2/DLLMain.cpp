@@ -33,9 +33,15 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		Adding "ntdll.dll" seems to fix SOME of the crashing issues which is kind of funny
 	*/
 
-	while (!WinAPI::GetModuleHandleW(_(L"mss32.dll")) && !WinAPI::GetModuleHandleW(_(L"ntdll.dll")))
+	while (!WinAPI::GetModuleHandleW(_(L"mss32.dll")) || !WinAPI::GetModuleHandleW(_(L"ntdll.dll")) || !WinAPI::GetModuleHandleW(_(L"stdshader_dx9.dll")))
 		std::this_thread::sleep_for(std::chrono::seconds(5));
 	
+	/*
+	AllocConsole();
+	freopen_s(reinterpret_cast<FILE**>(stdin), "CONIN$", "r", stdin);
+	freopen_s(reinterpret_cast<FILE**>(stdout), "CONOUT$", "w", stdout);
+	SetConsoleTitleA("nig");
+	*/
 	g_SteamInterfaces.Init();
 	g_Interfaces.Init();
 	g_Interfaces.Engine->ClientCmd_Unrestricted("unbind f7"); // for legacy only lmao
@@ -50,6 +56,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	g_dwDirectXDevice = **reinterpret_cast<DWORD**>(g_Pattern.Find(L"shaderapidx9.dll", L"A1 ? ? ? ? 50 8B 08 FF 51 0C") + 0x1);
 	g_Hooks.Init();
 	g_ConVars.Init();
+	//EFonts
 	g_Draw.InitFonts
 	({
 		//FONT_ESP
@@ -60,7 +67,6 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		//FONT_ESP_NAME
 		{ 0x0, _("Verdana"), 12, 0, FONTFLAG_DROPSHADOW },
 		//FONT_ESP_NAME_OUTLINED
-
 		{ 0x0, _("Segoe UI"), 13, 100, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS},
 
 		//FONT_ESP_COND
@@ -77,6 +83,9 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		{ 0x0, _("Verdana"), 12, 0, FONTFLAG_NONE | FONTFLAG_DROPSHADOW },
 		//FONT_MENU_OUTLINED
 		{ 0x0, _("Verdana"), 12, 0, FONTFLAG_OUTLINE },
+
+		/*FONT_ICONS*/
+		{ 0x0, _("Tf2weaponicons Regular"), 20, 0, FONTFLAG_NONE},
 	});
 
 	//Initialize ignored set
@@ -106,6 +115,12 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	while (!GetAsyncKeyState(VK_F11))
 		std::this_thread::sleep_for(420ms);
 
+	/*
+	fclose(static_cast<FILE*>(stdin));
+	fclose(static_cast<FILE*>(stdout));
+	FreeConsole();
+	*/
+
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 200, 0, 255 }, _("[-] Unloading CAM...\n"));
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 200, 0, 255 }, _("[-] Stopping Discord RPC\n"));
 	Discord_Shutdown();
@@ -121,6 +136,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	g_Hooks.Release();
 	g_Visuals.RestoreWorldModulation(); //needs to do this after hooks are released cuz UpdateWorldMod in FSN will override it
 	g_Interfaces.CVars->ConsoleColorPrintf({ 255, 255, 0, 255 }, _("[!] CAM Unloaded!\n"));
+
 	WinAPI::FreeLibraryAndExitThread(static_cast<HMODULE>(lpParam), EXIT_SUCCESS);
 	return EXIT_SUCCESS;
 }

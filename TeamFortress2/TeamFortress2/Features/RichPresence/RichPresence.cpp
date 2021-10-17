@@ -14,7 +14,7 @@ namespace source
 			g_SteamInterfaces.Friends015->SetRichPresence(_("steam_display"), _("#TF_RichPresence_Display"));
 			g_SteamInterfaces.Friends015->SetRichPresence(_("state"), _("PlayingMatchGroup"));
 			g_SteamInterfaces.Friends015->SetRichPresence(_("matchgrouploc"), _("SpecialEvent"));
-
+			
 			// Let's do both of these just incase
 			g_SteamInterfaces.Friends015->SetRichPresence(_("currentmap"), Vars::Misc::SteamRPCText.c_str());
 			

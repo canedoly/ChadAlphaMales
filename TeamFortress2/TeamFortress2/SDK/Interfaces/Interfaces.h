@@ -29,6 +29,7 @@
 #include "KeyValuesSystem/KeyValuesSystem.h"
 #include "UniformRandomStream/UniformRandomStream.h"
 #include <d3d9.h>
+#include "IInputSystem/InputSystem.h"
 
 class CClockDriftMgr
 {
@@ -108,9 +109,11 @@ public:
 	CModelRender*               ModelRender					= nullptr;
 	CMaterialSystem*            MatSystem					= nullptr;
 	IInput*						Input						= nullptr;
+	IInputSystem*				InputSystem					= nullptr;
 	IKeyValuesSystem*			KeyValuesSystem				= nullptr;
 	IUniformRandomStream*		UniformRandomStream			= nullptr;
 	IDirect3DDevice9*			directx						= nullptr;
+	void*						WriteUsercmdDeltaToBuffer	= nullptr;
 	void*						StudioRender				= nullptr;
 	void Init();
 };

@@ -4,6 +4,7 @@
 #define _validS(x) if (!x) WinAPI::MessageBoxW(0, _(L#x), _(L"CSteamInterfaces::Init() -> nullptr"), MB_ICONERROR)
 
 #define CLIENT _(L"client.dll")
+#define INPUTSYSTEM _(L"inputsystem.dll")
 #define STEAMCLIENT _(L"steamclient.dll")
 #define ENGINE _(L"engine.dll")
 #define VGUI2 _(L"vgui2.dll")
@@ -82,6 +83,10 @@ void CInterfaces::Init()
 	ModelRender = g_Interface.Get<CModelRender*>(ENGINE, _(VENGINE_MODELRENDER_INTERFACE));
 	_valid(ModelRender);
 
+	std::cout << "interface bullshit" << std::endl;
+	//WriteUsercmdDeltaToBuffer = g_Interface.Get<void*>(CLIENT, _(CLIENT_DLL_INTERFACE_VERSION));
+	//_valid(WriteUsercmdDeltaToBuffer);
+
 	MatSystem = g_Interface.Get<CMaterialSystem*>(MATSYSTEM, _(VMATERIALSYSTEM_INTERFACE));
 	_valid(MatSystem);
 
@@ -91,6 +96,9 @@ void CInterfaces::Init()
 	if (pdwTable)
 		ViewRender = **reinterpret_cast<IViewRender***>(static_cast<DWORD>(pdwTable[27]) + 5);
 	_valid(ViewRender);
+
+	InputSystem = g_Interface.Get<IInputSystem*>(INPUTSYSTEM, _(VINPUTSYSTEM_INTERFACE));
+	_valid(GameEvent);
 
 	Input = **reinterpret_cast<IInput***>(g_Pattern.Find(CLIENT, _(L"8B 0D ? ? ? ? 56 8B 01 FF 50 24 8B 45 FC")) + 0x2);
 	_valid(Input);

@@ -1,5 +1,7 @@
 #include "Chams.h"
 #include "../Vars.h"
+#include "../Backtrack/Backtrack.h"
+#include "../Visuals/Visuals.h"
 
 bool CChams::ShouldRun()
 {
@@ -103,6 +105,22 @@ void CChams::Init()
 		\n}\n")
 		});
 
+	m_pMatAA = Utils::CreateMaterial({
+		_("\"UnlitGeneric\"\
+		\n{\
+		\n\t\"$basetexture\" \"vgui/white_additive\"\
+		\n}\n")
+		});
+}
+
+void CChams::Delete() {
+	m_pMatFresnelHDR0 = nullptr;
+	m_pMatFresnelHDR1 = nullptr;
+	m_pMatShaded = nullptr;
+	m_pMatBrick = nullptr;
+	m_pMatShiny = nullptr;
+	m_pMatFlat = nullptr;
+	m_pMatAA = nullptr;
 }
 
 void CChams::Render()
@@ -126,7 +144,7 @@ void CChams::Render()
 			StencilState.m_bEnable = true;
 			StencilState.m_nReferenceValue = 1;
 			StencilState.m_CompareFunc = STENCILCOMPARISONFUNCTION_ALWAYS;
-			StencilState.m_PassOp = STENCILOPERATION_REPLACE;
+			StencilState.m_PassOp = STENCILOPERATION_REPLACE; 
 			StencilState.m_FailOp = STENCILOPERATION_KEEP;
 			StencilState.m_ZFailOp = STENCILOPERATION_REPLACE;
 			StencilState.SetStencilState(pRenderContext);
@@ -140,9 +158,16 @@ void CChams::Render()
 	}
 }
 
-void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
+void CChams::RenderBT(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
 {
 	if (!Vars::Chams::Players::Active.m_Var)
+		return;
+
+}
+
+void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContext)
+{
+	if (!Vars::Chams::Players::Active.m_Var || (Vars::Misc::CleanScreenshot.m_Var && g_Interfaces.Engine->IsTakingScreenshot()))
 		return;
 
 	const auto& Players = g_EntityCache.GetGroup(EGroupType::PLAYERS_ALL);
@@ -189,6 +214,7 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 
 	for (const auto& Player : Players)
 	{
+		
 		if (!Player->IsAlive() || Player->IsAGhost())
 			continue;
 
@@ -244,6 +270,8 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 
 
 		DrawModel(Player);
+		
+		
 
 		if (Vars::Chams::Players::Wearables.m_Var)
 		{

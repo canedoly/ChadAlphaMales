@@ -175,9 +175,6 @@ void CMisc::CheatsBypass()
 	}
 }
 
-// This made me feel like killing myself because of SEOwned shit source...
-// TODO add a fucking name changer how hard can this shit be i wanna hang myself looking at this wtf is NET_SetConVar and why does it not fucking work i hate this source
-
 void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 {
 	if ((nOldFlags & FL_ONGROUND) && Vars::Misc::EdgeJump.m_Var)
@@ -190,9 +187,9 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 	}
 }
 
-void CMisc::AutoJump(CUserCmd *pCmd)
+void CMisc::AutoJump(CUserCmd* pCmd)
 {
-	if (const auto &pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
 		if (!Vars::Misc::AutoJump.m_Var
 			|| !pLocal->IsAlive()
@@ -301,22 +298,22 @@ void CMisc::InitSpamKV(void* pKV)
 	typedef int(__cdecl* HashFunc_t)(const char*, bool);
 
 	static DWORD dwHashFunctionLocation = g_Pattern.Find(_(L"client.dll"), _(L"FF 15 ? ? ? ? 83 C4 08 89 06 8B C6"));
-	static HashFunc_t SymbForString = (HashFunc_t)* *(PDWORD*)(dwHashFunctionLocation + 0x2);
+	static HashFunc_t SymbForString = (HashFunc_t) * *(PDWORD*)(dwHashFunctionLocation + 0x2);
 
 	int nAddr = 0;
 	while (nAddr < 29)
 	{
 		switch (nAddr)
 		{
-			case 0:
-				*(PDWORD)((DWORD)pKV + nAddr) = SymbForString(chCommand, true);
-				break;
-			case 16:
-				*(PDWORD)((DWORD)pKV + nAddr) = 0x10000;
-				break;
-			default:
-				*(PDWORD)((DWORD)pKV + nAddr) = 0;
-				break;
+		case 0:
+			*(PDWORD)((DWORD)pKV + nAddr) = SymbForString(chCommand, true);
+			break;
+		case 16:
+			*(PDWORD)((DWORD)pKV + nAddr) = 0x10000;
+			break;
+		default:
+			*(PDWORD)((DWORD)pKV + nAddr) = 0;
+			break;
 		}
 
 		nAddr += 4;
@@ -371,11 +368,11 @@ std::string GetSpam(const int nIndex) {
 
 	switch (nIndex)
 	{
-		case 0: str = XorStr("say CAM | Get good get ChadAlphaMales.club").str(); break;
-		case 1: str = XorStr("say CAM | Way to the top!").str(); break;
-		case 2: str = XorStr("say CAM | Co-op with fuk0ff.com").str(); break;
-		case 3: str = XorStr("say CAM | Owning casual with ease").str(); break;
-		default: str = XorStr("say CAM | ChadAlphaMales.club").str(); break;
+	case 0: str = XorStr("say CAM | Get good get ChadAlphaMales.club").str(); break;
+	case 1: str = XorStr("say CAM | Way to the top!").str(); break;
+	case 2: str = XorStr("say CAM | Co-op with fuk0ff.com").str(); break;
+	case 3: str = XorStr("say CAM | Owning casual with ease").str(); break;
+	default: str = XorStr("say CAM | ChadAlphaMales.club").str(); break;
 	}
 
 	return str;
@@ -386,7 +383,7 @@ void CMisc::ChatSpam()
 	if (!Vars::Misc::ChatSpam.m_Var)
 		return;
 
-	float flCurTime = g_Interfaces.Engine->Time(); 
+	float flCurTime = g_Interfaces.Engine->Time();
 	static float flNextSend = 0.0f;
 
 	if (flCurTime > flNextSend) {

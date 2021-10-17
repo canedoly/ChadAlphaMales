@@ -5,7 +5,7 @@
 #include "AimbotProjectile/AimbotProjectile.h"
 #include "AimbotMelee/AimbotMelee.h"
 
-bool CAimbot::ShouldRun(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
+bool CAimbot::ShouldRun (CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 {
 	if (!Vars::Aimbot::Global::Active.m_Var)
 		return false;

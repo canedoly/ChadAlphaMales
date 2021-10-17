@@ -1,10 +1,12 @@
 #include "ESP.h"
 #include "../Vars.h"
 #include "../ChatInfo/ChatInfo.h"
-
+#include "../Visuals/Visuals.h"
+#include "../Backtrack/Backtrack.h"
+#include "../Chams/Chams.h"
 bool CESP::ShouldRun()
 {
-	if (g_Interfaces.EngineVGui->IsGameUIVisible())
+	if (g_Interfaces.EngineVGui->IsGameUIVisible() || Vars::Misc::CleanScreenshot.m_Var && g_Interfaces.Engine->IsTakingScreenshot())
 		return false;
 
 	return true;
@@ -140,6 +142,33 @@ bool CESP::GetDrawBounds(CBaseEntity *pEntity, Vec3* vTrans, int &x, int &y, int
 	return false;
 }
 
+void CESP::HandleDormancy(CBaseEntity* pEntity, int index)
+{
+	if (pEntity->GetDormant() && m_flEntityAlpha[index] > 0)
+	{
+		if (!m_bTimeSet[index])
+		{
+			m_flTimeSinceDormant[index] = g_Interfaces.GlobalVars->curtime;
+			m_bTimeSet[index] = true;
+		}
+
+		float flFade = 5;
+		if (flFade <= 0.0f)
+			flFade = 0.01f;
+
+		m_flEntityAlpha[index] = 150.0f - ((g_Interfaces.GlobalVars->curtime - m_flTimeSinceDormant[index]) * (150.0f / flFade));
+		if (m_flEntityAlpha[index] < 0.0f)
+			m_flEntityAlpha[index] = 0.0f;
+	}
+
+	if (!pEntity->GetDormant())
+	{
+		m_flEntityAlpha[index] = 255.0f;
+		m_flTimeSinceDormant[index] = 0.0f;
+		m_bTimeSet[index] = false;
+	}
+}
+
 void CESP::DrawPlayers(CBaseEntity *pLocal)
 {
 	if (!Vars::ESP::Players::Active.m_Var)
@@ -152,6 +181,10 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 
 		int nIndex = Player->GetIndex();
 		bool bIsLocal = nIndex == g_Interfaces.Engine->GetLocalPlayer();
+		
+		HandleDormancy(Player, nIndex);
+		if (m_flEntityAlpha[nIndex] <= 0.0f)
+			continue;
 
 		if (!bIsLocal)
 		{
@@ -221,21 +254,21 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 				case 1: {
 					int height = (h + 1); //don't ask me /shrug
 
-					g_Draw.OutlinedRect(x, y, w, height, DrawColor);
+					g_Draw.OutlinedRect(x, y, w, height, Color_t(DrawColor.r,DrawColor.g,DrawColor.b, m_flEntityAlpha[nIndex]));
 					if (Vars::ESP::Main::Outline.m_Var == 2)
 						g_Draw.OutlinedRect((x - 1), (y - 1), (w + 2), (height + 2), Colors::OutlineESP);
 
 					break;
 				}
 				case 2: {
-					g_Draw.CornerRect(x, y, w, h, 3, 5, DrawColor);
+					g_Draw.CornerRect(x, y, w, h, 3, 5, Color_t(DrawColor.r, DrawColor.g, DrawColor.b, m_flEntityAlpha[nIndex]));
 					if (Vars::ESP::Main::Outline.m_Var == 2)
 						g_Draw.CornerRect((x - 1), (y - 1), (w + 2), (h + 2), 3, 5, Colors::OutlineESP);
 
 					break;
 				}
 				case 3: {
-					Draw3DBox(vTrans, DrawColor);
+					Draw3DBox(vTrans, Color_t(DrawColor.r, DrawColor.g, DrawColor.b, m_flEntityAlpha[nIndex]));
 					break;
 				}
 				default:
@@ -358,7 +391,7 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 				float ratio = (flHealth / flMaxHealth);
 				g_Draw.Rect(((x - nWidth) - 2), y, nWidth, nHeight2, { 0,0,0,150 });
 				g_Draw.GradientRect(((x - nWidth) - 2), (y + nHeight - (nHeight * ratio)), ((x - nWidth) - 2) + nWidth, (y + nHeight - (nHeight * ratio)) + (nHeight * ratio), TopColor, BottomColor, false);
-				//g_Draw.GradientRect(((x - nWidth) - 2), (y + nHeight - (nHeight * ratio)), ((x - nWidth) - 2) + nWidth, (y + nHeight - (nHeight * ratio)) + (nHeight * ratio), clr, { 255,0,0,255 }, false);
+				
 				if (flHealth < flMaxHealth) {
 					g_Draw.String(
 						FONT_ESP_PICKUPS_OUTLINED, (x - 15), (y + nHeight - (nHeight * ratio)), { 255,255,255,255 }, ALIGN_CENTER, L"%d", nHealth
@@ -372,6 +405,25 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 				x += 1;
 			}
 
+			// Backtrack ESP, for future use
+			/*
+			if (pLocal->IsAlive()) {
+				for (unsigned int t = 0; t < CBacktrack::ticks[Player->GetIndex()].size(); t++) {
+					if (CBacktrack::GoodTick(t))
+						continue;
+
+					Vector hitbox = CBacktrack::ticks[Player->GetIndex()].at(t).head_position, screen;
+
+					if (Utils::W2S(hitbox, screen)) {
+						g_Draw.Line(screen[0] - 8, screen[1] - 0, screen[0] + 8, screen[1] + 0, Color_t{ 255, 0, 0, 200 });
+						g_Draw.Line(screen[0] + 0, screen[1] - 8, screen[0] - 0, screen[1] + 8, Color_t{ 255, 0, 0, 200 });
+						g_Draw.Line(screen[0] - 4, screen[1] - 0, screen[0] + 4, screen[1] + 0, Color_t{ 255, 255, 255, 255 });
+						g_Draw.Line(screen[0] + 0, screen[1] - 4, screen[0] - 0, screen[1] + 4, Color_t{ 255, 255, 255, 255 });
+					}
+
+				}
+			}
+			*/
 			g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
 		}
 	}
@@ -402,7 +454,10 @@ void CESP::DrawBuildings(CBaseEntity *pLocal)
 			auto nHealth = Building->GetHealth(), nMaxHealth = Building->GetMaxHealth(),
 				 nTextX = ((x + w) + 3), nTextOffset = 0, nTextTopOffset = 0;
 
-			Color_t HealthColor = Utils::GetHealthColor(nHealth, nMaxHealth);
+			//Color_t HealthColor = Utils::GetHealthColor(nHealth, nMaxHealth);
+
+			Color_t TopColor = Colors::HealthBarbTopColor;
+			Color_t BottomColor = Colors::HealthBarbBottomColor;
 
 			auto nType = EBuildingType(Building->GetType());
 
@@ -512,7 +567,7 @@ void CESP::DrawBuildings(CBaseEntity *pLocal)
 
 			if (Vars::ESP::Buildings::Health.m_Var)
 			{
-				g_Draw.String(FONT, nTextX, (y + nTextOffset), HealthColor, ALIGN_DEFAULT, L"%d", nHealth);
+				g_Draw.String(FONT, nTextX, (y + nTextOffset), DrawColor, ALIGN_DEFAULT, L"%d HP", nHealth);
 				nTextOffset += g_Draw.m_vecFonts[FONT].nTall;
 			}
 
@@ -559,14 +614,12 @@ void CESP::DrawBuildings(CBaseEntity *pLocal)
 
 				float ratio = (flHealth / flMaxHealth);
 
-				//g_Draw.Rect(((x - nWidth) - 2), (y + nHeight - (nHeight * ratio)), nWidth, (nHeight * ratio), HealthColor);
-				g_Draw.GradientRect(((x - nWidth) - 2), (y + nHeight - (nHeight * ratio)), ((x - nWidth) - 2) + nWidth, (y + nHeight - (nHeight * ratio)) + (nHeight * ratio), HealthColor, { 255,0,0,255 }, false);
+				g_Draw.GradientRect(((x - nWidth) - 2), (y + nHeight - (nHeight * ratio)), ((x - nWidth) - 2) + nWidth, (y + nHeight - (nHeight * ratio)) + (nHeight * ratio), TopColor, BottomColor, false);
 				if (Vars::ESP::Main::Outline.m_Var == 2)
 					g_Draw.OutlinedRect(((x - nWidth) - 2) - 1, (y + nHeight - (nHeight * ratio)) - 1, nWidth + 2, (nHeight * ratio) + 2, Colors::OutlineESP);
 
 				x += 1;
 			}
-
 			g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
 		}
 	}

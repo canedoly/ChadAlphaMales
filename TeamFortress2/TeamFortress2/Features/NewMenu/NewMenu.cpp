@@ -18,7 +18,9 @@ static int tab = 0;
 
 auto s = ImVec2{};
 auto p = ImVec2{};
-auto MenuSize = ImVec2{ 800, 530 };
+auto MenuSize = ImVec2{ 784, 522 };
+
+#define FixSlider ImGui::PushItemWidth(ImGui::GetCurrentWindow()->Size.x - 8)
 
 ImVec4 to_vec4(float r, float g, float b, float a)
 {
@@ -82,25 +84,22 @@ Color_t* vpColor(ImVec4 color) {
     return &col;
 }
 
-void plsfix(int lul) { // My friend told me that you could do it with a macro but fuck it
+void AlignToRight(int lul) { // My friend told me that you could do it with a macro but fuck it
     ImGui::SameLine(ImGui::GetContentRegionMax().x - lul);
     ImGui::SetNextItemWidth(lul);
 }
 
 auto MenuCol = mColor(Vars::Menu::Colors::WidgetActive); // Getting the menu color for "CustomStyle()"
+auto ShadowCol = mColor(Vars::Menu::Colors::ShadowColor); // Getting the Shadow color for "CustomStyle()"
 
 void CustomStyle() {
     ImGuiStyle& style = ImGui::GetStyle();
-    style.FrameBorderSize = 1.0f;
-
     style.Colors[ImGuiCol_Border] = ImVec4(0.24f, 0.24f, 0.24f, 0.33f);
     style.Colors[ImGuiCol_FrameBg] = ImVec4(0.07f, 0.08f, 0.09f, 1.0f);
     style.Colors[ImGuiCol_MenuBarBg] = MenuCol;
-
     style.Colors[ImGuiCol_Button] = ImVec4(0.07f, 0.08f, 0.09f, 1.0f);
     style.Colors[ImGuiCol_ButtonHovered] = style.Colors[ImGuiCol_MenuBarBg];
     style.Colors[ImGuiCol_ButtonActive] = style.Colors[ImGuiCol_MenuBarBg];
-
     style.Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.05, 0.05, 0.05, 1.00);
     style.Colors[ImGuiCol_ScrollbarGrab] = style.Colors[ImGuiCol_MenuBarBg];
     style.Colors[ImGuiCol_ScrollbarGrabHovered] = style.Colors[ImGuiCol_MenuBarBg];
@@ -126,6 +125,10 @@ void CustomStyle() {
     style.Colors[ImGuiCol_TabUnfocusedActive] = style.Colors[ImGuiCol_MenuBarBg];
     style.Colors[ImGuiCol_DragDropTarget] = style.Colors[ImGuiCol_MenuBarBg];
     style.Colors[ImGuiCol_NavHighlight] = style.Colors[ImGuiCol_MenuBarBg];
+    style.Colors[ImGuiCol_WindowShadow] = ShadowCol;
+
+    style.FrameBorderSize = 1.0f;
+    style.WindowShadowSize = Vars::Menu::ShadowSize;
 }
 
 bool InputKeybind(const char* label, CVar<int>& output, bool bAllowNone = true)
@@ -273,29 +276,30 @@ static int sl = 0;
 
 void AimbotTab() {
     {//left upper
-        ImGui::SetCursorPosY(50);
+        ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(15);
+        ImGui::SetCursorPosX(7);
         ImGui::MenuChild(_("Global"), ImVec2(250, 260), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Enabled"), &Vars::Aimbot::Global::Active.m_Var);
             //ImGui::Checkbox("Autoshoot", &Vars::Aimbot::Global::AutoShoot.m_Var); // We don't really need auto shoot atm.
-            plsfix(50);
+            AlignToRight(50);
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(MenuCol.x / 1.5, MenuCol.y / 1.5, MenuCol.z / 1.5, 255));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(MenuCol.x, MenuCol.y, MenuCol.z, 255));
             InputKeybind(_("Aim key"), Vars::Aimbot::Global::AimKey);
             ImGui::PopStyleColor(3);
+            FixSlider;
             ImGui::SliderFloat("Aimbot FOV", &Vars::Aimbot::Hitscan::AimFOV.m_Var, 1.0f, 180.f, _("%.0f"), ImGuiSliderFlags_AlwaysClamp);
             ImGui::Checkbox(_("Aim at players"), &Vars::Aimbot::Global::AimPlayers.m_Var);
-            plsfix(23);
+            AlignToRight(23);
             ColorPicker(_("Target"), Colors::Target);
             ImGui::Checkbox(_("Aim at buildings"), &Vars::Aimbot::Global::AimBuildings.m_Var);
             ImGui::Checkbox(_("Ignore invulnerable"), &Vars::Aimbot::Global::IgnoreInvlunerable.m_Var);
-            plsfix(23);
+            AlignToRight(23);
             ColorPicker(_("Invulnerable"), Colors::Invuln);
             ImGui::Checkbox(_("Ignore cloaked"), &Vars::Aimbot::Global::IgnoreCloaked.m_Var);
-            plsfix(23);
+            AlignToRight(23);
             ColorPicker(_("Cloaked"), Colors::Cloak);
             ImGui::Checkbox(_("Ignore friends"), &Vars::Aimbot::Global::IgnoreFriends.m_Var);
             ImGui::Checkbox(_("Ignore taunting"), &Vars::Aimbot::Global::IgnoreTaunting.m_Var);
@@ -307,18 +311,18 @@ void AimbotTab() {
 
 
     {//left bottom
-        ImGui::SetCursorPosY(310);
+        ImGui::SetCursorPosY(302);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(15);
+        ImGui::SetCursorPosX(7);
         ImGui::MenuChild(_("Crithack"), ImVec2(250, 205), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             static bool lefunny = false;
             static bool lefunny2 = false;
             ImGui::Checkbox(_("Enabled"), &lefunny);
-            plsfix(50);
+            AlignToRight(50);
             InputKeybind(_("Crithack Key"), Vars::Aimbot::CritHack::CritKey);
             ImGui::Checkbox(_("Crit Bar"), &Vars::Aimbot::CritHack::CritBar.m_Var);
-            ImGui::Checkbox(_("Meele Crits"), &Vars::Aimbot::CritHack::MeeleCrits.m_Var);
+            ImGui::Checkbox(_("Melee Crits"), &Vars::Aimbot::CritHack::MeleeCrits.m_Var);
             ImGui::Checkbox(_("Save Bucket"), &Vars::Aimbot::CritHack::SaveBucket.m_Var);
 
             if (lefunny) {
@@ -335,9 +339,9 @@ void AimbotTab() {
     }
     
     {//right
-        ImGui::SetCursorPosY(50);
+        ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(270);
+        ImGui::SetCursorPosX(262);
         ImGui::MenuChild(_("Hitscan"), ImVec2(250, 465), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Active###Hit scan"), &Vars::Aimbot::Hitscan::Active.m_Var);
@@ -350,6 +354,7 @@ void AimbotTab() {
             static const char* hitscanAimHitbox[]{ "Head", "Body", "Auto" };
             ImGui::Combo(_("Hitbox###hitscanAimHitbox"), &Vars::Aimbot::Hitscan::AimHitbox.m_Var, hitscanAimHitbox, IM_ARRAYSIZE(hitscanAimHitbox));
 
+            FixSlider;
             ImGui::SliderFloat(_("Smooth factor"), &Vars::Aimbot::Hitscan::SmoothingAmount.m_Var, 1.0f, 10.f, "%.0f", ImGuiSliderFlags_AlwaysClamp);
 
             static const char* hitscanTapFire[]{ "Off", "Distance", "Always" };
@@ -366,9 +371,9 @@ void AimbotTab() {
         ImGui::EndGroup();
     }
     {//right
-        ImGui::SetCursorPosY(50);
+        ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(525);
+        ImGui::SetCursorPosX(517);
         ImGui::MenuChild(_("Projectile"), ImVec2(260, 186), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Active###Projectile"), &Vars::Aimbot::Projectile::Active.m_Var);
@@ -386,9 +391,9 @@ void AimbotTab() {
         ImGui::EndGroup();
     }
     {//right
-        ImGui::SetCursorPosY(235);
+        ImGui::SetCursorPosY(227);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(525);
+        ImGui::SetCursorPosX(517);
         ImGui::MenuChild(_("Melee"), ImVec2(260, 280), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Active###Melee"), &Vars::Aimbot::Melee::Active.m_Var);
@@ -396,6 +401,7 @@ void AimbotTab() {
             ImGui::Combo(_("Sort method###meleeSortMethod"), &Vars::Aimbot::Melee::SortMethod.m_Var, meleeSortMethod, IM_ARRAYSIZE(meleeSortMethod));
             static const char* meleeAimMethod[]{ "Plain", "Smooth", "Silent" }; 
             ImGui::Combo(_("Aim method###meleeAimMethod"), &Vars::Aimbot::Melee::AimMethod.m_Var, meleeAimMethod, IM_ARRAYSIZE(meleeAimMethod));
+            FixSlider;
             ImGui::SliderFloat(_("Smooth factor###meleeSmooth"), &Vars::Aimbot::Melee::SmoothingAmount.m_Var, 1.0f, 10.f, "%.0f", ImGuiSliderFlags_AlwaysClamp);
             ImGui::Checkbox(_("Range check"), &Vars::Aimbot::Melee::RangeCheck.m_Var);
             ImGui::Checkbox(_("Melee prediction"), &Vars::Aimbot::Melee::PredictSwing.m_Var);
@@ -408,13 +414,13 @@ void AimbotTab() {
 
 void TriggerbotTab() {
     {//Left Upper
-        ImGui::SetCursorPosY(50);
+        ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(15);
+        ImGui::SetCursorPosX(7);
         ImGui::MenuChild(_("Global"), ImVec2(220, 220), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Enabled"), &Vars::Triggerbot::Global::Active.m_Var);
-            plsfix(50);
+            AlignToRight(50);
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(MenuCol.x / 1.5, MenuCol.y / 1.5, MenuCol.z / 1.5, 255));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(MenuCol.x, MenuCol.y, MenuCol.z, 255));
@@ -432,9 +438,9 @@ void TriggerbotTab() {
     }
     
     { // Left Middle
-        ImGui::SetCursorPosY(270);
+        ImGui::SetCursorPosY(262);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(15);
+        ImGui::SetCursorPosX(7);
 
         ImGui::MenuChild(_("Auto Airblast"), ImVec2(220, 120), false, ImGuiWindowFlags_NoScrollWithMouse);
         ImGui::Checkbox(_("Active##gAAB"), &Vars::Triggerbot::Blast::Active.m_Var);
@@ -445,14 +451,15 @@ void TriggerbotTab() {
         ImGui::EndGroup();
     }
     { // Left Bottom
-        ImGui::SetCursorPosY(390);
+        ImGui::SetCursorPosY(382);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(15);
+        ImGui::SetCursorPosX(7);
 
         ImGui::MenuChild(_("Auto Detonator"), ImVec2(220, 130), false, ImGuiWindowFlags_NoScrollWithMouse);
         ImGui::Checkbox(_("Active###gAD"), &Vars::Triggerbot::Detonate::Active.m_Var);
         ImGui::Checkbox(_("Stickybombs###gADs"), &Vars::Triggerbot::Detonate::Stickies.m_Var);
         ImGui::Checkbox(_("Detonator flares###gADd"), &Vars::Triggerbot::Detonate::Flares.m_Var);
+        //FixSlider;
         //ImGui::SliderFloat("Detonate radius###gADr", &Vars::Triggerbot::Detonate::RadiusScale.m_Var, 0.5f, 1.0f, "%.1f", ImGuiSliderFlags_Logarithmic);
         ImGui::EndChild();
         ImGui::EndGroup();
@@ -460,7 +467,7 @@ void TriggerbotTab() {
     // Left middle row
     /*
     { // Left Middle Upper
-        ImGui::SetCursorPosY(50);
+        ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
         ImGui::SetCursorPosX(220);
 
@@ -469,6 +476,7 @@ void TriggerbotTab() {
         ImGui::Checkbox(_("Shoot players##gASsp"), &Vars::Triggerbot::Shoot::TriggerPlayers.m_Var);
         //ImGui::Checkbox(_("Shoot buildings##gASsb"), &Vars::Triggerbot::Shoot::TriggerBuildings.m_Var);
         ImGui::Checkbox(_("Head only##gASho"), &Vars::Triggerbot::Shoot::HeadOnly.m_Var);
+        //FixSlider;
         //ImGui::SliderFloat(_("Head scale##gAShs"), &Vars::Triggerbot::Shoot::HeadScale.m_Var, 0.5f, 1.0f, "%.1f", ImGuiSliderFlags_Logarithmic);
         ImGui::Checkbox(_("Wait for charge##gASwfc"), &Vars::Triggerbot::Shoot::WaitForCharge.m_Var);
 
@@ -478,9 +486,9 @@ void TriggerbotTab() {
     }
     */
     { // Left Middle Upper
-        ImGui::SetCursorPosY(50);
+        ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(240);
+        ImGui::SetCursorPosX(232);
 
         ImGui::MenuChild(_("Auto Stab"), ImVec2(220, 220), false, ImGuiWindowFlags_NoScrollWithMouse);
         ImGui::Checkbox(_("Active###gABS"), &Vars::Triggerbot::Stab::Active.m_Var);
@@ -488,6 +496,7 @@ void TriggerbotTab() {
         ImGui::Checkbox(_("Silent###gABSs"), &Vars::Triggerbot::Stab::Silent.m_Var);
         ImGui::Checkbox(_("Disguise after stab###gABSd"), &Vars::Triggerbot::Stab::Disguise.m_Var);
         ImGui::Checkbox(_("Ignore razorback###gABSig"), &Vars::Triggerbot::Stab::IgnRazor.m_Var);
+        FixSlider;
         ImGui::SliderFloat(_("Stab range"), &Vars::Triggerbot::Stab::Range.m_Var, 0.5f, 1.0f, _("%.1f"), ImGuiSliderFlags_Logarithmic | ImGuiSliderFlags_AlwaysClamp);
 
 
@@ -495,14 +504,15 @@ void TriggerbotTab() {
         ImGui::EndGroup();
     }
     { // Left Middle Middle
-        ImGui::SetCursorPosY(270);
+        ImGui::SetCursorPosY(262);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(240);
+        ImGui::SetCursorPosX(232);
 
         ImGui::MenuChild(_("Auto Uber"), ImVec2(220, 180), false, ImGuiWindowFlags_NoScrollWithMouse);
         ImGui::Checkbox(_("Active###gAU"), &Vars::Triggerbot::Uber::Active.m_Var);
         ImGui::Checkbox(_("Only on friends###gAUf"), &Vars::Triggerbot::Uber::OnlyFriends.m_Var);
         ImGui::Checkbox(_("Uber self###gAUs"), &Vars::Triggerbot::Uber::PopLocal.m_Var);
+        FixSlider;
         ImGui::SliderFloat(_("Health left###gAUhp"), &Vars::Triggerbot::Uber::HealthLeft.m_Var, 1.f, 99.f, _("%.0f%%"), ImGuiSliderFlags_AlwaysClamp);
 
         ImGui::EndChild();
@@ -514,39 +524,45 @@ int nESPTab = 1;
 void ESPTab() {
     {//left upper
 
-        ImGui::SetCursorPosY(50);
+        ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(15);
+        ImGui::SetCursorPosX(7);
         ImGui::MenuChild(_("Player"), ImVec2(253, 446), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 5,5 });
+            ImGui::SetNextWindowSize(ImVec2(160, 0));
             if (ImGui::BeginPopup(_("PlayerHealthBar"))) {
                 ImGui::Text(_(ICON_FA_EYE " Player Health Bar"));
                 ImGui::Separator();
+                ImGui::SetCursorPosX(2);
                 ColorPicker2(_("Healthbar top color"), Colors::HealthBarTopColor, false);
+                ImGui::SetCursorPosX(2);
                 ColorPicker2(_("Healthbar bottom color"), Colors::HealthBarBottomColor, false);
 
                 ImGui::EndPopup();
             }
+            ImGui::PopStyleVar();
+
             ImGui::Checkbox(_("Enabled"), &Vars::ESP::Players::Active.m_Var);
-            plsfix(23);
+            AlignToRight(23);
             ColorPicker(_("Team Blu"), Colors::TeamBlu,false);
-            plsfix(43);
+            AlignToRight(43);
             ColorPicker(_("Team Red"), Colors::TeamRed, false);
             ImGui::Checkbox(_("Local ESP"), &Vars::ESP::Players::ShowLocal.m_Var);
-            plsfix(23);
+            AlignToRight(23);
             ColorPicker(_("Local / Friend"), Colors::Friend);
             //ImGui::Checkbox(_("Player health"), &Vars::ESP::Players::Health.m_Var);
+            ImGui::Checkbox(_("Player conditions"), &Vars::ESP::Players::Cond.m_Var);
+            AlignToRight(23);
+            ColorPicker(_("Conditions"), Colors::Cond);
+
             ImGui::Checkbox(_("Player health bar"), &Vars::ESP::Players::Healthbar::Enabled.m_Var);
-            plsfix(20);
+            AlignToRight(20);
             ImGui::Text(ICON_FA_COG);
-            plsfix(23);
+            AlignToRight(23);
             if (ImGui::InvisibleButton(_("PlayerHealthBar"), ImVec2(20, 20))) {
                 ImGui::OpenPopup(_("PlayerHealthBar"));
             }
-
-            ImGui::Checkbox(_("Player conditions"), &Vars::ESP::Players::Cond.m_Var);
-            plsfix(23);
-            ColorPicker(_("Conditions"), Colors::Cond);
             ImGui::Checkbox(_("Player name"), &Vars::ESP::Players::Name.m_Var);
             ImGui::Checkbox(_("Player Dlights"), &Vars::ESP::Players::Dlights.m_Var);
 
@@ -565,6 +581,7 @@ void ESPTab() {
             static const char* boxESP[]{ "Off", "Simple", "Cornered", "3D" }; 
             ImGui::Combo(_("Player box"), &Vars::ESP::Players::Box.m_Var, boxESP, IM_ARRAYSIZE(boxESP));
 
+            FixSlider;
             ImGui::SliderFloat(_("DLight radius"), &Vars::ESP::Players::DlightRadius.m_Var, 5.0f, 400.f, _("%.0f"), ImGuiSliderFlags_Logarithmic | ImGuiSliderFlags_AlwaysClamp);
 
         }
@@ -572,19 +589,41 @@ void ESPTab() {
         ImGui::EndGroup();
     }
     {//left upper
-        ImGui::SetCursorPosY(50);
+        ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(273);
+        ImGui::SetCursorPosX(265);
         ImGui::MenuChild(_("Buildings"), ImVec2(253, 446), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 5,5 });
+            ImGui::SetNextWindowSize(ImVec2(160, 0));
+            if (ImGui::BeginPopup(_("BuildingHealthBar"))) {
+                ImGui::Text(_(ICON_FA_EYE " Building Health Bar"));
+                ImGui::Separator();
+                ImGui::SetCursorPosX(2);
+                ColorPicker2(_("Healthbar top color##2"), Colors::HealthBarbTopColor, false);
+                ImGui::SetCursorPosX(2);
+                ColorPicker2(_("Healthbar bottom color##2"), Colors::HealthBarbBottomColor, false);
+
+                ImGui::EndPopup();
+            }
+            ImGui::PopStyleVar();
+
             ImGui::Checkbox(_("Enabled"), &Vars::ESP::Buildings::Active.m_Var);
             ImGui::Checkbox(_("Ignore team buildings###ESPbuildingsteam"), &Vars::ESP::Buildings::IgnoreTeammates.m_Var);
             ImGui::Checkbox(_("Building name"), &Vars::ESP::Buildings::Name.m_Var);
             ImGui::Checkbox(_("Building health"), &Vars::ESP::Buildings::Health.m_Var);
-            ImGui::Checkbox(_("Building health bar"), &Vars::ESP::Buildings::HealthBar.m_Var);
             ImGui::Checkbox(_("Building conditions"), &Vars::ESP::Buildings::Cond.m_Var);
-            plsfix(23);
+            AlignToRight(23);
             ColorPicker(_("Conditions"), Colors::CondBuildings);
+
+            ImGui::Checkbox(_("Building health bar"), &Vars::ESP::Buildings::HealthBar.m_Var);
+            AlignToRight(20);
+            ImGui::Text(ICON_FA_COG);
+            AlignToRight(23);
+            if (ImGui::InvisibleButton(_("BuildingHealthBar"), ImVec2(20, 20))) {
+                ImGui::OpenPopup(_("BuildingHealthBar"));
+            }
+
             ImGui::Checkbox(_("Building level"), &Vars::ESP::Buildings::Level.m_Var);
             ImGui::Checkbox(_("Building owner"), &Vars::ESP::Buildings::Owner.m_Var);
 
@@ -592,15 +631,16 @@ void ESPTab() {
             ImGui::Combo(_("Building box"), &Vars::ESP::Buildings::Box.m_Var, boxESPb, IM_ARRAYSIZE(boxESPb));
 
             ImGui::Checkbox(_("Building Dlights"), &Vars::ESP::Buildings::Dlights.m_Var);
+            FixSlider;
             ImGui::SliderFloat(_("Dlight radius###buildingsdlights"), &Vars::ESP::Buildings::DlightRadius.m_Var, 5.0f, 400.f, _("%.0f"), ImGuiSliderFlags_Logarithmic | ImGuiSliderFlags_AlwaysClamp);
         }
         ImGui::EndChild();
         ImGui::EndGroup();
     }
     {//left upper
-        ImGui::SetCursorPosY(50);
+        ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(532);
+        ImGui::SetCursorPosX(524);
         ImGui::MenuChild(_("World"), ImVec2(253, 446), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             const char* skyNames[] = {
@@ -630,33 +670,39 @@ void ESPTab() {
             };
 
             ImGui::Checkbox(_("Pickups ESP"), &Vars::ESP::World::Active.m_Var);
-            plsfix(23);
+            AlignToRight(23);
             ColorPicker(_("Pickup ESP"), Colors::Weapon, false);
 
             ImGui::Checkbox(_("Healthpack ESP"), &Vars::ESP::World::HealthText.m_Var);
-            plsfix(23);
+            AlignToRight(23);
             ColorPicker(_("Healthpack ESP"), Colors::Health, false);
 
             ImGui::Checkbox(_("Ammopack ESP"), &Vars::ESP::World::AmmoText.m_Var);
-            plsfix(23);
+            AlignToRight(23);
             ColorPicker(_("Ammopack ESP"), Colors::Ammo, false);
 
             ImGui::Checkbox(_("World modulation"), &Vars::Visuals::WorldModulation.m_Var);
-            plsfix(43);
+            AlignToRight(43);
             ColorPicker(_("World"), Colors::WorldModulation, false);
-            plsfix(23);
+            AlignToRight(23);
             ColorPicker(_("Props"), Colors::StaticPropModulation, false);
 
             ImGui::Checkbox(_("Dev Textures"), &Vars::Visuals::DevTextures.m_Var);
 
             ImGui::Checkbox(_("Skybox changer"), &Vars::Visuals::SkyboxChanger.m_Var);
-            ImGui::Combo(_("Skybox"), &Vars::Skybox::skyboxnum, skyNames, IM_ARRAYSIZE(skyNames), 6);
+
+            // Probably a bad idea to do it like this...?
+            if(ImGui::Combo(_("Skybox"), &Vars::Skybox::skyboxnum, skyNames, IM_ARRAYSIZE(skyNames), 6)) 
+                g_Visuals.SkyboxChanger();
+            
             if (Vars::Skybox::skyboxnum == 0) { // God damnit, this made the menu look a bit more messier :(
                 ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0));
                 ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.23f, 0.23f, 0.23f, 1.f));
                 ImGui::SetCursorPosX(8);
                 ImGui::PushItemWidth(ImGui::GetContentRegionMax().x - 16);
-                ImGui::InputTextWithHint(_("##Custom skybox"), _("Custom skybox name"), &Vars::Skybox::SkyboxName);
+                if(ImGui::InputTextWithHint(_("##Custom skybox"), _("Custom skybox name"), &Vars::Skybox::SkyboxName))
+                    g_Visuals.SkyboxChanger();
+
                 ImGui::PopStyleColor(2);
             }
 
@@ -699,22 +745,23 @@ void ESPTab() {
             ImGui::PopItemWidth();
             ImGui::Checkbox(_("Freecam"), &Vars::Misc::Freecam.m_Var);
             //ImGui::Checkbox("Autoshoot", &Vars::Aimbot::Global::AutoShoot.m_Var); // We don't really need auto shoot atm.
-            plsfix(50);
+            AlignToRight(50);
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(MenuCol.x / 1.5, MenuCol.y / 1.5, MenuCol.z / 1.5, 255));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(MenuCol.x, MenuCol.y, MenuCol.z, 255));
             InputKeybind(_("Freecam key"), Vars::Misc::FreecamKey, false);
             ImGui::PopStyleColor(3);
+            FixSlider;
             ImGui::SliderFloat("Freecam speed", &Vars::Misc::FreecamSpeed.m_Var, 0.01f, 10.f, _("%.2f"), ImGuiSliderFlags_AlwaysClamp | ImGuiSliderFlags_Logarithmic);
         }
         ImGui::EndChild();
         ImGui::EndGroup();
     }
     ImGui::SetCursorPosX((ImGui::GetContentRegionMax().x / 1.9) - ImGui::CalcTextSize(_("ESP Tab")).x);
-    ImGui::SetCursorPosY(ImGui::GetContentRegionMax().y - 17);
+    ImGui::SetCursorPosY(ImGui::GetContentRegionMax().y - 22);
     ImGui::Text(_("ESP Tab"));
     ImGui::SameLine();
-    ImGui::SetCursorPosY(ImGui::GetContentRegionMax().y - 20);
+    ImGui::SetCursorPosY(ImGui::GetContentRegionMax().y - 25);
     ImGui::SetCursorPosX(ImGui::GetContentRegionMax().x - 43);
     ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(MenuCol.x, MenuCol.y, MenuCol.z, 255));
 
@@ -726,13 +773,13 @@ void ESPTab() {
 void ESPTab2() { // Chams
 
     {//left upper
-        ImGui::SetCursorPosY(50);
+        ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(15);
+        ImGui::SetCursorPosX(7);
         ImGui::MenuChild(_("Player Chams"), ImVec2(253, 446), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Player chams"), &Vars::Chams::Players::Active.m_Var);
-            plsfix(23);
+            AlignToRight(23);
             ColorPicker(_("Fresnel Base"), Colors::FresnelBase, false);
             ImGui::Checkbox(_("Local chams"), &Vars::Chams::Players::ShowLocal.m_Var);
             ImGui::Checkbox(_("Chams on cosmetics"), &Vars::Chams::Players::Wearables.m_Var);
@@ -742,10 +789,12 @@ void ESPTab2() { // Chams
             ImGui::Combo(_("Player material"), &Vars::Chams::Players::Material.m_Var, pchamsMaterials, IM_ARRAYSIZE(pchamsMaterials));
             static const char* ignoreTeammatesChams[]{ "Off", "All", "Keep friends" };
             ImGui::Combo(_("Ignore teammates###chamsteam"), &Vars::Chams::Players::IgnoreTeammates.m_Var, ignoreTeammatesChams, IM_ARRAYSIZE(ignoreTeammatesChams));
+            FixSlider;
             ImGui::SliderFloat(_("Player chams opacity"), &Vars::Chams::Players::Alpha.m_Var, 0.0f, 1.0f, _("%.2f"), ImGuiSliderFlags_Logarithmic | ImGuiSliderFlags_AlwaysClamp);
             ImGui::Checkbox(_("Hitbox matrix"), &Vars::Chams::Players::HitboxThing.m_Var);
-            plsfix(23);
+            AlignToRight(23);
             ColorPicker(_("Matrix color"), Colors::hitboxColor, true);
+            FixSlider;
             ImGui::SliderFloat(_("Matrix time"), &Vars::Chams::Players::HitboxTimeThing.m_Var, 0.1f, 10.0f, _("%.0f"), ImGuiSliderFlags_AlwaysClamp);
         }
         ImGui::EndChild();
@@ -753,9 +802,9 @@ void ESPTab2() { // Chams
     }
 
     {//left upper
-        ImGui::SetCursorPosY(50);
+        ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(273);
+        ImGui::SetCursorPosX(265);
         ImGui::MenuChild(_("Building Chams"), ImVec2(253, 213), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Building chams"), &Vars::Chams::Buildings::Active.m_Var);
@@ -763,6 +812,7 @@ void ESPTab2() { // Chams
             ImGui::Checkbox(_("IgnoreZ###buildingsignorez"), &Vars::Chams::Buildings::IgnoreZ.m_Var);
             static const char* pchamsbMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Fresnel" };
             ImGui::Combo(_("Building material"), &Vars::Chams::Buildings::Material.m_Var, pchamsbMaterials, IM_ARRAYSIZE(pchamsbMaterials));
+            FixSlider;
             ImGui::SliderFloat(_("Building chams opacity"), &Vars::Chams::Buildings::Alpha.m_Var, 0.0f, 1.0f, _("%.2f"), ImGuiSliderFlags_Logarithmic | ImGuiSliderFlags_AlwaysClamp);
         }
         ImGui::EndChild();
@@ -770,15 +820,15 @@ void ESPTab2() { // Chams
     }
 
     {//left upper
-        ImGui::SetCursorPosY(263);
+        ImGui::SetCursorPosY(255);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(273);
+        ImGui::SetCursorPosX(265);
         ImGui::MenuChild(_("DME Chams"), ImVec2(253, 233), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("DME Chams##dmeactive"), &Vars::Chams::DME::Active.m_Var);
-            plsfix(43);
+            AlignToRight(43);
             ColorPicker(_("Hands"), Colors::Hands, false);
-            plsfix(23);
+            AlignToRight(23);
             ColorPicker(_("Weapon"), Colors::Weapon, false);
             static const char* handsMaterial[]{
                 "Original",
@@ -791,6 +841,7 @@ void ESPTab2() { // Chams
                 "Fresnel"
             };
             ImGui::Combo(_("Arm material"), &Vars::Chams::DME::Hands.m_Var, handsMaterial, IM_ARRAYSIZE(handsMaterial));
+            FixSlider;
             ImGui::SliderFloat(_("Arm opacity"), &Vars::Chams::DME::HandsAlpha.m_Var, 0.0f, 1.0f, _("%.2f"), ImGuiSliderFlags_Logarithmic | ImGuiSliderFlags_AlwaysClamp);
 
             static const char* weaponMaterial[]{
@@ -804,6 +855,7 @@ void ESPTab2() { // Chams
                 "Fresnel"
             };
             ImGui::Combo(_("Weapon material"), &Vars::Chams::DME::Weapon.m_Var, weaponMaterial, IM_ARRAYSIZE(weaponMaterial));
+            FixSlider;
             ImGui::SliderFloat(_("Weapon opacity"), &Vars::Chams::DME::WeaponAlpha.m_Var, 0.0f, 1.0f, _("%.2f"), ImGuiSliderFlags_Logarithmic | ImGuiSliderFlags_AlwaysClamp);
         }
         ImGui::EndChild();
@@ -811,9 +863,9 @@ void ESPTab2() { // Chams
     }
 
     {//left upper
-        ImGui::SetCursorPosY(50);
+        ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(532);
+        ImGui::SetCursorPosX(524);
         ImGui::MenuChild(_("World Chams"), ImVec2(253, 446), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Pickup chams"), &Vars::Chams::World::Active.m_Var);
@@ -824,13 +876,14 @@ void ESPTab2() { // Chams
             ImGui::Combo(_("Projectile chams"), &Vars::Chams::World::Projectiles.m_Var, projectilesTeam, IM_ARRAYSIZE(projectilesTeam));
             static const char* pchamspMaterials[]{ "None", "Shaded", "Shiny", "Flat", "Fresnel" };
             ImGui::Combo(_("Pickup chams material"), &Vars::Chams::World::Material.m_Var, pchamspMaterials, IM_ARRAYSIZE(pchamspMaterials));
+            FixSlider;
             ImGui::SliderFloat(_("Pickup chams opacity"), &Vars::Chams::World::Alpha.m_Var, 0.0f, 1.0f, _("%.2f"), ImGuiSliderFlags_Logarithmic | ImGuiSliderFlags_AlwaysClamp);
         }
         ImGui::EndChild();
         ImGui::EndGroup();
     }
-    ImGui::SetCursorPosX(15);
-    ImGui::SetCursorPosY(ImGui::GetContentRegionMax().y - 20);
+    ImGui::SetCursorPosX(7);
+    ImGui::SetCursorPosY(ImGui::GetContentRegionMax().y - 25);
     ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(MenuCol.x, MenuCol.y, MenuCol.z, 255));
 
     if (ImGui::Button(_("<<"), ImVec2(35, 0)))
@@ -850,17 +903,19 @@ void ESPTab2() { // Chams
 
 void ESPTab3() {
     {//left upper
-        ImGui::SetCursorPosY(50);
+        ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(15);
+        ImGui::SetCursorPosX(7);
         ImGui::MenuChild(_("Player Glow"), ImVec2(253, 446), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
+            FixSlider;
             ImGui::SliderInt("Global glow scale", &Vars::Glow::Main::Scale.m_Var, 1, 10, "%d", ImGuiSliderFlags_Logarithmic | ImGuiSliderFlags_AlwaysClamp);
             ImGui::Checkbox(_("Player glow"), &Vars::Glow::Players::Active.m_Var);
             static const char* ignoreTeammatesGlow[]{ "Off", "All", "Keep friends" };
             ImGui::Combo(_("Ignore teammates###glowteam"), &Vars::Glow::Players::IgnoreTeammates.m_Var, ignoreTeammatesGlow, IM_ARRAYSIZE(ignoreTeammatesGlow));
             ImGui::Checkbox(_("Glow on cosmetics"), &Vars::Glow::Players::Wearables.m_Var);
             ImGui::Checkbox(_("Glow on weapons"), &Vars::Glow::Players::Weapons.m_Var);
+            FixSlider;
             ImGui::SliderFloat(_("Player glow opacity"), &Vars::Glow::Players::Alpha.m_Var, 0.1f, 1.0f, _("%.2f"), ImGuiSliderFlags_Logarithmic | ImGuiSliderFlags_AlwaysClamp);
             static const char* colorGlow[]{ "Team", "Health" };
             ImGui::Combo(_("Player glow color"), &Vars::Glow::Players::Color.m_Var, colorGlow, IM_ARRAYSIZE(colorGlow));
@@ -869,14 +924,15 @@ void ESPTab3() {
         ImGui::EndGroup();
     }
     {//left upper
-        ImGui::SetCursorPosY(50);
+        ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(273);
+        ImGui::SetCursorPosX(265);
         ImGui::MenuChild(_("Building Glow"), ImVec2(253, 446), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Building glow"), &Vars::Glow::Buildings::Active.m_Var);
             ImGui::Checkbox(_("Ignore team buildings###glowbuildingsteam"), &Vars::Glow::Buildings::IgnoreTeammates.m_Var);
             //static const char* ignoreTeammatesGlow[]{ "Off", "All", "Keep friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore teammates###glowteam", &Vars::Glow::Buildings::IgnoreTeammates.m_Var, ignoreTeammatesGlow, IM_ARRAYSIZE(ignoreTeammatesGlow)); ImGui::PopItemWidth(); HelpMarker("Which teammates the glow will ignore drawing on");
+            FixSlider;
             ImGui::SliderFloat(_("Building glow opacity"), &Vars::Glow::Buildings::Alpha.m_Var, 0.1f, 1.0f, _("%.2f"), ImGuiSliderFlags_Logarithmic | ImGuiSliderFlags_AlwaysClamp);
             static const char* colorGlow[]{ "Team", "Health" }; 
             ImGui::Combo(_("Building glow color"), &Vars::Glow::Buildings::Color.m_Var, colorGlow, IM_ARRAYSIZE(colorGlow));
@@ -885,9 +941,9 @@ void ESPTab3() {
         ImGui::EndGroup();
     }
     {//left upper
-        ImGui::SetCursorPosY(50);
+        ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(532);
+        ImGui::SetCursorPosX(524);
         ImGui::MenuChild(_("World Glow"), ImVec2(253, 446), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Pickup glow"), &Vars::Glow::World::Active.m_Var);
@@ -895,13 +951,14 @@ void ESPTab3() {
             ImGui::Checkbox(_("Ammopack glow"), &Vars::Glow::World::Ammo.m_Var);
             static const char* projectilesgTeam[]{ "Off", "All", "Enemy Only" };
             ImGui::Combo(_("Projectile glow"), &Vars::Glow::World::Projectiles.m_Var, projectilesgTeam, IM_ARRAYSIZE(projectilesgTeam));
+            FixSlider;
             ImGui::SliderFloat(_("Pickup glow opacity"), &Vars::Glow::World::Alpha.m_Var, 0.1f, 1.0f, _("%.2f"), ImGuiSliderFlags_Logarithmic | ImGuiSliderFlags_AlwaysClamp);
         }
         ImGui::EndChild();
         ImGui::EndGroup();
     }
-    ImGui::SetCursorPosX(15);
-    ImGui::SetCursorPosY(ImGui::GetContentRegionMax().y - 20);
+    ImGui::SetCursorPosX(7);
+    ImGui::SetCursorPosY(ImGui::GetContentRegionMax().y - 25);
     ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(MenuCol.x, MenuCol.y, MenuCol.z, 255));
     if (ImGui::Button(_("<<"), ImVec2(35, 0)))
         nESPTab = 2;
@@ -915,21 +972,27 @@ void ESPTab3() {
 void VisualsTab() {
 
     {//left upper
-        ImGui::SetCursorPosY(50);
+        ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(15);
+        ImGui::SetCursorPosX(7);
         ImGui::MenuChild(_("Local"), ImVec2(253, 465), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
 
+            FixSlider;
             ImGui::SliderInt(_("Field of view"), &Vars::Visuals::FieldOfView.m_Var, 70, 150, _("%d"), ImGuiSliderFlags_AlwaysClamp);
+            FixSlider;
             ImGui::SliderFloat(_("Aspect Ratio"), &Vars::Visuals::AspectRatioValue.m_Var, 0.f, 200.f, _("%.f"), ImGuiSliderFlags_AlwaysClamp);
+            FixSlider;
             ImGui::SliderInt(_("Aim FOV Alpha"), &Vars::Visuals::AimFOVAlpha.m_Var, 0, 255, _("%d"), ImGuiSliderFlags_AlwaysClamp);
             static char buff[12];
             snprintf(buff, sizeof(buff), _("%i, %i, %i"), Vars::Visuals::ViewModelX.m_Var, Vars::Visuals::ViewModelY.m_Var, Vars::Visuals::ViewModelZ.m_Var);
             if (ImGui::BeginCombo(_("Viewmodel XYZ"), _(buff), 0, true))
             {
+                FixSlider;
                 ImGui::SliderInt(_("Viewmodel X"), &Vars::Visuals::ViewModelX.m_Var, -25, 25, _("%d"), ImGuiSliderFlags_AlwaysClamp);
+                FixSlider;
                 ImGui::SliderInt(_("Viewmodel Y"), &Vars::Visuals::ViewModelY.m_Var, -25, 25, _("%d"), ImGuiSliderFlags_AlwaysClamp);
+                FixSlider;
                 ImGui::SliderInt(_("Viewmodel Z"), &Vars::Visuals::ViewModelZ.m_Var, -25, 25, _("%d"), ImGuiSliderFlags_AlwaysClamp);
                 ImGui::EndCombo();
             }
@@ -940,15 +1003,24 @@ void VisualsTab() {
             ImGui::Checkbox(_("Chat info"), &Vars::Visuals::ChatInfo.m_Var);
             ImGui::Checkbox(_("PlayerList"), &Vars::Visuals::PlayerList.m_Var);
             ImGui::Checkbox(_("Vote revealer"), &Vars::Misc::VoteRevealer.m_Var);
+            ImGui::Checkbox(_("Clean screenshots"), &Vars::Misc::CleanScreenshot.m_Var);
+            static const char* weaponTracer[]{
+            "None",
+            "Machina",
+            "Capper",
+            "Merasmus Vortex",
+            "Merasmus Zap",
+            };
+            ImGui::Combo(_("Bullet Tracer"), &Vars::Visuals::TracerEffect.m_Var, weaponTracer, IM_ARRAYSIZE(weaponTracer));
         }
         ImGui::EndChild();
         ImGui::EndGroup();
     }
 
     {//left upper
-        ImGui::SetCursorPosY(50);
+        ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(273);
+        ImGui::SetCursorPosX(265);
         ImGui::MenuChild(_("Spywarning"), ImVec2(253, 195), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Active###spywarn"), &Vars::Visuals::SpyWarning.m_Var);
@@ -963,13 +1035,13 @@ void VisualsTab() {
     }
 
     {//left upper
-        ImGui::SetCursorPosY(245);
+        ImGui::SetCursorPosY(237);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(273);
+        ImGui::SetCursorPosX(265);
         ImGui::MenuChild(_("Thirdperson"), ImVec2(253, 270), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Thirdperson"), &Vars::Visuals::ThirdPerson.m_Var);
-            plsfix(50);
+            AlignToRight(50);
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(MenuCol.x / 1.5, MenuCol.y / 1.5, MenuCol.z / 1.5, 255));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(MenuCol.x, MenuCol.y, MenuCol.z, 255));
@@ -977,8 +1049,11 @@ void VisualsTab() {
             ImGui::PopStyleColor(3);
             ImGui::Checkbox(_("Show silent angles"), &Vars::Visuals::ThirdPersonSilentAngles.m_Var);
             ImGui::Checkbox(_("Instant yaw"), &Vars::Visuals::ThirdPersonInstantYaw.m_Var);
+            FixSlider;
             ImGui::SliderFloat(_("Forward offset"),    &Vars::Visuals::ThirdpersonOffsetX.m_Var, -100.0f, 100.f, _("%.0f"), ImGuiSliderFlags_AlwaysClamp);
+            FixSlider;
             ImGui::SliderFloat(_("Right offset"),      &Vars::Visuals::ThirdpersonOffsetY.m_Var, -100.0f, 100.f, _("%.0f"), ImGuiSliderFlags_AlwaysClamp);
+            FixSlider;
             ImGui::SliderFloat(_("Up offset"),         &Vars::Visuals::ThirdpersonOffsetZ.m_Var, -100.0f, 100.f, _("%.0f"), ImGuiSliderFlags_AlwaysClamp);
             ImGui::Checkbox(_("Thirdperson crosshair"), &Vars::Visuals::ThirdpersonCrosshair.m_Var);
         }
@@ -987,17 +1062,20 @@ void VisualsTab() {
     }
 
     {//left upper
-        ImGui::SetCursorPosY(50);
+        ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(532);
+        ImGui::SetCursorPosX(524);
         ImGui::MenuChild(_("Radar"), ImVec2(253, 465), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Active###radar"), &Vars::Radar::Main::Active.m_Var);
             ImGui::Checkbox(_("Players###radarp"), &Vars::Radar::Players::Active.m_Var);
             ImGui::Checkbox(_("Buildings###radarbuildingsa"), &Vars::Radar::Buildings::Active.m_Var);
+            FixSlider;
             ImGui::SliderInt(_("Radar size"), &Vars::Radar::Main::Size.m_Var, 20, 200, _("%d"), ImGuiSliderFlags_AlwaysClamp);
+            FixSlider;
             ImGui::SliderInt(_("Radar range"), &Vars::Radar::Main::Range.m_Var, 50, 3000, _("%d"), ImGuiSliderFlags_AlwaysClamp);
-            ImGui::SliderInt(_("Radar background alpha"), &Vars::Radar::Main::BackAlpha.m_Var, 0, 255, _("%d"), ImGuiSliderFlags_AlwaysClamp);
+            FixSlider;
+            ImGui::SliderInt(_("Radar BG alpha"), &Vars::Radar::Main::BackAlpha.m_Var, 0, 255, _("%d"), ImGuiSliderFlags_AlwaysClamp);
 
             ImGui::Checkbox(_("Player Health bar###radarhealt"), &Vars::Radar::Players::Health.m_Var);
             ImGui::Checkbox(_("Buildings Health bar###radarbuildingsc"), &Vars::Radar::Buildings::Health.m_Var);
@@ -1015,9 +1093,9 @@ void VisualsTab() {
 
 void MiscTab() {
     {//left upper
-        ImGui::SetCursorPosY(50);
+        ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(15);
+        ImGui::SetCursorPosX(7);
         ImGui::MenuChild(_("General"), ImVec2(300, 265), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Instant Respawn MVM"), &Vars::Misc::InstantRespawn.m_Var);
@@ -1035,9 +1113,9 @@ void MiscTab() {
         ImGui::EndGroup();
     }
     {//left bottom
-        ImGui::SetCursorPosY(315);
+        ImGui::SetCursorPosY(307);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(15);
+        ImGui::SetCursorPosX(7);
         ImGui::MenuChild(_("Movement"), ImVec2(300, 205), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Bhop"), &Vars::Misc::AutoJump.m_Var);
@@ -1051,51 +1129,101 @@ void MiscTab() {
         ImGui::EndGroup();
     }
     {//right
-        ImGui::SetCursorPosY(50);
+        ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(320);
+        ImGui::SetCursorPosX(312);
         ImGui::MenuChild(_("HvH (autism)"), ImVec2(300, 300), false, ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar);
         {
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 5,5 });
+            ImGui::SetNextWindowSize(ImVec2(210, 0));
+            if (ImGui::BeginPopup(_("FakeLagSettings"))) {
+                ImGui::Text(_(ICON_FA_EYE " Fakelag settings"));
+                ImGui::Separator();
+                ImGui::SetCursorPosX(2);
+                ImGui::PushItemWidth(200);
+                FixSlider;
+                ImGui::SliderInt(_("Fakelag value"), &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 14, _("%d"), ImGuiSliderFlags_AlwaysClamp);
+                ImGui::Checkbox(_("Fakelag on key"), &Vars::Misc::CL_Move::FakelagOnKey.m_Var);
+                ImGui::EndPopup();
+            }
+            ImGui::PopStyleVar();
+
             ImGui::Checkbox(_("AntiAim"), &Vars::AntiHack::AntiAim::Active.m_Var);
             const char* pitch[]{ "None", "Up", "Down", "Fake up", "Fake down", "Center", "Half Up"}; ImGui::Combo(_("Pitch"), &Vars::AntiHack::AntiAim::Pitch.m_Var, pitch, IM_ARRAYSIZE(pitch));
-            const char* realYaw[]{ "None", "Left", "Right", "Backwards", "Spin", "Random"}; ImGui::Combo(_("Real yaw"), &Vars::AntiHack::AntiAim::YawReal.m_Var, realYaw, IM_ARRAYSIZE(realYaw));
-            const char* fakeYaw[]{ "None", "Left", "Right", "Backwards", "Spin", "Random"}; ImGui::Combo(_("Fake yaw"), &Vars::AntiHack::AntiAim::YawFake.m_Var, fakeYaw, IM_ARRAYSIZE(fakeYaw));
+            const char* realYaw[]{ "None", "Left", "Right", "Backwards", "Spin", "Random", "Edge"}; ImGui::Combo(_("Real yaw"), &Vars::AntiHack::AntiAim::YawReal.m_Var, realYaw, IM_ARRAYSIZE(realYaw));
+            const char* fakeYaw[]{ "None", "Left", "Right", "Backwards", "Spin", "Random", "Edge"}; ImGui::Combo(_("Fake yaw"), &Vars::AntiHack::AntiAim::YawFake.m_Var, fakeYaw, IM_ARRAYSIZE(fakeYaw));
+            FixSlider;
             ImGui::SliderInt(_("Spin Speed"), &Vars::AntiHack::AntiAim::SpinSpeed.m_Var, 1, 20, _("%d"), ImGuiSliderFlags_AlwaysClamp);
 
             ImGui::Checkbox(_("Fakelag"), &Vars::Misc::CL_Move::Fakelag.m_Var);
-            plsfix(50);
+            AlignToRight(70);
+            
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(MenuCol.x / 1.5, MenuCol.y / 1.5, MenuCol.z / 1.5, 255));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(MenuCol.x, MenuCol.y, MenuCol.z, 255));
             InputKeybind(_("Fakelag key"), Vars::Misc::CL_Move::FakelagKey);
             ImGui::PopStyleColor(3);
-            ImGui::Checkbox(_("Fakelag on key"), &Vars::Misc::CL_Move::FakelagOnKey.m_Var);
-            ImGui::SliderInt(_("Fakelag value"), &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 14, _("%d"), ImGuiSliderFlags_AlwaysClamp);
+            
+            AlignToRight(20);
+            ImGui::Text(ICON_FA_COG);
+            AlignToRight(23);
+            if (ImGui::InvisibleButton(_("FakeLagSettings"), ImVec2(20, 20))) {
+                ImGui::OpenPopup(_("FakeLagSettings"));
+            }
+
+            //ImGui::Checkbox(_("Fakelag on key"), &Vars::Misc::CL_Move::FakelagOnKey.m_Var);
+            //FixSlider;
+            //ImGui::SliderInt(_("Fakelag value"), &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 14, _("%d"), ImGuiSliderFlags_AlwaysClamp);
         }
         ImGui::EndChild();
         ImGui::EndGroup();
     }
     {//right
-        ImGui::SetCursorPosY(350);
+        ImGui::SetCursorPosY(342);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(320);
+        ImGui::SetCursorPosX(312);
         ImGui::MenuChild(_("Exploits"), ImVec2(300, 169), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 8,8 });
+            ImGui::SetNextWindowSize(ImVec2(210, 0));
+            if (ImGui::BeginPopup(_("DTSettings"))) {
+                ImGui::Text(_(ICON_FA_EYE " Doubletap settings"));
+                ImGui::Separator();
+                ImGui::PushItemWidth(200);
+                ImGui::SetCursorPosX(2);
+                ImGui::SliderInt(_("Ticks to shift"), &g_GlobalInfo.MaxNewCommands, 10, 23, _("%d"), ImGuiSliderFlags_ClampOnInput);
+                ImGui::SetCursorPosX(2);
+                ImGui::Checkbox(_("Wait for DT"), &Vars::Misc::CL_Move::WaitForDT.m_Var);
+                ImGui::SetCursorPosX(2);
+                ImGui::Checkbox(_("Don't DT in air"), &Vars::Misc::CL_Move::NotInAir.m_Var);
+                ImGui::SetCursorPosX(8);
+                ImGui::Text(_("Recharge Key"));
+                AlignToRight(45);
+                InputKeybind(_("Recharge Key"), Vars::Misc::CL_Move::RechargeKey);
+                ImGui::EndPopup();
+            }
+            ImGui::PopStyleVar();
+
             ImGui::Checkbox(_("DoubleTap"), &Vars::Misc::CL_Move::Doubletap.m_Var);
-            plsfix(50);
+            AlignToRight(70);
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(MenuCol.x / 1.5, MenuCol.y / 1.5, MenuCol.z / 1.5, 255));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(MenuCol.x, MenuCol.y, MenuCol.z, 255));
             InputKeybind(_("DoubleTap Key"), Vars::Misc::CL_Move::DoubletapKey);
-            ImGui::SliderInt(_("Ticks to shift"), &g_GlobalInfo.MaxNewCommands, 10, 23, _("%d"), ImGuiSliderFlags_ClampOnInput);
-            ImGui::Checkbox(_("Wait for DT"), &Vars::Misc::CL_Move::WaitForDT.m_Var);
-            ImGui::Checkbox(_("Don't DT in air"), &Vars::Misc::CL_Move::NotInAir.m_Var);
-            ImGui::SetCursorPosX(8);
-            ImGui::Text(_("Recharge Key"));
-            plsfix(50);
-            InputKeybind(_("Recharge Key"), Vars::Misc::CL_Move::RechargeKey);
             ImGui::PopStyleColor(3);
 
+            AlignToRight(20);
+            ImGui::Text(ICON_FA_COG);
+            AlignToRight(23);
+            if (ImGui::InvisibleButton(_("DTSettings"), ImVec2(20, 20))) {
+                ImGui::OpenPopup(_("DTSettings"));
+            }
+            /*
+            ImGui::SetCursorPosX(8);
+            ImGui::Text(_("Recharge Key"));
+            AlignToRight(50);
+            InputKeybind(_("Recharge Key##2"), Vars::Misc::CL_Move::RechargeKey);
+            */
         }
         ImGui::EndChild();
         ImGui::EndGroup();
@@ -1106,12 +1234,13 @@ void MiscTab() {
 
 void ConfigsTab() {
     {//left upper
-        ImGui::SetCursorPosY(50);
+        ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(15);
-        ImGui::MenuChild(_("Configs"), ImVec2(300, 445), false, ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::SetCursorPosX(7);
+        ImGui::MenuChild(_("Configs"), ImVec2(250, 445), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::SetCursorPosX(5);
+
             static std::wstring selected = {};
             int nConfig = 0;
 
@@ -1176,58 +1305,37 @@ void ConfigsTab() {
                 selected.clear();
                 g_Visuals.AddToEventLog(_("Config %s deleted!"), selected.data());
             }
+            ImGui::SetCursorPosX((ImGui::GetContentRegionMax().x - ImGui::CalcTextSize(_("Note: Press enter to create a new config.")).x) * 0.5f);
+            ImGui::Text(_("Note: Press enter to create a new config."));
         }
         ImGui::EndChild();
         ImGui::EndGroup();
     }
     ImGui::SameLine();
-    ImGui::SetCursorPosY(55);
-    ColorPicker2(_("Menu Color"), Vars::Menu::Colors::WidgetActive, false);
-    ImGui::SetCursorPosX(15);
-    ImGui::Text(_("Note: Press enter to create a new config."));
+    //ImGui::SetCursorPosY(55);
+    ImGui::BeginGroup();
+    ImGui::MenuChild(_("Lua"), ImVec2(250, 445), false, ImGuiWindowFlags_NoScrollWithMouse);
+    {
+        ImGui::SetCursorPosX(5);
+        ImGui::Text("Hopefully soon :tm:");
+        ImGui::EndChild();
+        ImGui::EndGroup();
+    }
 
-    //
-    // Example of how to apply these to buttons
-    // You could make it a checkbox by using
-    // g_Playerlist.IsIgnored(friendsID) and
-    // making the checkbox ticked if it returns
-    // true, false otherwise. You don't have to run
-    // SaveSet anywhere, because the ignore/unignore 
-    // functions will run it for you
-    // GetIgnoredPlayers() is ran in DLLMain on inject.
-    // You can iterate through the players by doing
-    // for (int playerIndex = 1; playerIndex < g_Interfaces.GlobalVars->maxclients; playerIndex++)
-    // playerIndex starts at 1 to avoid the 0th index - which is not a player ever, 
-    // just some weird world entity or something
-    /*if (ImGui::Button(_("Fill players"))) {
-        g_Playerlist.GetIgnoredPlayers();
+    ImGui::SameLine();
+    //ImGui::SetCursorPosY(55);
+    ImGui::BeginGroup();
+    ImGui::MenuChild(_("Others"), ImVec2(250, 445), false, ImGuiWindowFlags_NoScrollWithMouse);
+    {
+        ImGui::SetCursorPosX(5);
+        ColorPicker2(_("Menu Color"), Vars::Menu::Colors::WidgetActive, false);
+        ImGui::SetCursorPosX(5);
+        ColorPicker2(_("Shadow Color"), Vars::Menu::Colors::ShadowColor, true);
+        ImGui::SetCursorPosX(5);
+        ImGui::SliderInt("Menu shadow size", &Vars::Menu::ShadowSize, 0, 128, "%d", ImGuiSliderFlags_AlwaysClamp);
+        ImGui::EndChild();
+        ImGui::EndGroup();
     }
-    if (ImGui::Button(_("Save set"))) {
-        g_Playerlist.SaveSet();
-    }
-    if (ImGui::Button(_("Ignore me"))) {
-        PlayerInfo_t local;
-        if (g_Interfaces.Engine->GetPlayerInfo(g_Interfaces.Engine->GetLocalPlayer(), &local)) 
-        {
-            g_Playerlist.AddIgnore(local.friendsID);
-        }
-    }
-    if (ImGui::Button(_("Unignore me"))) {
-        PlayerInfo_t local;
-        if (g_Interfaces.Engine->GetPlayerInfo(g_Interfaces.Engine->GetLocalPlayer(), &local))
-        {
-            g_Playerlist.RemoveIgnore(local.friendsID);
-        }
-    }*/
- 
-    /*
-    ImGui::SetCursorPos({ ImGui::GetContentRegionMax().x - 90, ImGui::GetContentRegionMax().y - 25});
-    if (ImGui::Button(_("Unload Cheat"))) {
-        sprintf_s(buffer, _("Unloading..."));
-        g_Visuals.vecEventVector.push_back(EventLogging_t{ buffer });
-        g_GlobalInfo.Unload = true;
-    }
-    */
 }
 
 void Handle()
@@ -1270,7 +1378,7 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
 
         auto& io = ImGui::GetIO();
         io.IniFilename = NULL;
-        io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
+        io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange | ImGuiConfigFlags_NavEnableKeyboard;
         ImFontConfig font_config;
         font_config.OversampleH = 1;
         font_config.OversampleV = 1;
@@ -1297,10 +1405,10 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
 
     if (GetAsyncKeyState(VK_INSERT) & 1) { // Can we please fix this in WndProcHook...? :(
         g_Interfaces.Surface->SetCursorAlwaysVisible(menuOpen = !menuOpen);
-        //g_Interfaces.Surface->ResetInputState();
+        g_Interfaces.InputSystem->ResetInputState();
         g_Menu.flTimeOnChange = g_Interfaces.Engine->Time();
-
     }
+
     g_Menu.m_flFadeElapsed = g_Interfaces.Engine->Time() - g_Menu.flTimeOnChange;
 
     ImGui_ImplDX9_NewFrame();
@@ -1314,9 +1422,13 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
 	{
         // I know it's probably a bad idea to do these under a loop but oh well you got to sacrifice some stuff sometimes just to get the perfect result.
         MenuCol = mColor(Vars::Menu::Colors::WidgetActive);
+        ShadowCol = mColor(Vars::Menu::Colors::ShadowColor);
         CustomStyle();
 
+        //ImGui::GetBackgroundDrawList()->AddRectFilled({ 0.f,0.f }, { (float)g_ScreenSize.w,(float)g_ScreenSize.h }, ImColor(0.5f, 0.5f, 0.5f));
+        //ImGui::ShowDemoWindow();
         ImGui::PushStyleColor(ImGuiCol_Separator, MenuCol);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0,0 });
         ImGui::PushFont(font);
         {
             ImGui::Begin(_("##console"), NULL, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_AlwaysAutoResize);
@@ -1326,13 +1438,14 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
                 MenuCol = ImGui::GetStyle().Colors[ImGuiCol_MenuBarBg];
                 s2 = ImVec2(ImGui::GetWindowSize().x - ImGui::GetStyle().WindowPadding.x * 2, ImGui::GetWindowSize().y - ImGui::GetStyle().WindowPadding.y * 2);
                 p2 = ImVec2(ImGui::GetWindowPos().x + ImGui::GetStyle().WindowPadding.x, ImGui::GetWindowPos().y + ImGui::GetStyle().WindowPadding.y);
-                draw->AddRectFilled(p2, ImVec2(p2.x + s2.x, p2.y + s2.y + 25), ImColor(15, 17, 19, 200), 5); // Titlebar
-                draw->AddRectFilled(ImVec2(p2.x, p2.y + 25), ImVec2(p2.x + s2.x, p2.y + s2.y), ImColor(18, 20, 21, 200), 5, ImDrawCornerFlags_Bot); // Background
+                ImGui::GetBackgroundDrawList()->AddRect({ p2.x,p2.y }, { p2.x + s2.x, p2.y + s2.y }, ImColor(15, 17, 19, 255));
+                draw->AddRectFilled(p2, ImVec2(p2.x + s2.x, p2.y + s2.y + 25), ImColor(15, 17, 19, 200), 0); // Titlebar
+                draw->AddRectFilled(ImVec2(p2.x, p2.y + 25), ImVec2(p2.x + s2.x, p2.y + s2.y), ImColor(18, 20, 21, 255), 0, ImDrawCornerFlags_Bot); // Background
                 draw->AddRectFilled(ImVec2(p2.x, p2.y + 24), ImVec2(p2.x + s2.x, p2.y + 25), ImColor(MenuCol)); // Line
                 draw->AddText(ImVec2(p2.x + 15 / 2, p2.y + 13 / 2), ImColor(255, 255, 255, 255), _(ICON_FA_COG "  Console"));
             }
 
-            ImGui::SetCursorPosY(40);
+            ImGui::SetCursorPosY(32);
             if (ImGui::Button(_("Force SV_Cheats"), ImVec2(120, 20))) {
                 //ConVar* sv_cheats = g_Interfaces.CVars->FindVar("sv_cheats");
                 //sv_cheats->SetValue(1);
@@ -1357,6 +1470,7 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
             if (ImGui::Button(_("Retry"), ImVec2(120, 20)))
                 g_Interfaces.Engine->ClientCmd_Unrestricted(_("retry"));
 
+            ImGui::Dummy(ImVec2(0, 8));
             ImGui::End();
         }
 
@@ -1368,13 +1482,14 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
                 MenuCol = ImGui::GetStyle().Colors[ImGuiCol_MenuBarBg];
                 s2 = ImVec2(ImGui::GetWindowSize().x - ImGui::GetStyle().WindowPadding.x * 2, ImGui::GetWindowSize().y - ImGui::GetStyle().WindowPadding.y * 2);
                 p2 = ImVec2(ImGui::GetWindowPos().x + ImGui::GetStyle().WindowPadding.x, ImGui::GetWindowPos().y + ImGui::GetStyle().WindowPadding.y);
+                ImGui::GetBackgroundDrawList()->AddRect({ p2.x,p2.y }, { p2.x + s2.x, p2.y + s2.y }, ImColor(15, 17, 19, 255));
                 draw->AddRectFilled(p2, ImVec2(p2.x + s2.x, p2.y + s2.y + 25), ImColor(15, 17, 19, 200), 5); // Titlebar
                 draw->AddRectFilled(ImVec2(p2.x, p2.y + 25), ImVec2(p2.x + s2.x, p2.y + s2.y), ImColor(18, 20, 21, 200), 5, ImDrawCornerFlags_Bot); // Background
                 draw->AddRectFilled(ImVec2(p2.x, p2.y + 24), ImVec2(p2.x + s2.x, p2.y + 25), ImColor(MenuCol)); // Line
                 draw->AddText(ImVec2(p2.x + 15 / 2, p2.y + 13 / 2), ImColor(255, 255, 255, 255), _(ICON_FA_USER "  Playerlist"));
             }
 
-            ImGui::SetCursorPosY(40);
+            ImGui::SetCursorPosY(32);
 
             if (ImGui::BeginTable(_("PlayerList"), 4, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_Reorderable)) {
 
@@ -1474,7 +1589,9 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
         {
             {
                 MenuCol = ImGui::GetStyle().Colors[ImGuiCol_MenuBarBg];
-                s = ImVec2(ImGui::GetWindowSize().x - ImGui::GetStyle().WindowPadding.x * 2, ImGui::GetWindowSize().y - ImGui::GetStyle().WindowPadding.y * 2); p = ImVec2(ImGui::GetWindowPos().x + ImGui::GetStyle().WindowPadding.x, ImGui::GetWindowPos().y + ImGui::GetStyle().WindowPadding.y); auto draw = ImGui::GetWindowDrawList();
+                s = ImVec2(ImGui::GetWindowSize().x - ImGui::GetStyle().WindowPadding.x * 2, ImGui::GetWindowSize().y - ImGui::GetStyle().WindowPadding.y * 2);
+                p = ImVec2(ImGui::GetWindowPos().x + ImGui::GetStyle().WindowPadding.x, ImGui::GetWindowPos().y + ImGui::GetStyle().WindowPadding.y); auto draw = ImGui::GetWindowDrawList();
+                ImGui::GetBackgroundDrawList()->AddRect({ p.x,p.y }, { p.x + s.x, p.y + s.y }, ImColor(15, 17, 19, 255));
                 draw->AddRectFilled(p, ImVec2(p.x + s.x, p.y + s.y + 40), ImColor(15, 17, 19, 200), 5); // Titlebar
                 draw->AddRectFilled(ImVec2(p.x, p.y + 40), ImVec2(p.x + s.x, p.y + s.y), ImColor(18, 20, 21, 200), 5, ImDrawCornerFlags_Bot); // Background
 
@@ -1485,15 +1602,15 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
             }
             {
                 ImGui::PushFont(font);
-                ImGui::SetCursorPosX(ImGui::GetWindowSize().x - 72 * 6.7); // 6 = how much tabs, .7 = how much tabs + 0.1
+                ImGui::SetCursorPosX(ImGui::GetWindowSize().x - 71 * 6.7); // 6 = how much tabs, .7 = how much tabs + 0.1
                 ImGui::BeginGroup();
                 ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0,0 });
-                if (ImGui::tab(_(ICON_FA_CROSSHAIRS " Aimbot"), tab == 0))tab = 0; ImGui::SameLine();
-                if (ImGui::tab(_(ICON_FA_EXPAND " Triggerbot"), tab == 1, 90))tab = 1; ImGui::SameLine();
-                if (ImGui::tab(_(ICON_FA_EYE " ESP"), tab == 2))tab = 2; ImGui::SameLine();
-                if (ImGui::tab(_(ICON_FA_PALETTE " Visuals"), tab == 3))tab = 3; ImGui::SameLine();
-                if (ImGui::tab(_(ICON_FA_COGS " Misc"), tab == 4))tab = 4; ImGui::SameLine();
-                if (ImGui::tab(_(ICON_FA_FILE " Config"), tab == 5))tab = 5;
+                if (ImGui::Tab(_(ICON_FA_CROSSHAIRS " Aimbot"), tab == 0))tab = 0; ImGui::SameLine();
+                if (ImGui::Tab(_(ICON_FA_EXPAND " Triggerbot"), tab == 1, 90))tab = 1; ImGui::SameLine();
+                if (ImGui::Tab(_(ICON_FA_EYE " ESP"), tab == 2))tab = 2; ImGui::SameLine();
+                if (ImGui::Tab(_(ICON_FA_PALETTE " Visuals"), tab == 3))tab = 3; ImGui::SameLine();
+                if (ImGui::Tab(_(ICON_FA_COGS " Misc"), tab == 4))tab = 4; ImGui::SameLine();
+                if (ImGui::Tab(_(ICON_FA_FILE " Config"), tab == 5))tab = 5;
                 
                 ImGui::PopStyleVar();
                 ImGui::EndGroup();
@@ -1533,7 +1650,7 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
                         break;
                     }
                     default: {
-                        ImGui::SetCursorPosX(15);
+                        ImGui::SetCursorPosX(7);
                         ImGui::Text(_("How the fuck did you manage to get here?\nInvalid tab value : 5 / %d"), tab);
                     }
                 }
@@ -1541,6 +1658,7 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
             }
             ImGui::End();
         }
+        ImGui::PopStyleVar();
 	}
 
 	ImGui::EndFrame();

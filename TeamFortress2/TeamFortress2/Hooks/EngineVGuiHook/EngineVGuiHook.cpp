@@ -11,6 +11,7 @@
 #include "../../Features/Playerlist/Playerlist.h"
 
 int ticksChoked = 0;
+int nig = 0;
 std::time_t CurzTime = std::time(nullptr);
 
 void __stdcall EngineVGuiHook::Paint::Hook(int mode)
@@ -52,13 +53,13 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 		}
 
 		StartDrawing(g_Interfaces.Surface);
+
 		{
+
 			g_ESP.Run();
 
 			auto OtherDraws = [&]() -> void
 			{
-				if (g_Interfaces.EngineVGui->IsGameUIVisible())
-					return;
 
 				//Tickbase info
 				if (Vars::Misc::CL_Move::Doubletap.m_Var)
@@ -81,7 +82,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 									//printf("i: %d\n", i);
 									for (int j = MAX_NEW_COMMANDS_HEAVY - g_GlobalInfo.m_nShifted; j <= MAX_NEW_COMMANDS_HEAVY; j++) {
 										//printf("j: %d\n", j);
-										ticksChoked = j;
+										g_GlobalInfo.m_nticksChoked = j;
 										break;
 									}
 								}
@@ -92,7 +93,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 									//printf("i: %d\n", i);
 									for (int j = g_GlobalInfo.MaxNewCommands - g_GlobalInfo.m_nShifted; j <= g_GlobalInfo.MaxNewCommands; j++) {
 										//printf("j: %d\n", j);
-										ticksChoked = j;
+										g_GlobalInfo.m_nticksChoked = j;
 										break;
 									}
 								}
@@ -100,13 +101,19 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							}
 							int tickWidth = 5;
 							int barWidth = (tickWidth * ticks) + 2;
-
-							g_Draw.Rect(g_ScreenSize.c - (barWidth / 2), nY + 50, barWidth, 6, { 40,40,40,255 });
-							g_Draw.OutlinedRect(g_ScreenSize.c - (barWidth / 2),nY + 50, barWidth,6,{ 0, 0, 0, 255 });
-							g_Draw.GradientRect(g_ScreenSize.c - (barWidth / 2) + 1, nY + 51, (g_ScreenSize.c - (barWidth / 2) + 1) + tickWidth * ticksChoked, nY + 51 + 4, { 0,0,0,255 }, Vars::Menu::Colors::WidgetActive, true);
+							g_Draw.Rect(g_ScreenSize.c - (barWidth / 2), nY + 50, barWidth, 6, { 40,40,40,g_GlobalInfo.barAlpha });
+							g_Draw.OutlinedRect(g_ScreenSize.c - (barWidth / 2), nY + 50, barWidth, 6, { 0, 0, 0, g_GlobalInfo.barAlpha });
+							g_Draw.GradientRect(g_ScreenSize.c - (barWidth / 2) + 1, nY + 51, (g_ScreenSize.c - (barWidth / 2) + 1) + tickWidth * g_GlobalInfo.m_nticksChoked, nY + 51 + 4, { 0,0,0,g_GlobalInfo.barAlpha }, 
+								{
+									Vars::Menu::Colors::WidgetActive.r,
+									Vars::Menu::Colors::WidgetActive.g,
+									Vars::Menu::Colors::WidgetActive.b,
+									g_GlobalInfo.barAlpha
+								}, true);
 						}
 					}
 				}
+
 				//Current Active Aimbot FOV
 				if (Vars::Visuals::AimFOVAlpha.m_Var && g_GlobalInfo.m_flCurAimFOV)
 				{
@@ -121,52 +128,51 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 					}
 				}
 			};
-			OtherDraws();
+			if (!(g_Interfaces.EngineVGui->IsGameUIVisible() || (Vars::Misc::CleanScreenshot.m_Var && g_Interfaces.Engine->IsTakingScreenshot()))) {
+				OtherDraws();
 
-			g_Visuals.RunEventLogs();
-			g_Misc.BypassPure();
-			g_SpyWarning.Run();
-			g_SpectatorList.Run();
-			//g_Playerlist.DrawPlayers();
-			g_Radar.Run();
-			//g_Menu.Run(); // Goodbye old menu :wave:
+				g_Visuals.RunEventLogs();
+				g_Misc.BypassPure();
+				g_SpyWarning.Run();
+				g_SpectatorList.Run();
+				g_Radar.Run();
 
-			int width = g_ScreenSize.w;
-			int	height = g_ScreenSize.h;
-			static wchar_t buff[512];
-			int label_w, label_h;
-			static int nignog = 0;
-			static auto fps = 0;
-			static auto nme = g_GlobalInfo.uname;
+				int width = g_ScreenSize.w;
+				int	height = g_ScreenSize.h;
+				static wchar_t buff[512];
+				int label_w, label_h;
+				static int nignog = 0;
+				static auto fps = 0;
 
-			static float flPressedTime = g_Interfaces.Engine->Time();
-			float flElapsed = g_Interfaces.Engine->Time() - flPressedTime;
+				static float flPressedTime = g_Interfaces.Engine->Time();
+				float flElapsed = g_Interfaces.Engine->Time() - flPressedTime;
 
-			if (flElapsed > 0.4f) {
-				fps = static_cast<int>(1.f / g_Interfaces.GlobalVars->frametime);
-				flPressedTime = g_Interfaces.Engine->Time();
-			}
+				if (flElapsed > 0.4f) {
+					fps = static_cast<int>(1.f / g_Interfaces.GlobalVars->frametime);
+					flPressedTime = g_Interfaces.Engine->Time();
+				}
 
-			int ms = std::max(0, (int)std::round(g_GlobalInfo.m_Latency * 1000.f));
-			// Change admin to something else if you really need to, it was for the protection thing
-			_snwprintf(buff, sizeof(buff), _(L"CAM [v1.2b] | admin | fps: %i | delay: %ims") ,fps, ms);
+				int ms = std::max(0, (int)std::round(g_GlobalInfo.m_Latency * 1000.f));
+				// Change admin to something else if you really need to, it was for the protection thing
+				_snwprintf(buff, sizeof(buff), _(L"CAM [v1.3] | fps: %i | delay: %ims") ,fps, ms);
 
-			g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_MENU].dwFont, buff, label_w, label_h);
+				g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_MENU].dwFont, buff, label_w, label_h);
 
-			int boxw = label_w + 10;
+				int boxw = label_w + 10;
 
-			if (g_Interfaces.Engine->IsInGame())
-			{
-				auto nci = g_Interfaces.Engine->GetNetChannelInfo();
-
-				if (nci)
+				if (g_Interfaces.Engine->IsInGame())
 				{
-					//ms = 1.f / nci->GetLatency(FLOW_INCOMING);
-					//ms = std::max(0, (int)std::round(g_GlobalInfo.m_Latency * 1000.f));
+					auto nci = g_Interfaces.Engine->GetNetChannelInfo();
 
-					g_Draw.Rect(width - 10 - boxw, 11, boxw, 18, { 0, 0, 0, 200 });
-					g_Draw.Rect(width - 10 - boxw, 10, boxw, 2, Vars::Menu::Colors::WidgetActive);
-					g_Draw.String(FONT_MENU, width - 10 - boxw + 5, 20, { 255,255,255,255 }, ALIGN_CENTERVERTICAL, buff);
+					if (nci)
+					{
+						//ms = 1.f / nci->GetLatency(FLOW_INCOMING);
+						//ms = std::max(0, (int)std::round(g_GlobalInfo.m_Latency * 1000.f));
+
+						g_Draw.Rect(width - 10 - boxw, 11, boxw, 18, { 0, 0, 0, 200 });
+						g_Draw.Rect(width - 10 - boxw, 10, boxw, 2, Vars::Menu::Colors::WidgetActive);
+						g_Draw.String(FONT_MENU, width - 10 - boxw + 5, 20, { 255,255,255,255 }, ALIGN_CENTERVERTICAL, buff);
+					}
 				}
 			}
 		}	

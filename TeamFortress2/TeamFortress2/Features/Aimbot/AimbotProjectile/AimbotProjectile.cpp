@@ -660,13 +660,7 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 		if (ShouldFire(pCmd))
 		{
 			pCmd->buttons |= IN_ATTACK;
-
-			/*
-			if (Vars::Misc::CL_Move::Enabled.m_Var && Vars::Misc::CL_Move::Doubletap.m_Var && (pCmd->buttons & IN_ATTACK) && !g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_nWaitForShift)
-			{
-				g_GlobalInfo.m_bShouldShift = true;
-			}
-			*/
+			
 			if (g_GlobalInfo.m_nCurItemDefIndex == Soldier_m_TheBeggarsBazooka)
 			{
 				if (pWeapon->GetClip1() > 0)
@@ -683,10 +677,12 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 		bool bIsAttacking = IsAttacking(pCmd, pWeapon);
 
 		if (bIsAttacking) {
+			/*
 			if (Vars::Chams::Players::HitboxThing.m_Var && abs(pCmd->tick_count - nLastTracerTick) > 1) {
 				g_Visuals.DrawHitboxMatrix(Target.m_pEntity, Colors::hitboxColor, Vars::Chams::Players::HitboxTimeThing.m_Var);
 				nLastTracerTick = pCmd->tick_count;
 			}
+			*/
 		}
 
 		if (Vars::Aimbot::Projectile::AimMethod.m_Var == 1)

@@ -241,7 +241,7 @@ void CVisuals::RunEventLogs()
 		g_Interfaces.Surface->GetTextSize(FONT_MENU_OUTLINED, Utils::ConvertUtf8ToWide(log.szText.c_str()).data(), w, h);
 		Color_t color = Vars::Menu::Colors::WidgetActive;
 
-		// I have to do it the ghetto way because woohooo!!!
+		// I have to do it the ghetto way because woohooo gradients suck ass on seowned for some reason!!!
 		g_Interfaces.Surface->SetDrawColor(0, 0, 0, log.flAlpha);
 		g_Interfaces.Surface->DrawFilledRectFade(w2 - 5, height - 2, w - 30 + width, height + 15, log.flAlpha, 0, true);
 		g_Draw.Rect(w2, height - 2, 2, 17, Vars::Menu::Colors::WidgetActive);
@@ -304,6 +304,9 @@ void CVisuals::ARatio() {
 		RatioVar->SetValue(ratio);
 	else
 		RatioVar->SetValue((35 * 0.1f) / 2);
+
+	if (Vars::Misc::CleanScreenshot.m_Var && g_Interfaces.Engine->IsTakingScreenshot()) // There's definitely a better way to do this
+		RatioVar->SetValue((35 * 0.1f) / 2);
 }
 
 void CVisuals::ViewmodelXYZ() {
@@ -319,7 +322,7 @@ void CVisuals::ViewmodelXYZ() {
 
 void CVisuals::ThirdPerson()
 {
-	if (const auto &pLocal = g_EntityCache.m_pLocal)
+	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
 		if (Vars::Visuals::ThirdPersonKey.m_Var)
 		{
@@ -334,11 +337,13 @@ void CVisuals::ThirdPerson()
 				}
 			}
 		}
-		
+
 		bool bIsInThirdPerson = g_Interfaces.Input->CAM_IsThirdPerson();
 
-		if (!Vars::Visuals::ThirdPerson.m_Var
-			|| ((!Vars::Visuals::RemoveScope.m_Var || !Vars::Visuals::RemoveZoom.m_Var) && pLocal->IsScoped()))
+		if (Vars::Misc::CleanScreenshot.m_Var && g_Interfaces.Engine->IsTakingScreenshot())
+			pLocal->ForceTauntCam(0);
+
+		if (!Vars::Visuals::ThirdPerson.m_Var || ((!Vars::Visuals::RemoveScope.m_Var || !Vars::Visuals::RemoveZoom.m_Var) && pLocal->IsScoped()))
 		{
 			if (bIsInThirdPerson)
 				pLocal->ForceTauntCam(0);
@@ -355,7 +360,7 @@ void CVisuals::ThirdPerson()
 
 			if (Vars::Visuals::ThirdPersonInstantYaw.m_Var)
 			{
-				if (const auto &pAnimState = pLocal->GetAnimState())
+				if (const auto& pAnimState = pLocal->GetAnimState())
 					pAnimState->m_flCurrentFeetYaw = g_GlobalInfo.m_vRealViewAngles.y;
 			}
 		}
@@ -401,7 +406,7 @@ void CVisuals::ModulateWorld()
 
 void CVisuals::UpdateWorldModulation()
 {
-	if (!Vars::Visuals::WorldModulation.m_Var) {
+	if (!Vars::Visuals::WorldModulation.m_Var || (Vars::Misc::CleanScreenshot.m_Var && g_Interfaces.Engine->IsTakingScreenshot())) {
 		RestoreWorldModulation();
 		return;
 	}

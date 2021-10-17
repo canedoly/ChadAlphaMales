@@ -10,6 +10,7 @@ void CHooks::Init()
 	MH_Initialize();
 	{
 		EndSceneHook::Init();
+		//ChatPrintfHook::Init();
 		Scoreboard::IsPlayerDominated::Init();
 	}
 
@@ -22,6 +23,17 @@ void CHooks::Init()
 		Table.Hook(PostEntity::index, &PostEntity::Hook);
 		Table.Hook(ShutDown::index, &ShutDown::Hook);
 		Table.Hook(FrameStageNotify::index, &FrameStageNotify::Hook);
+		//Table.Hook(DispatchUserMessage::index, &DispatchUserMessage::Hook);
+	}
+
+	if (g_Interfaces.ViewRender)
+	{
+		using namespace ViewRenderHook;
+
+		Table.Init(g_Interfaces.ViewRender);
+		Table.Hook(LevelInit::index, &LevelInit::Hook);
+		Table.Hook(LevelShutdown::index, &LevelShutdown::Hook);
+
 	}
 
 	if (g_Interfaces.ClientMode)
@@ -99,7 +111,7 @@ void CHooks::Init()
 	}
 
 	WndProcHook::WndProc = (WNDPROC)SetWindowLongPtr(m_hwWindow, GWL_WNDPROC, (LONG_PTR)WndProcHook::Hook);
-	
+
 	//Inventory expander
 	{
 		CTFInventoryManager* InventoryManager = nullptr;
@@ -186,6 +198,18 @@ void CHooks::Init()
 
 		Func.Hook(reinterpret_cast<void*>(SetColorModulation), reinterpret_cast<void*>(Hook));
 	}
+	
+	{
+		using namespace BulletTracers::FireBullet;
+
+		//fn FN = reinterpret_cast<fn>(g_Pattern.Find(_(L"client.dll"), L"E8 ? ? ? ? 8B 45 20 47")) + 0x1;
+		DWORD FireBulletAddress = g_Pattern.Find(_(L"client.dll"), _(L"E8 ? ? ? ? 8B 45 20 47")) + 1;
+		fn FireBulletHook = reinterpret_cast<fn>(((*(PDWORD)(FireBulletAddress)) + FireBulletAddress + 0x4));
+		UTIL_ParticleTracer = reinterpret_cast<UTIL_ParticleTracer_Fn>(g_Pattern.Find(L"client.dll", _(L"55 8B EC FF 75 08 E8 ? ? ? ? D9 EE 83")));
+		Func.Hook(reinterpret_cast<void*>(FireBulletHook), reinterpret_cast<void*>(Hook));
+		//fn FN = reinterpret_cast<fn>(g_Pattern.Find(_(L"client.dll"), _(L"E8 ? ? ? ? 8B 45 20 47")));
+	}
+	
 
 	if (MH_EnableHook(MH_ALL_HOOKS) != MH_STATUS::MH_OK)
 		WinAPI::MessageBoxW(0, _(L"MH failed to enable all hooks!"), _(L"ERROR!"), MB_ICONERROR);

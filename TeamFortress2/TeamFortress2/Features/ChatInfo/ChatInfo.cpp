@@ -48,10 +48,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 
 						sprintf(szBuff, _("\x4[CAM]\x1 CAT detected: \x3%s"), info.name);
 						g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(GET_INDEX_USERID(pEvent->GetInt(_("userid"))), szBuff);
-						{ // marked by other bots. r.i.p cl_drawline :(
-							// this will be detected by fedoraware and lmaobox easily.
-							// use 0xCA7 if you want to make more bots do the thing,
-							// most only care about being marked.
+						{
 							KeyValues* kv = new KeyValues(_("AchievementEarned"));
 							kv->SetInt(_("achievementID"), 0xCA8);
 							g_Interfaces.Engine->ServerCmdKeyValues(kv);
@@ -99,25 +96,6 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 				Exploits::cathook.run_auth();
 				g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(GET_INDEX_USERID(pEvent->GetInt(_("userid"))), tfm::format(_("\x3%s\x1 connected. (%s)"), pEvent->GetString(_("name")), pEvent->GetString(_("address"))).c_str());
 			}
-			/*
-			if (uNameHash == FNV1A::HashConst("player_disconnect")) {
-				const int nPlayer = pEvent->GetInt("userid");
-				PlayerInfo_t info;
-				char szBuff[255];
-				sprintf(szBuff, _("Detected player leaving"));
-				g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(GET_INDEX_USERID(pEvent->GetInt(_("userid"))), szBuff);
-				g_GlobalInfo.storedmis.push_back(info.userID);
-				if (g_Interfaces.Engine->GetPlayerInfo(nPlayer, &info)) {
-					if (m_known_bots.find(info.friendsID) == m_known_bots.end()) {
-						g_Visuals.AddToEventLog(_("Hurt %s for %i (%i health remaining)\n"), player_info.name, pEvent->GetInt(_("damageamount")), pEvent->GetInt(_("health")));
-						sprintf(szBuff, _("\x4[CAM]\x1 CAT left: \x3%s"), info.name);
-						g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(GET_INDEX_USERID(pEvent->GetInt(_("userid"))), szBuff);
-						g_GlobalInfo.storedmis.push_back(info.userID);
-						m_known_bots.erase(info.friendsID);
-					}
-				}
-			}
-			*/
 		}
 
 		if (uNameHash == FNV1A::HashConst(_("player_hurt")))
@@ -133,9 +111,14 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 			if (pAttacker == pLocal && pVictim != pLocal)
 			{
 				PlayerInfo_t player_info;
+				//CUserCmd pCmd;
 				if (!g_Interfaces.Engine->GetPlayerInfo(pVictim->GetIndex(), &player_info))
 					return;
 				const auto crit = pEvent->GetBool(_("crit"));
+
+				if (Vars::Chams::Players::HitboxThing.m_Var) {
+					g_Visuals.DrawHitboxMatrix(pVictim, Colors::hitboxColor, Vars::Chams::Players::HitboxTimeThing.m_Var);
+				}
 
 				if (crit) {
 					g_Visuals.AddToEventLog(_("Hurt %s for %i (%i health remaining) (crit)\n"), player_info.name, pEvent->GetInt(_("damageamount")), pEvent->GetInt(_("health")));
