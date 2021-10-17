@@ -95,7 +95,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	float fOldSide = pCmd->sidemove;
 	float fOldForward = pCmd->forwardmove;
 
-	auto AntiWarp = [](CUserCmd* cmd) -> void
+	/*auto AntiWarp = [](CUserCmd* cmd) -> void
 	{
 		if (dt.Charged == 0) {
 			dt.FastStop = false;
@@ -134,6 +134,28 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			}
 			else {
 				cmd->forwardmove = cmd->sidemove = 0.0f;
+			}
+		}
+		else {
+			dt.FastStop = false;
+		}
+	};*/
+
+	auto AntiWarp = [](CUserCmd* cmd) -> void
+	{
+		int shiftcheck = dt.ChargedReverse;
+
+		if (shiftcheck < 19)
+		{
+			if (shiftcheck < 6)
+			{
+				cmd->forwardmove *= -1;
+				cmd->sidemove *= -1;
+			}
+			else
+			{
+				cmd->forwardmove = 0;
+				cmd->sidemove = 0;
 			}
 		}
 		else {

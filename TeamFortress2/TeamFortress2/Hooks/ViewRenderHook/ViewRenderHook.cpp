@@ -10,6 +10,7 @@ void __stdcall ViewRenderHook::LevelInit::Hook() {
 	dt.Shifting = false;
 	dt.Recharging = false;
 	dt.Charged = 0;
+	dt.ChargedReverse = dt.ToShift;
 	dt.ToWait = 0;
 	
 	Table.Original<fn>(index)(g_Interfaces.ViewRender);

@@ -35,6 +35,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 		dt.barAlpha = 255;
 		dt.FastStop = false;
 		dt.Charged++;
+		dt.ChargedReverse--;
 		dt.ToWait = DT_WAIT_CALLS;
 		return;
 	}
@@ -66,12 +67,14 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 				}
 				if (!Vars::Misc::CL_Move::NotInAir.m_Var) {
 					Func.Original<fn>()(accumulated_extra_samples, (dt.Charged == 1)); //this doubletaps
+					dt.ChargedReverse++;
 					dt.Charged--;
 				}
 				if (Vars::Misc::CL_Move::NotInAir.m_Var) {
 
 					if (pLocal->IsOnGround()) {
 						Func.Original<fn>()(accumulated_extra_samples, (dt.Charged == 1)); //this doubletaps
+						dt.ChargedReverse++;
 						dt.Charged--;
 					}
 					else {
