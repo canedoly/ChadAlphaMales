@@ -105,12 +105,12 @@ void CChams::Init()
 		\n}\n")
 		});
 
-	m_pMatAA = Utils::CreateMaterial({
+	/*m_pMatAA = Utils::CreateMaterial({
 		_("\"UnlitGeneric\"\
 		\n{\
 		\n\t\"$basetexture\" \"vgui/white_additive\"\
 		\n}\n")
-		});
+		});*/
 }
 
 void CChams::Delete() {
@@ -120,7 +120,7 @@ void CChams::Delete() {
 	m_pMatBrick = nullptr;
 	m_pMatShiny = nullptr;
 	m_pMatFlat = nullptr;
-	m_pMatAA = nullptr;
+	//m_pMatAA = nullptr;
 }
 
 void CChams::Render()

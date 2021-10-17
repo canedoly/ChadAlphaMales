@@ -10,12 +10,13 @@ void CHooks::Init()
 	MH_Initialize();
 	{
 		EndSceneHook::Init();
-		ChatPrintfHook::Init();
+		//ChatPrintfHook::Init();
 		Scoreboard::IsPlayerDominated::Init();
 	}
 
 	if (g_Interfaces.Client)
 	{
+		
 		using namespace ClientHook;
 
 		Table.Init(g_Interfaces.Client);
@@ -23,6 +24,7 @@ void CHooks::Init()
 		Table.Hook(PostEntity::index, &PostEntity::Hook);
 		Table.Hook(ShutDown::index, &ShutDown::Hook);
 		Table.Hook(FrameStageNotify::index, &FrameStageNotify::Hook);
+		Table.Hook(WriteUserCmdDeltaToBuffer::index, &WriteUserCmdDeltaToBuffer::Hook);
 		//Table.Hook(DispatchUserMessage::index, &DispatchUserMessage::Hook);
 	}
 
