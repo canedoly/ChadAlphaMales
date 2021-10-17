@@ -451,6 +451,7 @@ void CConfigManager::Save(const wchar_t *name)
 //#ifdef DEVELOPER_BUILD
 			SAVE_VAR(Vars::Visuals::Skins::Enabled);
 //#endif
+			SAVE_VAR(Vars::Visuals::TracerEffect);
 		}
 
 		//Misc
@@ -893,6 +894,7 @@ void CConfigManager::Load(const wchar_t *name)
 //#ifdef DEVELOPER_BUILD
 			LOAD_VAR(Vars::Visuals::Skins::Enabled);
 //#endif
+			LOAD_VAR(Vars::Visuals::TracerEffect);
 		}
 
 		//Misc

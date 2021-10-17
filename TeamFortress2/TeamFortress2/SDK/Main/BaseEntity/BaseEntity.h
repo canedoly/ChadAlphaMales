@@ -121,6 +121,12 @@ public: //Virtuals from renderable
 		GetVFunc<void(__thiscall*)(void*, Vec3&, Vec3&)>(pRend, 20)(pRend, vMins, vMaxs);
 	}
 
+	__inline Vec3 GetMuzzlePos() {
+		Vec3 vec;
+		GetVFunc<void(__thiscall*)(void*, Vec3&)>(this, 277)(this, vec);
+		return vec;
+	}
+
 	__inline bool SetupBones(matrix3x4* pOut, int nMax, int nMask, float flTime) {
 		const auto pRend = Renderable();
 		return GetVFunc<bool(__thiscall*)(void*, matrix3x4*, int, int, float)>(pRend, 16)(pRend, pOut, nMax, nMask, flTime);
@@ -129,6 +135,12 @@ public: //Virtuals from renderable
 	__inline int DrawModel(int nFlags) {
 		const auto pRend = Renderable();
 		return GetVFunc<int(__thiscall*)(void*, int)>(pRend, 10)(pRend, nFlags);
+	}
+
+	__inline int LookupAttachment(const char* pAttachmentName)
+	{
+		const auto pRend = Renderable();
+		return GetVFunc<int(__thiscall*)(void*, const char*)>(pRend, 35)(pRend, pAttachmentName);
 	}
 
 public: //Virtuals from networkable

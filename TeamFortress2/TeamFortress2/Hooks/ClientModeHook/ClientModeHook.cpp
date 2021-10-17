@@ -102,31 +102,38 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		}
 
 		if (auto& pLocal = g_EntityCache.m_pLocal) {
-			Vec3 velocity = pLocal->GetVelocity();
-			Vec3 direction; Math::VectorAngles(velocity, direction);
-			float speed = velocity.Lenght2D();	
+			if (dt.Charged > dt.ToShift - 5) {
+				return;
+			}
+			if (dt.Charged > 10) {
+				Vec3 vel = pLocal->GetVelocity();
 
-			direction.y = cmd->viewangles.y - direction.y;
+				static auto sv_friction = g_Interfaces.CVars->FindVar("sv_friction");
+				static auto sv_stopspeed = g_Interfaces.CVars->FindVar("sv_stopspeed");
 
-			Vec3 negated_direction; Math::AngleVectors(direction, &negated_direction);
-			negated_direction *= -speed;
-			if (dt.Charged > 0) {
-				if (speed > 5.0f) {
-					
+				auto speed = vel.Lenght2D();
+				auto friction = sv_friction->GetFloat() * *reinterpret_cast<float*>(pLocal + 0x12b8);
+				auto control = (speed < sv_stopspeed->GetFloat()) ? sv_stopspeed->GetFloat() : speed;
+				auto drop = control * friction * g_Interfaces.GlobalVars->interval_per_tick;
+
+				if (speed > drop - 1.0f) {
+					Vec3 velocity = vel;
+					Vec3 direction;
+					Math::VectorAngles(vel, direction);
+					float speed = velocity.Lenght();
+
+					direction.y = cmd->viewangles.y - direction.y;
+
+					Vec3 forward;
+					Math::AngleVectors(direction, &forward);
+					Vec3 negated_direction = forward * -speed;
+
 					cmd->forwardmove = negated_direction.x;
 					cmd->sidemove = negated_direction.y;
-					cmd->forwardmove = cmd->sidemove = 0.0f;
 				}
-				else {
-					cmd->forwardmove = cmd->sidemove = 0.0f;
-				}
-				/*if (speed > 5.0f) {
-					cmd->forwardmove *= -1.f;
-					cmd->sidemove *= -1.f;
-				}
-				else {
-					cmd->forwardmove = cmd->sidemove = 0.f;
-				}*/
+			}
+			else {
+				cmd->forwardmove = cmd->sidemove = 0.0f;
 			}
 		}
 		else {
@@ -144,6 +151,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
+		Ray_t trace;
 		g_GlobalInfo.m_Latency = g_Interfaces.ClientState->m_NetChannel->GetLatency(0);
 		nOldFlags = pLocal->GetFlags();
 

@@ -594,7 +594,9 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 
 			if (Vars::Misc::CL_Move::Doubletap.m_Var && (pCmd->buttons & IN_ATTACK) && (dt.Charged > 0) && (dt.ToWait == 0))
 			{
-				dt.Shifting = true;
+				if (GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) {
+					dt.Shifting = true;
+				}
 			}
 
 			if (g_GlobalInfo.m_bAAActive && !g_GlobalInfo.m_bWeaponCanAttack)

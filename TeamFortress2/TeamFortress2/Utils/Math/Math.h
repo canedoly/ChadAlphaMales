@@ -330,6 +330,10 @@ public:
 		return (x * x + y * y + z * z);
 	}
 
+	__forceinline void Clear() {
+		x = y = z = 0.f;
+	}
+
 	float Normalize()
 	{
 		float fl_lenght = Lenght();

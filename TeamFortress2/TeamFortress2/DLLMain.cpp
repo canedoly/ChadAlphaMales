@@ -33,7 +33,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		Adding "ntdll.dll" seems to fix SOME of the crashing issues which is kind of funny
 	*/
 
-	while (!WinAPI::GetModuleHandleW(_(L"mss32.dll")) || !WinAPI::GetModuleHandleW(_(L"ntdll.dll")))
+	while (!WinAPI::GetModuleHandleW(_(L"mss32.dll")) || !WinAPI::GetModuleHandleW(_(L"ntdll.dll")) || !WinAPI::GetModuleHandleW(_(L"stdshader_dx9.dll")))
 		std::this_thread::sleep_for(std::chrono::seconds(5));
 	
 	g_SteamInterfaces.Init();

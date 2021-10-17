@@ -424,6 +424,8 @@ namespace Vars
 
 		inline CVar<bool> PlayerList				{ false, L"Playerlist" };
 
+		inline CVar<int> TracerEffect{ 0, L"Tracer style" };
+
 		namespace Skins
 		{
 			inline CVar<bool> Enabled				{ false, L"Active" };

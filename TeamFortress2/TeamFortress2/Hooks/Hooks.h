@@ -21,6 +21,7 @@
 #include "InventoryExpander/InventoryExpander.h"
 #include "ViewRenderHook/ViewRenderHook.h"
 #include "ChatPrintfHook/ChatPrintfHook.h"
+#include "BulletTracer/BulletTracer.h"
 
 class CHooks
 {

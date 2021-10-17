@@ -49,7 +49,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 
 		if (dt.Shifting) {
 			if (const auto& pLocal = g_EntityCache.m_pLocal) {
-				while (dt.Charged < dt.ToShift + 1)
+				while (dt.Charged != 0)//< dt.ToShift + 1) // THIS IS BAD
 				{
 					dt.FastStop = true;
 					if (!dt.Shifting) {

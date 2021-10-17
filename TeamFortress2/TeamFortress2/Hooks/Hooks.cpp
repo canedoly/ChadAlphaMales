@@ -1,6 +1,5 @@
 #include "Hooks.h"
 #include "../SDK/SDK.h"
-
 inline uintptr_t GetVFuncPtr(void* pBaseClass, unsigned int nIndex) {
 	return static_cast<uintptr_t>((*static_cast<int**>(pBaseClass))[nIndex]);
 }
@@ -10,6 +9,7 @@ void CHooks::Init()
 	MH_Initialize();
 	{
 		EndSceneHook::Init();
+
 		//ChatPrintfHook::Init();
 		Scoreboard::IsPlayerDominated::Init();
 	}
@@ -113,7 +113,7 @@ void CHooks::Init()
 	}
 
 	WndProcHook::WndProc = (WNDPROC)SetWindowLongPtr(m_hwWindow, GWL_WNDPROC, (LONG_PTR)WndProcHook::Hook);
-	
+
 	//Inventory expander
 	{
 		CTFInventoryManager* InventoryManager = nullptr;
@@ -199,6 +199,17 @@ void CHooks::Init()
 		fn SetColorModulation = reinterpret_cast<fn>(GetVFuncPtr(g_Interfaces.StudioRender, 27));
 
 		Func.Hook(reinterpret_cast<void*>(SetColorModulation), reinterpret_cast<void*>(Hook));
+	}
+
+	{
+		using namespace BulletTracers::FireBullet;
+
+		//fn FN = reinterpret_cast<fn>(g_Pattern.Find(_(L"client.dll"), L"E8 ? ? ? ? 8B 45 20 47")) + 0x1;
+		DWORD FireBulletAddress = g_Pattern.Find(_(L"client.dll"), _(L"E8 ? ? ? ? 8B 45 20 47")) + 1;
+		fn FireBulletHook = reinterpret_cast<fn>(((*(PDWORD)(FireBulletAddress)) + FireBulletAddress + 0x4));
+		UTIL_ParticleTracer = reinterpret_cast<UTIL_ParticleTracer_Fn>(g_Pattern.Find(L"client.dll", _(L"55 8B EC FF 75 08 E8 ? ? ? ? D9 EE 83")));
+		Func.Hook(reinterpret_cast<void*>(FireBulletHook), reinterpret_cast<void*>(Hook));
+		//fn FN = reinterpret_cast<fn>(g_Pattern.Find(_(L"client.dll"), _(L"E8 ? ? ? ? 8B 45 20 47")));
 	}
 
 	if (MH_EnableHook(MH_ALL_HOOKS) != MH_STATUS::MH_OK)

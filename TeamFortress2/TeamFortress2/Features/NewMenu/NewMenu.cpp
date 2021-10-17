@@ -940,6 +940,14 @@ void VisualsTab() {
             ImGui::Checkbox(_("Chat info"), &Vars::Visuals::ChatInfo.m_Var);
             ImGui::Checkbox(_("PlayerList"), &Vars::Visuals::PlayerList.m_Var);
             ImGui::Checkbox(_("Vote revealer"), &Vars::Misc::VoteRevealer.m_Var);
+            static const char* weaponTracer[]{
+                "None",
+                "Machina",
+                "Capper",
+                "Merasmus Vortex",
+                "Merasmus Zap",
+            };
+            ImGui::Combo(_("Bullet Tracer"), &Vars::Visuals::TracerEffect.m_Var, weaponTracer, IM_ARRAYSIZE(weaponTracer));
         }
         ImGui::EndChild();
         ImGui::EndGroup();
