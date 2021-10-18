@@ -118,11 +118,13 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 					}
 				}
 			};
+
+			g_Misc.BypassPure();
+
 			if (!(g_Interfaces.EngineVGui->IsGameUIVisible() || (Vars::Misc::CleanScreenshot.m_Var && g_Interfaces.Engine->IsTakingScreenshot()))) {
 				OtherDraws();
 
 				g_Visuals.RunEventLogs();
-				g_Misc.BypassPure();
 				g_SpyWarning.Run();
 				g_SpectatorList.Run();
 				g_Radar.Run();
