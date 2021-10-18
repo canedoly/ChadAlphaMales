@@ -16,6 +16,8 @@ bool __fastcall Scoreboard::IsPlayerDominated::Hook(void* ecx, void* edx, int in
     return bResult;
 }
 
+
+
 void Scoreboard::IsPlayerDominated::Init()
 {
     fny FN = reinterpret_cast<fny>(g_Pattern.Find(

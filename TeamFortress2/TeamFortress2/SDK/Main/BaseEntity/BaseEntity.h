@@ -9,6 +9,28 @@
 	return GetVFunc<fn>(pBase, index)(pBase); \
 }
 
+class CPlayerSimInfo
+{
+public:
+	CPlayerSimInfo() :
+		m_flTime(0.0f), m_nNumCmds(0), m_nTicksCorrected(0), m_flFinalSimulationTime(0.0f), m_flGameSimulationTime(0.0f), m_flServerFrameTime(0.0f), m_vecAbsOrigin(0, 0, 0)
+	{
+	}
+
+	// realtime of sample
+	float		m_flTime;
+	// # of CUserCmds in this update
+	int			m_nNumCmds;
+	// If clock needed correction, # of ticks added/removed
+	int			m_nTicksCorrected; // +ve or -ve
+	// player's m_flSimulationTime at end of frame
+	float		m_flFinalSimulationTime;
+	float		m_flGameSimulationTime;
+	// estimate of server perf
+	float		m_flServerFrameTime;
+	Vector		m_vecAbsOrigin;
+};
+
 class CBaseEntity
 {
 public: //Netvars & conditions
@@ -99,6 +121,12 @@ public: //Virtuals from renderable
 		GetVFunc<void(__thiscall*)(void*, Vec3&, Vec3&)>(pRend, 20)(pRend, vMins, vMaxs);
 	}
 
+	__inline Vec3 GetMuzzlePos() {
+		Vec3 vec;
+		GetVFunc<void(__thiscall*)(void*, Vec3&)>(this, 277)(this, vec);
+		return vec;
+	}
+
 	__inline bool SetupBones(matrix3x4* pOut, int nMax, int nMask, float flTime) {
 		const auto pRend = Renderable();
 		return GetVFunc<bool(__thiscall*)(void*, matrix3x4*, int, int, float)>(pRend, 16)(pRend, pOut, nMax, nMask, flTime);
@@ -107,6 +135,12 @@ public: //Virtuals from renderable
 	__inline int DrawModel(int nFlags) {
 		const auto pRend = Renderable();
 		return GetVFunc<int(__thiscall*)(void*, int)>(pRend, 10)(pRend, nFlags);
+	}
+
+	__inline int LookupAttachment(const char* pAttachmentName)
+	{
+		const auto pRend = Renderable();
+		return GetVFunc<int(__thiscall*)(void*, const char*)>(pRend, 35)(pRend, pAttachmentName);
 	}
 
 public: //Virtuals from networkable

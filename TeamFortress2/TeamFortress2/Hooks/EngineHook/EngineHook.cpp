@@ -8,7 +8,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 {
 	if (Vars::Misc::CL_Move::Doubletap.m_Var)
 	{
-		g_GlobalInfo.fast_stop = false;
+		dt.FastStop = false;
 		/*
 		if (Vars::Misc::CL_Move::TeleportKey.m_Var && (GetAsyncKeyState(Vars::Misc::CL_Move::TeleportKey.m_Var)) && !g_GlobalInfo.m_nShifted) //teleport
 		{
@@ -25,126 +25,69 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 		}
 		*/
 		if (GetAsyncKeyState(Vars::Misc::CL_Move::RechargeKey.m_Var)) {//recharge key
-			g_GlobalInfo.fast_stop = false;
-			g_GlobalInfo.m_bRecharging = true;
+			dt.FastStop = false;
+			dt.Recharging = true;
 		}
 	}
-	
-	if (g_GlobalInfo.m_bRecharging && g_GlobalInfo.m_nShifted) //recharge
+
+	if (dt.Recharging && dt.Charged != dt.ToShift) //recharge
 	{
-		g_GlobalInfo.fast_stop = false;
-		g_GlobalInfo.m_nShifted--; //goes from 15 to 0
-		g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS;
+		dt.barAlpha = 255;
+		dt.FastStop = false;
+		dt.Charged++;
+		dt.ChargedReverse--;
+		dt.ToWait = DT_WAIT_CALLS;
 		return;
 	}
 	else {
-		g_GlobalInfo.fast_stop = false;
-		g_GlobalInfo.m_bRecharging = false;
+		dt.FastStop = false;
+		dt.Recharging = false;
 	}
 
+	Func.Original<fn>()(accumulated_extra_samples, (dt.Shifting && !dt.ToWait) ? true : bFinalTick);
 
-
-
-	Func.Original<fn>()(accumulated_extra_samples, (g_GlobalInfo.m_bShouldShift && !g_GlobalInfo.m_nWaitForShift) ? true : bFinalTick);
-
-	if (g_GlobalInfo.m_nWaitForShift)
+	if (dt.ToWait)
 	{
-		g_GlobalInfo.fast_stop = false;
-		g_GlobalInfo.m_nWaitForShift--;
+		dt.FastStop = false;
+		dt.ToWait--;
 		return;
 	}
-	/*
-	if (g_GlobalInfo.m_bShouldShift) {
-		const auto& pLocal = g_EntityCache.m_pLocal;
-		int nClass = pLocal->GetClassNum();
-		int dtTicks;
-		if (nClass == CLASS_HEAVY) {
-			dtTicks = MAX_NEW_COMMANDS_HEAVY;
-		}
-		else {
-			dtTicks = MAX_NEW_COMMANDS;
-		}
-
-		CUserCmd* pCmd;
-
-		if (GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) {
-			if (g_GlobalInfo.m_nShifted < dtTicks) { // do not try shifting without being charged
-				for (int i = pCmd->command_number + 1; i < pCmd->command_number + 22 + 1; i++) {
-					CUserCmd* future_cmd = g_Interfaces.Input->GetUserCmd(i % MULTIPLAYER_BACKUP);
-					if (future_cmd)
-						memcpy(future_cmd, pCmd, sizeof(CUserCmd)); // copy current command as default data
-
-					// set up the command
-					future_cmd->command_number = i;
-					future_cmd->hasbeenpredicted = true;
-
-					// verify the command
-					CVerifiedUserCmd* verified_cmd = GetVerifiedCmds(i % MULTIPLAYER_BACKUP);
-					if (verified_cmd)
-						memcpy(&verified_cmd->m_cmd, future_cmd, sizeof(CUserCmd));
-
-					// CNetChan::SetChoked, magic netchannel values hit p
-					//INetChannelInfo* nci = g_tf2.m_engine_client->GetNetChannelInfo();
-					INetChannelInfo* nci = g_Interfaces.Engine->GetNetChannelInfo();
-					if (nci) {
-						//Func.Original<fn>()(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == (dtTicks - 1))); //this doubletaps
-						GetVFunc<void(__thiscall*)(void*)>(nci, 45)(nci);
-					}
-					// manual offset for cl.chokedcommands, can be found reversing CL_SendMove
-					++* (int*)((int)L"engine.dll" + 0x469438);
-
-					verified_cmd->m_crc = future_cmd->GetChecksum();
-				}
-			}
-			g_GlobalInfo.fast_stop = false;
-
-			g_GlobalInfo.m_bShouldShift = false;
-		}
-	}
-	*/
-	if (g_GlobalInfo.m_bShouldShift)
+	if (dt.Shifting)
 	{
 		const auto& pLocal = g_EntityCache.m_pLocal;
 		if (!pLocal) // lol.
 			return;
 
-		int nClass = pLocal->GetClassNum();
-		int dtTicks;
-		if (nClass == CLASS_HEAVY) {
-			dtTicks = MAX_NEW_COMMANDS_HEAVY;
-		}
-		else {
-			dtTicks = g_GlobalInfo.MaxNewCommands;
-		}
-		
 		if (GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) {
-			g_GlobalInfo.fast_stop = true;
-			while (g_GlobalInfo.m_nShifted < dtTicks)
+			dt.FastStop = true;
+			while (dt.Charged != 0)
 			{
-				if (!g_GlobalInfo.m_bShouldShift) {
+				if (!dt.Shifting) {
 					return;
 				}
 				if (!Vars::Misc::CL_Move::NotInAir.m_Var) {
-					Func.Original<fn>()(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == (dtTicks - 1))); //this doubletaps
-					g_GlobalInfo.m_nShifted++;
+					Func.Original<fn>()(accumulated_extra_samples, (dt.Charged == 1)); //this doubletaps
+					dt.ChargedReverse++;
+					dt.Charged--;
 				}
 				if (Vars::Misc::CL_Move::NotInAir.m_Var) {
 
 					if (pLocal->IsOnGround()) {
-						Func.Original<fn>()(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == (dtTicks - 1))); //this doubletaps
-						g_GlobalInfo.m_nShifted++;
+						Func.Original<fn>()(accumulated_extra_samples, (dt.Charged == 1)); //this doubletaps
+						dt.ChargedReverse++;
+						dt.Charged--;
 					}
 					else {
-						g_GlobalInfo.fast_stop = false;
+						dt.FastStop = false;
 						return;
 					}
 				}
 			}
-			g_GlobalInfo.fast_stop = false;
+			dt.FastStop = false;
 		}
-		g_GlobalInfo.fast_stop = false;
+		dt.FastStop = false;
 
-		g_GlobalInfo.m_bShouldShift = false;
+		dt.Shifting = false;
 	}
-	
+
 }

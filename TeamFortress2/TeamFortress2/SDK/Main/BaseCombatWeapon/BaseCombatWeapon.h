@@ -24,6 +24,8 @@ public: //Virtuals
 	M_VIRTUALGET(DamageType, int, this, int(__thiscall*)(void*), 378)
 	M_VIRTUALGET(FinishReload, void, this, void(__thiscall*)(void*), 275)
 	M_VIRTUALGET(BulletSpread, Vec3&, this, Vec3&(__thiscall*)(void*), 286)
+	//M_VIRTUALGET(MuzzleAttachmenetFP, int, this, int(__thiscall*)(void*), 468)
+	//M_VIRTUALGET(MuzzleAttachmenetTP, int, this, int(__thiscall*)(void*), 469)
 
 public: //Everything else, lol
 	__inline float GetSmackTime() {
@@ -40,6 +42,10 @@ public: //Everything else, lol
 	__inline void SetItemDefIndex(const int nIndex) {
 		static auto dwOff = g_NetVars.get_offset(_("DT_EconEntity"), _("m_AttributeManager"), _("m_Item"), _("m_iItemDefinitionIndex"));
 		*reinterpret_cast<int*>(this + dwOff) = nIndex;
+	}
+
+	__inline bool GetAttachment(int number, Vec3& origin) {
+		return GetVFunc<bool(__thiscall*)(void*, int, Vec3&)>(this, 71)(this, number, origin);
 	}
 
 	__inline CBaseEntity* GetHealingTarget() {

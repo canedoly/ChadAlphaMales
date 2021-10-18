@@ -94,9 +94,55 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	float fOldSide = pCmd->sidemove;
 	float fOldForward = pCmd->forwardmove;
 
+	/*auto AntiWarp = [](CUserCmd* cmd) -> void
+	{
+		if (dt.Charged == 0) {
+			dt.FastStop = false;
+		}
+
+		if (auto& pLocal = g_EntityCache.m_pLocal) {
+			if (dt.Charged > dt.ToShift - 5) {
+				return;
+			}
+			if (dt.Charged > 10) {
+				Vec3 vel = pLocal->GetVelocity();
+
+				static auto sv_friction = g_Interfaces.CVars->FindVar("sv_friction");
+				static auto sv_stopspeed = g_Interfaces.CVars->FindVar("sv_stopspeed");
+
+				auto speed = vel.Lenght2D();
+				auto friction = sv_friction->GetFloat() * *reinterpret_cast<float*>(pLocal + 0x12b8);
+				auto control = (speed < sv_stopspeed->GetFloat()) ? sv_stopspeed->GetFloat() : speed;
+				auto drop = control * friction * g_Interfaces.GlobalVars->interval_per_tick;
+
+				if (speed > drop - 1.0f) {
+					Vec3 velocity = vel;
+					Vec3 direction;
+					Math::VectorAngles(vel, direction);
+					float speed = velocity.Lenght();
+
+					direction.y = cmd->viewangles.y - direction.y;
+
+					Vec3 forward;
+					Math::AngleVectors(direction, &forward);
+					Vec3 negated_direction = forward * -speed;
+
+					cmd->forwardmove = negated_direction.x;
+					cmd->sidemove = negated_direction.y;
+				}
+			}
+			else {
+				cmd->forwardmove = cmd->sidemove = 0.0f;
+			}
+		}
+		else {
+			dt.FastStop = false;
+		}
+	};*/
+
 	auto AntiWarp = [](CUserCmd* cmd) -> void
 	{
-		int shiftcheck = g_GlobalInfo.m_nShifted;
+		int shiftcheck = dt.ChargedReverse;
 
 		if (shiftcheck < 19)
 		{
@@ -112,12 +158,13 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			}
 		}
 		else {
-			g_GlobalInfo.fast_stop = false;
+			dt.FastStop = false;
 		}
 	};
 
 
-	if (g_GlobalInfo.fast_stop) {
+
+	if (dt.FastStop) {
 		AntiWarp(pCmd);
 	}
 
@@ -125,6 +172,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
+		Ray_t trace;
 		g_GlobalInfo.m_Latency = g_Interfaces.ClientState->m_NetChannel->GetLatency(0);
 		nOldFlags = pLocal->GetFlags();
 
@@ -133,7 +181,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			const int nItemDefIndex = pWeapon->GetItemDefIndex();
 
 			if (g_GlobalInfo.m_nCurItemDefIndex != nItemDefIndex || !pWeapon->GetClip1())
-				g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS;
+				dt.ToWait = DT_WAIT_CALLS;
 
 			g_GlobalInfo.m_nCurItemDefIndex = nItemDefIndex;
 			g_GlobalInfo.m_bWeaponCanHeadShot = pWeapon->CanWeaponHeadShot();
@@ -167,7 +215,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	else {
 		badcode++;
 	}
-
+  
 	g_Misc.Run(pCmd);
 	g_EnginePrediction.Start(pCmd);
 	{
@@ -275,6 +323,9 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		if (nChoked > 14)
 			*pSendPacket = true;
 	}
+
+	g_GlobalInfo.shiftedCmd = pCmd;
+	
 
 	return g_GlobalInfo.m_bSilentTime
 		|| g_GlobalInfo.m_bAAActive

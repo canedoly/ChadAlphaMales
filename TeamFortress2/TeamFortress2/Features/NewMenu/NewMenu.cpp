@@ -941,6 +941,24 @@ void VisualsTab() {
             ImGui::Checkbox(_("Remove Hats"), &Vars::Visuals::RemoveHats.m_Var);
             ImGui::Checkbox(_("PlayerList"), &Vars::Visuals::PlayerList.m_Var);
             ImGui::Checkbox(_("Vote revealer"), &Vars::Misc::VoteRevealer.m_Var);
+            static const char* weaponTracer[]{
+                "None",
+                "Machina",
+                "Capper",
+                "Merasmus Vortex",
+                "Merasmus Zap",
+            };
+            ImGui::Combo(_("Bullet Tracer"), &Vars::Visuals::TracerEffect.m_Var, weaponTracer, IM_ARRAYSIZE(weaponTracer));
+            static const char* ragdollEffect[]{
+                "None",
+                "Gib",
+                "Burning",
+                "Feign death",
+                "Become ash",
+                "Gold ragdoll",
+                "Ice ragdoll",
+            };
+            ImGui::Combo(_("Ragdoll effect"), &Vars::Visuals::RagdollEffect.m_Var, ragdollEffect, IM_ARRAYSIZE(ragdollEffect));
         }
         ImGui::EndChild();
         ImGui::EndGroup();
@@ -1088,9 +1106,9 @@ void MiscTab() {
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(MenuCol.x / 1.5, MenuCol.y / 1.5, MenuCol.z / 1.5, 255));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(MenuCol.x, MenuCol.y, MenuCol.z, 255));
             InputKeybind(_("DoubleTap Key"), Vars::Misc::CL_Move::DoubletapKey);
-            ImGui::SliderInt(_("Ticks to shift"), &g_GlobalInfo.MaxNewCommands, 10, 23, _("%d"), ImGuiSliderFlags_ClampOnInput);
+            ImGui::SliderInt(_("Ticks to shift"), &dt.ToShift, 10, 24, _("%d"), ImGuiSliderFlags_ClampOnInput);
             ImGui::Checkbox(_("Wait for DT"), &Vars::Misc::CL_Move::WaitForDT.m_Var);
-            ImGui::Checkbox(_("Don't DT in air"), &Vars::Misc::CL_Move::NotInAir.m_Var);
+            //ImGui::Checkbox(_("Don't DT in air"), &Vars::Misc::CL_Move::NotInAir.m_Var);
             ImGui::SetCursorPosX(8);
             ImGui::Text(_("Recharge Key"));
             plsfix(50);
