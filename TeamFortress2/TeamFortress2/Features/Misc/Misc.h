@@ -43,7 +43,8 @@ private:
 	void NoiseMakerSpam();
 	void InitSpamKV(void* pKV);
 	void ChatSpam();
-
+    void InstantRespawn();
+    void NoPush();
 public:
 
     Vec3 m_strafe_angles = { };
@@ -55,7 +56,6 @@ public:
     void EdgeJump(CUserCmd* pCmd, const int nOldFlags);
 	void BypassPure();
 	void AutoRocketJump(CUserCmd *pCmd);
-    void nopush();
 };
 
 inline CMisc g_Misc;

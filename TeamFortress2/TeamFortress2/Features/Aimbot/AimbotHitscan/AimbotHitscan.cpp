@@ -565,7 +565,7 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 		}
 
 		if (Vars::Misc::CL_Move::WaitForDT.m_Var) {
-			if (g_GlobalInfo.m_nWaitForShift && !g_GlobalInfo.m_nShifted && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) //if dt not ready and "ticks" = 0 and key is held, dont aimbot
+			if (dt.ToWait > 0 && (dt.Charged > 0) && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) //if dt not ready and "ticks" = 0 and key is held, dont aimbot
 				return;
 		}
 
@@ -592,13 +592,11 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 
 			pCmd->buttons |= IN_ATTACK;
 
-			if (Vars::Misc::CL_Move::Doubletap.m_Var && (pCmd->buttons & IN_ATTACK) && !g_GlobalInfo.m_nShifted && !g_GlobalInfo.m_nWaitForShift)
-			{/*
-				if (pLocal->GetClassNum() == CLASS_HEAVY && pWeapon->GetSlot() == SLOT_PRIMARY && !pLocal->GetVecVelocity().IsZero())
-					g_GlobalInfo.m_bShouldShift = false;
-				else*/
-				//FastStop(pCmd);
-				g_GlobalInfo.m_bShouldShift = true;
+			if (Vars::Misc::CL_Move::Doubletap.m_Var && (pCmd->buttons & IN_ATTACK) && (dt.Charged > 0) && (dt.ToWait == 0))
+			{
+				if (GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) {
+					dt.Shifting = true;
+				}
 			}
 
 			if (g_GlobalInfo.m_bAAActive && !g_GlobalInfo.m_bWeaponCanAttack)

@@ -25,6 +25,25 @@ void __stdcall ClientHook::ShutDown::Hook()
 	Table.Original<fn>(index)(g_Interfaces.Client);
 	g_EntityCache.Clear();
 }
+/*
+m_bGib (0xC91)
+m_bBurning (0xC92)
+m_bElectrocuted (0xC93)
+m_bFeignDeath (0xC96)
+m_bBecomeAsh (0xC99)
+m_bGoldRagdoll (0xCA0)
+m_bIceRagdoll (0xCA1)
+m_vecRagdollOrigin (0xC7C)
+*/
+void disableRagdollEffects(CBaseEntity* Ent) {
+	*reinterpret_cast<bool*>(Ent + 0xC91) = false;
+	*reinterpret_cast<bool*>(Ent + 0xC92) = false;
+	*reinterpret_cast<bool*>(Ent + 0xC93) = false;
+	*reinterpret_cast<bool*>(Ent + 0xC96) = false;
+	*reinterpret_cast<bool*>(Ent + 0xC99) = false;
+	*reinterpret_cast<bool*>(Ent + 0xCA0) = false;
+	*reinterpret_cast<bool*>(Ent + 0xCA1) = false;
+}
 
 void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 {
@@ -60,13 +79,69 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 		g_EntityCache.Clear();
 		break;
 	}
+		case EClientFrameStage::FRAME_NET_UPDATE_POSTDATAUPDATE_START: {
+			g_AttributeChanger.Run();
 
-												  //#ifdef DEVELOPER_BUILD
-	case EClientFrameStage::FRAME_NET_UPDATE_POSTDATAUPDATE_START: {
-		g_AttributeChanger.Run();
-		break;
-	}
-																 //#endif
+			for (int i = 1; i < g_Interfaces.EntityList->GetHighestEntityIndex(); i++)
+			{
+				auto Ent = g_Interfaces.EntityList->GetClientEntity(i);
+				if (!Ent)
+					continue;
+				if (Ent->GetClientClass()->iClassID == 282)
+				{
+					if (Vars::Visuals::RagdollEffect.m_Var == 1) {
+						disableRagdollEffects(Ent);
+						*reinterpret_cast<bool*>(Ent + 0xC91) = true;
+					}
+					if (Vars::Visuals::RagdollEffect.m_Var == 2) {
+						disableRagdollEffects(Ent);
+						*reinterpret_cast<bool*>(Ent + 0xC92) = true;
+					}
+					if (Vars::Visuals::RagdollEffect.m_Var == 3) {
+						disableRagdollEffects(Ent);
+						*reinterpret_cast<bool*>(Ent + 0xC93) = true;
+					}
+					if (Vars::Visuals::RagdollEffect.m_Var == 4) {
+						disableRagdollEffects(Ent);
+						*reinterpret_cast<bool*>(Ent + 0xC99) = true;
+					}
+					if (Vars::Visuals::RagdollEffect.m_Var == 5) {
+						disableRagdollEffects(Ent);
+						*reinterpret_cast<bool*>(Ent + 0xCA0) = true;
+					}
+					if (Vars::Visuals::RagdollEffect.m_Var == 6) {
+						disableRagdollEffects(Ent);
+						*reinterpret_cast<bool*>(Ent + 0xCA1) = true;
+					}
+					/*switch (Vars::Visuals::RagdollEffect.m_Var) {
+					case 1:
+						// Gib
+						*reinterpret_cast<bool*>(Ent + 0xC91) = true;
+					case 2:
+						// Burning
+						*reinterpret_cast<bool*>(Ent + 0xC92) = true;
+					case 3:
+						// Electrocuted
+						*reinterpret_cast<bool*>(Ent + 0xC93) = true;
+					case 4:
+						// Feign Death???
+						*reinterpret_cast<bool*>(Ent + 0xC96) = true;
+					case 5:
+						// Become ash
+						*reinterpret_cast<bool*>(Ent + 0xC99) = true;
+					case 6:
+						// Become gold
+						*reinterpret_cast<bool*>(Ent + 0xCA0) = true;
+					case 7:
+						// Become ice
+						*reinterpret_cast<bool*>(Ent + 0xCA1) = true;
+					}
+					
+					//*reinterpret_cast<bool*>(Ent + 0xC93) = true;*/
+				}
+			}
+			break;
+		}
 
 	case EClientFrameStage::FRAME_NET_UPDATE_END:
 	{

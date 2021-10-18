@@ -1001,17 +1001,28 @@ void VisualsTab() {
             ImGui::Checkbox(_("Remove recoil"), &Vars::Visuals::RemovePunch.m_Var);
             ImGui::Checkbox(_("Aimbot crosshair"), &Vars::Visuals::CrosshairAimPos.m_Var);
             ImGui::Checkbox(_("Chat info"), &Vars::Visuals::ChatInfo.m_Var);
+            ImGui::Checkbox(_("Remove Hats"), &Vars::Visuals::RemoveHats.m_Var);
             ImGui::Checkbox(_("PlayerList"), &Vars::Visuals::PlayerList.m_Var);
             ImGui::Checkbox(_("Vote revealer"), &Vars::Misc::VoteRevealer.m_Var);
             ImGui::Checkbox(_("Clean screenshots"), &Vars::Misc::CleanScreenshot.m_Var);
-            static const char* weaponTracer[]{
-            "None",
-            "Machina",
-            "Capper",
-            "Merasmus Vortex",
-            "Merasmus Zap",
+           static const char* weaponTracer[]{
+                "None",
+                "Machina",
+                "Capper",
+                "Merasmus Vortex",
+                "Merasmus Zap",
             };
             ImGui::Combo(_("Bullet Tracer"), &Vars::Visuals::TracerEffect.m_Var, weaponTracer, IM_ARRAYSIZE(weaponTracer));
+            static const char* ragdollEffect[]{
+                "None",
+                "Gib",
+                "Burning",
+                "Feign death",
+                "Become ash",
+                "Gold ragdoll",
+                "Ice ragdoll",
+            };
+            ImGui::Combo(_("Ragdoll effect"), &Vars::Visuals::RagdollEffect.m_Var, ragdollEffect, IM_ARRAYSIZE(ragdollEffect));
         }
         ImGui::EndChild();
         ImGui::EndGroup();
@@ -1204,7 +1215,7 @@ void MiscTab() {
             }
             ImGui::PopStyleVar();
 
-            ImGui::Checkbox(_("DoubleTap"), &Vars::Misc::CL_Move::Doubletap.m_Var);
+             ImGui::Checkbox(_("DoubleTap"), &Vars::Misc::CL_Move::Doubletap.m_Var);
             AlignToRight(70);
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(MenuCol.x / 1.5, MenuCol.y / 1.5, MenuCol.z / 1.5, 255));
@@ -1218,12 +1229,6 @@ void MiscTab() {
             if (ImGui::InvisibleButton(_("DTSettings"), ImVec2(20, 20))) {
                 ImGui::OpenPopup(_("DTSettings"));
             }
-            /*
-            ImGui::SetCursorPosX(8);
-            ImGui::Text(_("Recharge Key"));
-            AlignToRight(50);
-            InputKeybind(_("Recharge Key##2"), Vars::Misc::CL_Move::RechargeKey);
-            */
         }
         ImGui::EndChild();
         ImGui::EndGroup();

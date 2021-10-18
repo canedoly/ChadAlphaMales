@@ -6,10 +6,9 @@
 
 void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFinalTick)
 {
-
 	if (Vars::Misc::CL_Move::Doubletap.m_Var)
 	{
-		g_GlobalInfo.fast_stop = false;
+		dt.FastStop = false;
 		/*
 		if (Vars::Misc::CL_Move::TeleportKey.m_Var && (GetAsyncKeyState(Vars::Misc::CL_Move::TeleportKey.m_Var)) && !g_GlobalInfo.m_nShifted) //teleport
 		{
@@ -21,81 +20,73 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 				Func.Original<fn>()(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == (MAX_NEW_COMMANDS_HEAVY - 1))); //this teleports you
 				//g_GlobalInfo.m_nShifted++;
 			}
-
 			return;
 		}
 		*/
 		if (GetAsyncKeyState(Vars::Misc::CL_Move::RechargeKey.m_Var)) {//recharge key
-			g_GlobalInfo.fast_stop = false;
-			g_GlobalInfo.m_bRecharging = true;
+			dt.FastStop = false;
+			dt.Recharging = true;
 		}
 	}
 
-	if (g_GlobalInfo.m_bRecharging && g_GlobalInfo.m_nShifted) //recharge
+	if (dt.Recharging && dt.Charged != dt.ToShift) //recharge
 	{
-		g_GlobalInfo.fast_stop = false;
-		g_GlobalInfo.barAlpha = 255;
-		g_GlobalInfo.m_nShifted--; //goes from 15 to 0
-		g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS;
+		dt.barAlpha = 255;
+		dt.FastStop = false;
+		dt.Charged++;
+		dt.ChargedReverse--;
+		dt.ToWait = DT_WAIT_CALLS;
 		return;
 	}
 	else {
-		g_GlobalInfo.fast_stop = false;
-		g_GlobalInfo.m_bRecharging = false;
+		dt.FastStop = false;
+		dt.Recharging = false;
 	}
 
-	if (g_GlobalInfo.m_bShouldShift)
+	Func.Original<fn>()(accumulated_extra_samples, (dt.Shifting && !dt.ToWait) ? true : bFinalTick);
+
+	if (dt.ToWait)
+	{
+		dt.FastStop = false;
+		dt.ToWait--;
+		return;
+	}
+	if (dt.Shifting)
 	{
 		const auto& pLocal = g_EntityCache.m_pLocal;
 		if (!pLocal) // lol.
 			return;
 
-		int nClass = pLocal->GetClassNum();
-		int dtTicks;
-		if (nClass == CLASS_HEAVY) {
-			dtTicks = MAX_NEW_COMMANDS_HEAVY;
-		}
-		else {
-			dtTicks = g_GlobalInfo.MaxNewCommands;
-		}
-
 		if (GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) {
-			g_GlobalInfo.fast_stop = true;
-			while (g_GlobalInfo.m_nShifted < dtTicks)
+			dt.FastStop = true;
+			while (dt.Charged != 0)
 			{
-				if (!g_GlobalInfo.m_bShouldShift) {
+				if (!dt.Shifting) {
 					return;
 				}
 				if (!Vars::Misc::CL_Move::NotInAir.m_Var) {
-					Func.Original<fn>()(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == (dtTicks - 1))); //this doubletaps
-					g_GlobalInfo.m_nShifted++;
-					//pCmd->tick_count = INT_MAX;
+					Func.Original<fn>()(accumulated_extra_samples, (dt.Charged == 1)); //this doubletaps
+					dt.ChargedReverse++;
+					dt.Charged--;
 				}
 				if (Vars::Misc::CL_Move::NotInAir.m_Var) {
 
 					if (pLocal->IsOnGround()) {
-						Func.Original<fn>()(accumulated_extra_samples, (g_GlobalInfo.m_nShifted == (dtTicks - 1))); //this doubletaps
-						g_GlobalInfo.m_nShifted++;
+						Func.Original<fn>()(accumulated_extra_samples, (dt.Charged == 1)); //this doubletaps
+						dt.ChargedReverse++;
+						dt.Charged--;
 					}
 					else {
-						g_GlobalInfo.fast_stop = false;
+						dt.FastStop = false;
 						return;
 					}
 				}
 			}
-			g_GlobalInfo.fast_stop = false;
+			dt.FastStop = false;
 		}
-		g_GlobalInfo.fast_stop = false;
+		dt.FastStop = false;
 
-		g_GlobalInfo.m_bShouldShift = false;
+		dt.Shifting = false;
 	}
 
-	Func.Original<fn>()(accumulated_extra_samples, (g_GlobalInfo.m_bShouldShift && !g_GlobalInfo.m_nWaitForShift) ? true : bFinalTick);
-
-	if (g_GlobalInfo.m_nWaitForShift)
-	{
-		g_GlobalInfo.fast_stop = false;
-		g_GlobalInfo.m_nWaitForShift--;
-		return;
-	}
 }

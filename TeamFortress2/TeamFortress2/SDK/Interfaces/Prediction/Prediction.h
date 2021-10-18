@@ -66,7 +66,7 @@ public:
 		int incoming_acknowledged,
 		int outgoing_command
 	);
-
+	
 	//CHandle< C_BaseEntity > m_hLastGround;
 	uint32_t m_hLastGround;
 	bool	 m_bInPrediction;

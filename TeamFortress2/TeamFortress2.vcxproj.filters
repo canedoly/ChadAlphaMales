@@ -86,11 +86,12 @@
     <ClCompile Include="TeamFortress2\Utils\Events\Events.cpp" />
     <ClCompile Include="TeamFortress2\Features\KatzeB0t\AntiCat.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.cpp" />
-    <ClCompile Include="TeamFortress2\Features\InstantRespawn\InstantRespawn.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\InventoryExpander\InventoryExpander.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\ViewRenderHook\ViewRenderHook.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\NetChannel\NetChannel.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\ChatPrintfHook\ChatPrintfHook.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\BulletTracer\BulletTracer.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\GameMovementHook\GameMovementHook.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -613,12 +614,13 @@
     <ClInclude Include="TeamFortress2\Hooks\Scoreboard\Scoreboard.h" />
     <ClInclude Include="TeamFortress2\SDK\Timer.h" />
     <ClInclude Include="TeamFortress2\Features\Playerlist\Playerlist.h" />
-    <ClInclude Include="TeamFortress2\Features\InstantRespawn\InstantRespawn.h" />
     <ClInclude Include="TeamFortress2\Hooks\InventoryExpander\InventoryExpander.h" />
     <ClInclude Include="TeamFortress2\Features\NewMenu\font_awesome_5.h" />
     <ClInclude Include="TeamFortress2\Hooks\ViewRenderHook\ViewRenderHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\ChatPrintfHook\ChatPrintfHook.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\Typedef.h" />
+    <ClInclude Include="TeamFortress2\Hooks\BulletTracer\BulletTracer.h" />
+    <ClInclude Include="TeamFortress2\Hooks\GameMovementHook\GameMovementHook.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\Include\D3DX_DXGIFormatConvert.inl" />

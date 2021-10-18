@@ -178,7 +178,6 @@
     <ClCompile Include="TeamFortress2\Features\Chams\DMEChams.cpp" />
     <ClCompile Include="TeamFortress2\Features\ESP\ESP.cpp" />
     <ClCompile Include="TeamFortress2\Features\Glow\Glow.cpp" />
-    <ClCompile Include="TeamFortress2\Features\InstantRespawn\InstantRespawn.cpp" />
     <ClCompile Include="TeamFortress2\Features\KatzeB0t\AntiCat.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ConfigManager\ConfigManager.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\InputHelper\InputHelper.cpp" />
@@ -205,6 +204,7 @@
     <ClCompile Include="TeamFortress2\Features\Auto\AutoStab\AutoStab.cpp" />
     <ClCompile Include="TeamFortress2\Features\Auto\Auto.cpp" />
     <ClCompile Include="TeamFortress2\Features\Visuals\Visuals.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\BulletTracer\BulletTracer.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\ChatPrintfHook\ChatPrintfHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\ClientHook\ClientHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\ClientModeHook\ClientModeHook.cpp" />
@@ -213,6 +213,7 @@
     <ClCompile Include="TeamFortress2\Hooks\EngineClientHook\EngineClientHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\EngineHook\EngineHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\EngineVGuiHook\EngineVGuiHook.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\GameMovementHook\GameMovementHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\GetDrawPositionHook\GetDrawPositionHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\Hooks.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\InCondHook\InCondHook.cpp" />
@@ -269,7 +270,6 @@
     <ClInclude Include="TeamFortress2\Features\Chams\DMEChams.h" />
     <ClInclude Include="TeamFortress2\Features\ESP\ESP.h" />
     <ClInclude Include="TeamFortress2\Features\Glow\Glow.h" />
-    <ClInclude Include="TeamFortress2\Features\InstantRespawn\InstantRespawn.h" />
     <ClInclude Include="TeamFortress2\Features\KatzeB0t\AntiCat.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\ConfigManager\ConfigManager.h" />
     <ClInclude Include="TeamFortress2\Features\Menu\InputHelper\InputHelper.h" />
@@ -301,6 +301,7 @@
     <ClInclude Include="TeamFortress2\Features\Auto\Auto.h" />
     <ClInclude Include="TeamFortress2\Features\Vars.h" />
     <ClInclude Include="TeamFortress2\Features\Visuals\Visuals.h" />
+    <ClInclude Include="TeamFortress2\Hooks\BulletTracer\BulletTracer.h" />
     <ClInclude Include="TeamFortress2\Hooks\ChatPrintfHook\ChatPrintfHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\ClientHook\ClientHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\ClientModeHook\ClientModeHook.h" />
@@ -309,6 +310,7 @@
     <ClInclude Include="TeamFortress2\Hooks\EngineClientHook\EngineClientHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\EngineHook\EngineHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\EngineVGuiHook\EngineVGuiHook.h" />
+    <ClInclude Include="TeamFortress2\Hooks\GameMovementHook\GameMovementHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\GetDrawPositionHook\GetDrawPositionHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\Hooks.h" />
     <ClInclude Include="TeamFortress2\Hooks\InCondHook\InCondHook.h" />

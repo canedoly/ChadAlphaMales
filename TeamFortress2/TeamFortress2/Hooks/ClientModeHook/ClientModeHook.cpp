@@ -9,8 +9,6 @@
 #include "../../Features/AntiHack/AntiAim.h"
 #include "../../Features/KatzeB0t/AntiCat.h"
 #include "../../SDK/Timer.h"
-#include "../../Features/InstantRespawn/InstantRespawn.h"
-#include "../../Features/Backtrack/Backtrack.h"
 
 //#include "../../Features/KatzeB0t/AntiCat.h"
 
@@ -95,7 +93,8 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	Vec3 vOldAngles = pCmd->viewangles;
 	float fOldSide = pCmd->sidemove;
 	float fOldForward = pCmd->forwardmove;
-	auto AntiWarp = [](CUserCmd* cmd) -> void
+  
+auto AntiWarp = [](CUserCmd* cmd) -> void
 	{
 		int shiftcheck = g_GlobalInfo.m_nShifted;
 		auto pLocal = GLOCAL;
@@ -115,12 +114,13 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			}
 		}
 		else {
-			g_GlobalInfo.fast_stop = false;
+			dt.FastStop = false;
 		}
 	};
 
 
-	if (g_GlobalInfo.fast_stop) {
+
+	if (dt.FastStop) {
 		AntiWarp(pCmd);
 	}
 
@@ -128,9 +128,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
-		if (pLocal->IsAlive())
-			CBacktrack::DoBacktrack(pCmd);
-
+    Ray_t trace;
 		g_GlobalInfo.m_Latency = g_Interfaces.ClientState->m_NetChannel->GetLatency(0);
 		nOldFlags = pLocal->GetFlags();
 
@@ -139,7 +137,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			const int nItemDefIndex = pWeapon->GetItemDefIndex();
 
 			if (g_GlobalInfo.m_nCurItemDefIndex != nItemDefIndex || !pWeapon->GetClip1())
-				g_GlobalInfo.m_nWaitForShift = DT_WAIT_CALLS;
+				dt.ToWait = DT_WAIT_CALLS;
 
 			g_GlobalInfo.m_nCurItemDefIndex = nItemDefIndex;
 			g_GlobalInfo.m_bWeaponCanHeadShot = pWeapon->CanWeaponHeadShot();
@@ -172,7 +170,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	}
 	else {
 		badcode++;
-	}
+  }
 
 	if (g_GlobalInfo.m_nticksChoked == 0) {
 		if (g_GlobalInfo.barAlpha > 0) {
@@ -186,8 +184,6 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		g_GlobalInfo.barAlpha = 255;
 	}
 
-
-	g_InstantRespawn.InstantRespawn();
 	g_Misc.Run(pCmd);
 	g_EnginePrediction.Start(pCmd);
 	{
@@ -295,6 +291,9 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		if (nChoked > 14)
 			*pSendPacket = true;
 	}
+
+	g_GlobalInfo.shiftedCmd = pCmd;
+	
 
 	return g_GlobalInfo.m_bSilentTime
 		|| g_GlobalInfo.m_bAAActive
