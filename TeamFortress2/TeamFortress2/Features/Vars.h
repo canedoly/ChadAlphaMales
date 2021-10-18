@@ -15,12 +15,12 @@ namespace Vars
 	namespace Menu
 	{
 		inline bool Opened			= false;
-		//inline Rect_t Position		= { 100, 100, 870, 480 };
+		inline Rect_t Position		= { 100, 100, 870, 480 };
 		inline const auto Title		= XorStr(L"Team Fortress 2");
 		inline int TitleBarH		= 16;
 
 		inline int ShadowSize		= 128;
-		/*
+		
 		inline int SpacingX = 8;
 		inline int SpacingY = 4;
 		inline int SpacingText = 4;
@@ -44,12 +44,13 @@ namespace Vars
 		inline int InputBoxW = 90;
 		inline int InputBoxH = 14;
 		inline int InputColorBoxW = 30;
-		*/
+		
 
 		namespace Colors
 		{
 			//inline Color_t WindowBackground = { 30, 30, 30, 255 };
 			inline Color_t Text = { 255, 255, 255, 190 };
+			inline Color_t Widget = { 255, 255, 255, 190 };
 			inline Color_t WidgetActive = { 150, 0, 255, 255 };
 			inline Color_t ShadowColor = { 150, 0, 255, 255 };
 			inline Color_t OutlineMenu = { 50, 50, 50, 255 };

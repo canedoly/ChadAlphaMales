@@ -92,6 +92,7 @@
     <ClCompile Include="TeamFortress2\Hooks\ChatPrintfHook\ChatPrintfHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\BulletTracer\BulletTracer.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\GameMovementHook\GameMovementHook.cpp" />
+    <ClCompile Include="TeamFortress2\Utils\Easings\easing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
