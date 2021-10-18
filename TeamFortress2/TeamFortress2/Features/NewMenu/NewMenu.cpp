@@ -531,7 +531,7 @@ void ESPTab() {
         {
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 5,5 });
             ImGui::SetNextWindowSize(ImVec2(160, 0));
-            if (ImGui::BeginPopup(_("PlayerHealthBar"))) {
+            if (ImGui::BeginPopup(_("PlayerHealthBar"), ImGuiWindowFlags_NoScrollWithMouse)) {
                 ImGui::Text(_(ICON_FA_EYE " Player Health Bar"));
                 ImGui::Separator();
                 ImGui::SetCursorPosX(2);
@@ -596,7 +596,7 @@ void ESPTab() {
         {
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 5,5 });
             ImGui::SetNextWindowSize(ImVec2(160, 0));
-            if (ImGui::BeginPopup(_("BuildingHealthBar"))) {
+            if (ImGui::BeginPopup(_("BuildingHealthBar"), ImGuiWindowFlags_NoScrollWithMouse)) {
                 ImGui::Text(_(ICON_FA_EYE " Building Health Bar"));
                 ImGui::Separator();
                 ImGui::SetCursorPosX(2);
@@ -621,7 +621,7 @@ void ESPTab() {
             ImGui::Text(ICON_FA_COG);
             AlignToRight(23);
             if (ImGui::InvisibleButton(_("BuildingHealthBar"), ImVec2(20, 20))) {
-                ImGui::OpenPopup(_("BuildingHealthBar"));
+                ImGui::OpenPopup(_("BuildingHealthBar"), ImGuiWindowFlags_NoScrollWithMouse);
             }
 
             ImGui::Checkbox(_("Building level"), &Vars::ESP::Buildings::Level.m_Var);
@@ -1147,7 +1147,7 @@ void MiscTab() {
         {
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 5,5 });
             ImGui::SetNextWindowSize(ImVec2(210, 0));
-            if (ImGui::BeginPopup(_("FakeLagSettings"))) {
+            if (ImGui::BeginPopup(_("FakeLagSettings"), ImGuiWindowFlags_NoScrollWithMouse)) {
                 ImGui::Text(_(ICON_FA_EYE " Fakelag settings"));
                 ImGui::Separator();
                 ImGui::SetCursorPosX(2);
@@ -1179,7 +1179,7 @@ void MiscTab() {
             ImGui::Text(ICON_FA_COG);
             AlignToRight(23);
             if (ImGui::InvisibleButton(_("FakeLagSettings"), ImVec2(20, 20))) {
-                ImGui::OpenPopup(_("FakeLagSettings"));
+                ImGui::OpenPopup(_("FakeLagSettings"), ImGuiWindowFlags_NoScrollWithMouse);
             }
 
             //ImGui::Checkbox(_("Fakelag on key"), &Vars::Misc::CL_Move::FakelagOnKey.m_Var);
@@ -1197,7 +1197,7 @@ void MiscTab() {
         {
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 8,8 });
             ImGui::SetNextWindowSize(ImVec2(210, 0));
-            if (ImGui::BeginPopup(_("DTSettings"))) {
+            if (ImGui::BeginPopup(_("DTSettings"), ImGuiWindowFlags_NoScrollWithMouse)) {
                 ImGui::Text(_(ICON_FA_EYE " Doubletap settings"));
                 ImGui::Separator();
                 ImGui::PushItemWidth(200);
