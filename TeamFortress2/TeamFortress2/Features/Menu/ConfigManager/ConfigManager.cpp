@@ -452,6 +452,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Visuals::Skins::Enabled);
 //#endif
 			SAVE_VAR(Vars::Visuals::TracerEffect);
+			SAVE_VAR(Vars::Visuals::RagdollEffect);
 		}
 
 		//Misc
@@ -898,6 +899,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Visuals::Skins::Enabled);
 //#endif
 			LOAD_VAR(Vars::Visuals::TracerEffect);
+			LOAD_VAR(Vars::Visuals::RagdollEffect);
 		}
 
 		//Misc
