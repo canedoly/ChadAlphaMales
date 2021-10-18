@@ -71,45 +71,35 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 					{
 						if (pLocal->GetLifeState() == LIFE_ALIVE)
 						{
-
 							const int nY = (g_ScreenSize.h / 2) + 20;
+							/*auto vel = pLocal->GetVelocity();
+							vel.z = 0;
+							auto speed = vel.Lenght2D();
+							auto speed2 = vel.Lenght();
+							g_Draw.String(FONT_MENU, g_ScreenSize.c, g_ScreenSize.h / 2, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, std::string("Length2D: " + std::to_string(speed)).c_str());
+							g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 20, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, std::string("Length: " + std::to_string(speed2)).c_str());
 
-							int ticks;
-
-							if (pLocal->GetClassNum() == CLASS_HEAVY) {
-
-								for (int i = MAX_NEW_COMMANDS_HEAVY; i >= 0; i--) {
-									//printf("i: %d\n", i);
-									for (int j = MAX_NEW_COMMANDS_HEAVY - g_GlobalInfo.m_nShifted; j <= MAX_NEW_COMMANDS_HEAVY; j++) {
-										//printf("j: %d\n", j);
-										g_GlobalInfo.m_nticksChoked = j;
-										break;
-									}
-								}
-								ticks = MAX_NEW_COMMANDS_HEAVY;
-							}
-							else {
-								for (int i = g_GlobalInfo.MaxNewCommands; i >= 0; i--) {
-									//printf("i: %d\n", i);
-									for (int j = g_GlobalInfo.MaxNewCommands - g_GlobalInfo.m_nShifted; j <= g_GlobalInfo.MaxNewCommands; j++) {
-										//printf("j: %d\n", j);
-										g_GlobalInfo.m_nticksChoked = j;
-										break;
-									}
-								}
-								ticks = g_GlobalInfo.MaxNewCommands;
-							}
+							g_Draw.String(FONT_MENU, 0, nY + 00, { 255,255,255,255 }, ALIGN_DEFAULT, std::string("Charged: " + std::to_string(dt.Charged)).c_str());
+							g_Draw.String(FONT_MENU, 0, nY + 20, { 255,255,255,255 }, ALIGN_DEFAULT, std::string("Fast stop: " + std::to_string(dt.FastStop)).c_str());
+							g_Draw.String(FONT_MENU, 0, nY + 40, { 255,255,255,255 }, ALIGN_DEFAULT, std::string("Recharging: " + std::to_string(dt.Recharging)).c_str());
+							g_Draw.String(FONT_MENU, 0, nY + 60, { 255,255,255,255 }, ALIGN_DEFAULT, std::string("Shifting: " + std::to_string(dt.Shifting)).c_str());
+							g_Draw.String(FONT_MENU, 0, nY + 80, { 255,255,255,255 }, ALIGN_DEFAULT, std::string("Ticks to shift: " + std::to_string(dt.ToShift)).c_str());
+							g_Draw.String(FONT_MENU, 0, nY + 99, { 255,255,255,255 }, ALIGN_DEFAULT, std::string("Wait ticks: " + std::to_string(dt.ToWait)).c_str());*/
+							int ticks = dt.Charged;
 							int tickWidth = 5;
-							int barWidth = (tickWidth * ticks) + 2;
-							g_Draw.Rect(g_ScreenSize.c - (barWidth / 2), nY + 50, barWidth, 6, { 40,40,40,g_GlobalInfo.barAlpha });
-							g_Draw.OutlinedRect(g_ScreenSize.c - (barWidth / 2), nY + 50, barWidth, 6, { 0, 0, 0, g_GlobalInfo.barAlpha });
-							g_Draw.GradientRect(g_ScreenSize.c - (barWidth / 2) + 1, nY + 51, (g_ScreenSize.c - (barWidth / 2) + 1) + tickWidth * g_GlobalInfo.m_nticksChoked, nY + 51 + 4, { 0,0,0,g_GlobalInfo.barAlpha }, 
+							int barWidth = (tickWidth * 24) + 2;
+
+
+							g_Draw.Rect(g_ScreenSize.c - (barWidth / 2), nY + 50, barWidth, 6, { 40,40,40,dt.barAlpha });
+							g_Draw.OutlinedRect(g_ScreenSize.c - (barWidth / 2), nY + 50, barWidth, 6, { 0, 0, 0, dt.barAlpha });
+							g_Draw.GradientRect(g_ScreenSize.c - (barWidth / 2) + 1, nY + 51, (g_ScreenSize.c - (barWidth / 2) + 1) + tickWidth * dt.Charged, nY + 51 + 4, { 0,0,0,255 },
 								{
 									Vars::Menu::Colors::WidgetActive.r,
 									Vars::Menu::Colors::WidgetActive.g,
 									Vars::Menu::Colors::WidgetActive.b,
-									g_GlobalInfo.barAlpha
-								}, true);
+									255
+								},
+								true);
 						}
 					}
 				}

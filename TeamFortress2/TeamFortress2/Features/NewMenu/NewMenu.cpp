@@ -1202,7 +1202,7 @@ void MiscTab() {
                 ImGui::Separator();
                 ImGui::PushItemWidth(200);
                 ImGui::SetCursorPosX(2);
-                ImGui::SliderInt(_("Ticks to shift"), &g_GlobalInfo.MaxNewCommands, 10, 23, _("%d"), ImGuiSliderFlags_ClampOnInput);
+                ImGui::SliderInt(_("Ticks to shift"), &dt.ToShift, 10, 24, _("%d"), ImGuiSliderFlags_ClampOnInput);
                 ImGui::SetCursorPosX(2);
                 ImGui::Checkbox(_("Wait for DT"), &Vars::Misc::CL_Move::WaitForDT.m_Var);
                 ImGui::SetCursorPosX(2);

@@ -247,6 +247,7 @@
     <ClCompile Include="TeamFortress2\Utils\DiscordRPC\src\rpc_connection.cpp" />
     <ClCompile Include="TeamFortress2\Utils\DiscordRPC\src\serialization.cpp" />
     <ClCompile Include="TeamFortress2\Utils\Easings\easing.cpp" />
+    <ClCompile Include="TeamFortress2\Utils\Easings\easing.cpp" />
     <ClCompile Include="TeamFortress2\Utils\Events\Events.cpp" />
     <ClCompile Include="TeamFortress2\Utils\Hash\Hash.cpp" />
     <ClCompile Include="TeamFortress2\Utils\MinHook\buffer.c" />

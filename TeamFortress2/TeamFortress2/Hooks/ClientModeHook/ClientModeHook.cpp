@@ -93,10 +93,10 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	Vec3 vOldAngles = pCmd->viewangles;
 	float fOldSide = pCmd->sidemove;
 	float fOldForward = pCmd->forwardmove;
-  
-auto AntiWarp = [](CUserCmd* cmd) -> void
+
+	auto AntiWarp = [](CUserCmd* cmd) -> void
 	{
-		int shiftcheck = g_GlobalInfo.m_nShifted;
+		int shiftcheck = dt.ChargedReverse;
 		auto pLocal = GLOCAL;
 
 		if (shiftcheck < 19)
@@ -117,8 +117,6 @@ auto AntiWarp = [](CUserCmd* cmd) -> void
 			dt.FastStop = false;
 		}
 	};
-
-
 
 	if (dt.FastStop) {
 		AntiWarp(pCmd);
@@ -171,18 +169,6 @@ auto AntiWarp = [](CUserCmd* cmd) -> void
 	else {
 		badcode++;
   }
-
-	if (g_GlobalInfo.m_nticksChoked == 0) {
-		if (g_GlobalInfo.barAlpha > 0) {
-			g_GlobalInfo.barAlpha -= 3;
-		}
-		if (g_GlobalInfo.barAlpha < 0) {
-			g_GlobalInfo.barAlpha = 0;
-		}
-	}
-	else {
-		g_GlobalInfo.barAlpha = 255;
-	}
 
 	g_Misc.Run(pCmd);
 	g_EnginePrediction.Start(pCmd);
