@@ -2,10 +2,6 @@
 #include "../../Features/Vars.h"
 constexpr int TEAM_RED = 2;
 
-const char* Tracer(int team) {
-
-}
-
 
 
 void __fastcall BulletTracers::FireBullet::Hook(void* ecx, void* edx, CBaseCombatWeapon* pWeapon, const FireBulletsInfo_t& info, bool bDoEffects, int nDamageType, int nCustomDamageType) {

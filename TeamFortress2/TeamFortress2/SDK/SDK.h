@@ -132,6 +132,7 @@ namespace Colors
 	inline Color_t Weapon = { 30, 144, 255, 255 };
 	inline Color_t WorldModulation = { 255, 255, 255, 255 };
 	inline Color_t StaticPropModulation = { 255, 255, 255, 255 };
+	inline Color_t SkyModulation = { 255, 255, 255, 255 };
 	inline Color_t FOVCircle = { 255, 255, 255, 255 };
 	inline Color_t Bones = { 255, 255, 255, 255 };
 	inline Color_t FresnelBase = { 0,0,0,255 };

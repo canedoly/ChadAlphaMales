@@ -129,6 +129,9 @@ void CGlowEffect::Render()
 					if (!Player->IsAlive() || Player->IsAGhost())
 						continue;
 
+					//DoOldGlow(Player);
+					//continue;
+
 					bool bIsLocal = Player->GetIndex() == g_Interfaces.Engine->GetLocalPlayer();
 
 					if (!bIsLocal)
@@ -329,4 +332,15 @@ void CGlowEffect::Render()
 			g_Interfaces.RenderView->SetColorModulation(flOriginalColor);
 			g_Interfaces.RenderView->SetBlend(flOriginalBlend);
 		}
+}
+
+void CGlowEffect::DoOldGlow(CBaseEntity* pPlayerEntity) {
+	if (pPlayerEntity == NULL || !pPlayerEntity || pPlayerEntity->GetDormant() || pPlayerEntity->GetLifeState() != LIFE_ALIVE) {
+		pPlayerEntity->SetGlowEnabled(false);
+		pPlayerEntity->DestroyGlowEffect();
+		return;
+	}
+
+	pPlayerEntity->UpdateGlowEffect();
+	pPlayerEntity->SetGlowEnabled(true);
 }

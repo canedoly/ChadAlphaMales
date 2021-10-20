@@ -359,6 +359,19 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd)
 	}
 }
 
+static void(__thiscall* ob_SetConVar)(void*, const char*, const char*) = reinterpret_cast<void(__thiscall*)(void*, const char*, const char*)>(g_Pattern.Find(L"engine.dll", L"08 C6 47 04 01 C7") - 0x1);
+
+
+void CMisc::ChangeName(std::string name)
+{
+	static char msg_SetConVar[0x250];
+	memset(msg_SetConVar, 0, sizeof(msg_SetConVar));
+
+	ob_SetConVar(msg_SetConVar, "name", name.c_str());
+
+	g_Interfaces.Engine->GetNetChannelInfo()->SendFartMsg(msg_SetConVar);
+}
+
 void CMisc::NoPush() {
 	ConVar* noPush = g_Interfaces.CVars->FindVar(_("tf_avoidteammates_pushaway"));
 	if (Vars::Misc::NoPush.m_Var) {

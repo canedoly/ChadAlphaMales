@@ -10,6 +10,9 @@
 #define SAVE_VAR(x) Save(_(L#x), x.m_Var)
 #define LOAD_VAR(x) Load(_(L#x), x.m_Var)
 
+#define SAVE_STRING(x) Save(_(L#x), x)
+#define LOAD_STRING(x) Load(_(L#x), x)
+
 #define SAVE_OTHER(x) Save(_(L#x), x)
 #define LOAD_OTHER(x) Load(_(L#x), x)
 
@@ -92,6 +95,26 @@ void CConfigManager::Load(const wchar_t *name, Color_t &val)
 		int r = 0, g = 0, b = 0, a = 0;
 		swscanf_s(line.c_str(), L"%*ls %d %d %d %d", &r, &g, &b, &a);
 		val = { static_cast<byte>(r), static_cast<byte>(g), static_cast<byte>(b), static_cast<byte>(a) };
+	}
+}
+
+void CConfigManager::Save(const wchar_t* name, std::string val)
+{
+	char buffer[128];
+	sprintf_s(buffer, "%ls: %s", name, val.c_str());
+	m_Write << buffer << "\n";
+}
+
+void CConfigManager::Load(const wchar_t* name, std::string& val)
+{
+	std::wstring line = {};
+
+	if (Find(name, line)) {
+		//swscanf_s(line.c_str(), L"%*ls:");
+		std::wstring delimiter = L": ";
+		std::wstring svalue = line.substr(line.find(L": ") + 2, sizeof(line));
+		std::string stringvalue(svalue.begin(), svalue.end());
+		val = stringvalue;
 	}
 }
 
@@ -222,6 +245,13 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Triggerbot::Uber::OnlyFriends);
 				SAVE_VAR(Vars::Triggerbot::Uber::PopLocal);
 				SAVE_VAR(Vars::Triggerbot::Uber::HealthLeft);
+			}
+
+			//Vacc
+			{
+				SAVE_VAR(Vars::Triggerbot::AutoVaccinator::Active);
+				SAVE_VAR(Vars::Triggerbot::AutoVaccinator::OnlyFriends);
+				SAVE_VAR(Vars::Triggerbot::AutoVaccinator::UberMaxPercentage);
 			}
 		}
 
@@ -539,13 +569,18 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::Bones);
 			SAVE_OTHER(Colors::HealthBarTopColor);
 			SAVE_OTHER(Colors::HealthBarBottomColor);
+			SAVE_OTHER(Colors::HealthBarbTopColor);
+			SAVE_OTHER(Colors::HealthBarbBottomColor);
 			SAVE_OTHER(Colors::hitboxColor);
+
 
 			SAVE_OTHER(g_Radar.m_nRadarX);
 			SAVE_OTHER(g_Radar.m_nRadarY);
 
 			SAVE_OTHER(g_SpectatorList.m_nSpecListX);
 			SAVE_OTHER(g_SpectatorList.m_nSpecListY);
+
+			SAVE_STRING(Vars::Skybox::SkyboxName);
 		}
 
 		m_Write.close();
@@ -668,6 +703,12 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Triggerbot::Uber::OnlyFriends);
 				LOAD_VAR(Vars::Triggerbot::Uber::PopLocal);
 				LOAD_VAR(Vars::Triggerbot::Uber::HealthLeft);
+			}
+
+			{
+				LOAD_VAR(Vars::Triggerbot::AutoVaccinator::Active);
+				LOAD_VAR(Vars::Triggerbot::AutoVaccinator::OnlyFriends);
+				LOAD_VAR(Vars::Triggerbot::AutoVaccinator::UberMaxPercentage);
 			}
 		}
 
@@ -987,6 +1028,8 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::Bones);
 			LOAD_OTHER(Colors::HealthBarTopColor);
 			LOAD_OTHER(Colors::HealthBarBottomColor);
+			LOAD_OTHER(Colors::HealthBarbTopColor);
+			LOAD_OTHER(Colors::HealthBarbBottomColor);
 			LOAD_OTHER(Colors::hitboxColor);
 
 			LOAD_OTHER(g_Radar.m_nRadarX);
@@ -994,6 +1037,8 @@ void CConfigManager::Load(const wchar_t *name)
 
 			LOAD_OTHER(g_SpectatorList.m_nSpecListX);
 			LOAD_OTHER(g_SpectatorList.m_nSpecListY);
+
+			LOAD_STRING(Vars::Skybox::SkyboxName);
 		}
 
 		m_Read.close();

@@ -369,33 +369,61 @@ void CVisuals::ThirdPerson()
 }
 
 bool bWorldIsModulated = false;
+bool bSkyIsModulated = false;
 
-void ApplyModulation(const Color_t &clr)
+
+
+void ApplyModulation(const Color_t& clr)
 {
 	for (MaterialHandle_t h = g_Interfaces.MatSystem->First(); h != g_Interfaces.MatSystem->Invalid(); h = g_Interfaces.MatSystem->Next(h))
 	{
-		if (const auto &pMaterial = g_Interfaces.MatSystem->Get(h))
+		if (const auto& pMaterial = g_Interfaces.MatSystem->Get(h))
 		{
+			//bool bFound2 = false;
+			//IMaterialVar* rain = pMaterial->FindVar(_("env_global"), &bFound2);
+
 			if (pMaterial->IsErrorMaterial() || !pMaterial->IsPrecached())
 				continue;
 
 			std::string_view group(pMaterial->GetTextureGroupName());
 
-			if (group.find(_(TEXTURE_GROUP_WORLD)) != group.npos /* || group.find(_(TEXTURE_GROUP_SKYBOX)) != group.npos*/)
+			if (group.find(_(TEXTURE_GROUP_WORLD)) != group.npos/* || group.find(_(TEXTURE_GROUP_SKYBOX)) != group.npos*/)
 			{
 				bool bFound = false;
-				IMaterialVar *pVar = pMaterial->FindVar(_("$color2"), &bFound);
+				IMaterialVar* pVar = pMaterial->FindVar(_("$color2"), &bFound);
 
 				if (bFound && pVar)
 					pVar->SetVecValue(Color::TOFLOAT(clr.r), Color::TOFLOAT(clr.g), Color::TOFLOAT(clr.b));
 
 				else pMaterial->ColorModulate(Color::TOFLOAT(clr.r), Color::TOFLOAT(clr.g), Color::TOFLOAT(clr.b));
 			}
+
+
 		}
 	}
 
 	bWorldIsModulated = true;
 }
+
+void ApplySkyboxModulation(const Color_t& clr)
+{
+	for (MaterialHandle_t h = g_Interfaces.MatSystem->First(); h != g_Interfaces.MatSystem->Invalid(); h = g_Interfaces.MatSystem->Next(h))
+	{
+		const auto& pMaterial = g_Interfaces.MatSystem->Get(h);
+
+		if (pMaterial->IsErrorMaterial() || !pMaterial->IsPrecached())
+			continue;
+
+		std::string_view group(pMaterial->GetTextureGroupName());
+
+		if (group._Starts_with("SkyBox"))
+		{
+			pMaterial->ColorModulate(Color::TOFLOAT(clr.r), Color::TOFLOAT(clr.g), Color::TOFLOAT(clr.b));
+		}
+	}
+	bSkyIsModulated = true;
+}
+
 
 void CVisuals::ModulateWorld()
 {
@@ -403,6 +431,8 @@ void CVisuals::ModulateWorld()
 		return;
 
 	ApplyModulation(Colors::WorldModulation);
+	ApplySkyboxModulation(Colors::SkyModulation);
+
 }
 
 void CVisuals::UpdateWorldModulation()
@@ -427,6 +457,30 @@ void CVisuals::UpdateWorldModulation()
 
 	if (!bWorldIsModulated || ColorChanged())
 		ApplyModulation(Colors::WorldModulation);
+}
+
+void CVisuals::UpdateSkyModulation()
+{
+	if (!Vars::Visuals::SkyModulation.m_Var || (Vars::Misc::CleanScreenshot.m_Var && g_Interfaces.Engine->IsTakingScreenshot())) {
+		RestoreWorldModulation();
+		return;
+	}
+
+	auto ColorChanged = [&]() -> bool
+	{
+		static Color_t old = Colors::SkyModulation;
+		Color_t cur = Colors::SkyModulation;
+
+		if (cur.r != old.r || cur.g != old.g || cur.b != old.b) {
+			old = cur;
+			return true;
+		}
+
+		return false;
+	};
+
+	if (!bWorldIsModulated || ColorChanged())
+		ApplySkyboxModulation(Colors::SkyModulation);
 }
 
 void CVisuals::RestoreWorldModulation()

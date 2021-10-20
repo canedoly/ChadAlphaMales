@@ -30,6 +30,8 @@ public:
 	void Init();
 	void Render();
 
+
+
 	inline bool HasDrawn(CBaseEntity *pEntity) {
 		return m_DrawnEntities.find(pEntity) != m_DrawnEntities.end();
 	}
@@ -40,6 +42,7 @@ public:
 
 public:
 	bool m_bDrawingGlow;
+	void DoOldGlow(CBaseEntity* pPlayerEntity);
 	bool m_bRendering;
 };
 

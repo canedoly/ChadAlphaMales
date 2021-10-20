@@ -4,6 +4,7 @@
 #include "../Visuals/Visuals.h"
 #include "../Playerlist/Playerlist.h"
 #include "font_awesome_5.h"
+#include "../Misc/Misc.h"
 
 // I know this might sound dumb but here are the rules before messing with the menu
 // Before you add stuff here please tell me first what you're going to add and we'll discuss about it
@@ -39,6 +40,8 @@ Color_t vColor(ImVec4 color) {
         (byte)(color.w * 256.0f > 255 ? 255 : color.w * 256.0f)
     };
 }
+
+std::string name;
 
 void ColorPicker(const char* label, Color_t& color, bool alpha = true) {
     ImVec4 FUCKOFF = mColor(color);
@@ -129,6 +132,17 @@ void CustomStyle() {
 
     style.FrameBorderSize = 1.0f;
     style.WindowShadowSize = Vars::Menu::ShadowSize;
+}
+
+bool ClickText(const char* label) {
+    const auto id = ImGui::GetID(label);
+    ImGui::PushID(label);
+    ImGui::Text(label);
+    if (ImGui::IsItemHovered() && ImGui::GetIO().MouseClicked[0]) {
+        return true;
+    }
+    ImGui::PopID();
+    return false;
 }
 
 bool InputKeybind(const char* label, CVar<int>& output, bool bAllowNone = true)
@@ -417,7 +431,7 @@ void TriggerbotTab() {
         ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
         ImGui::SetCursorPosX(7);
-        ImGui::MenuChild(_("Global"), ImVec2(220, 220), false, ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::MenuChild(_("Global"), ImVec2(250, 220), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Enabled"), &Vars::Triggerbot::Global::Active.m_Var);
             AlignToRight(50);
@@ -442,7 +456,7 @@ void TriggerbotTab() {
         ImGui::BeginGroup();
         ImGui::SetCursorPosX(7);
 
-        ImGui::MenuChild(_("Auto Airblast"), ImVec2(220, 120), false, ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::MenuChild(_("Auto Airblast"), ImVec2(250, 120), false, ImGuiWindowFlags_NoScrollWithMouse);
         ImGui::Checkbox(_("Active##gAAB"), &Vars::Triggerbot::Blast::Active.m_Var);
         ImGui::Checkbox(_("Rage mode##gAABr"), &Vars::Triggerbot::Blast::Rage.m_Var);
         ImGui::Checkbox(_("Silent##gAABs"), &Vars::Triggerbot::Blast::Silent.m_Var);
@@ -455,7 +469,7 @@ void TriggerbotTab() {
         ImGui::BeginGroup();
         ImGui::SetCursorPosX(7);
 
-        ImGui::MenuChild(_("Auto Detonator"), ImVec2(220, 130), false, ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::MenuChild(_("Auto Detonator"), ImVec2(250, 130), false, ImGuiWindowFlags_NoScrollWithMouse);
         ImGui::Checkbox(_("Active###gAD"), &Vars::Triggerbot::Detonate::Active.m_Var);
         ImGui::Checkbox(_("Stickybombs###gADs"), &Vars::Triggerbot::Detonate::Stickies.m_Var);
         ImGui::Checkbox(_("Detonator flares###gADd"), &Vars::Triggerbot::Detonate::Flares.m_Var);
@@ -465,32 +479,14 @@ void TriggerbotTab() {
         ImGui::EndGroup();
     }
     // Left middle row
-    /*
-    { // Left Middle Upper
+   
+    
+    { // Middle Upper
         ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(220);
+        ImGui::SetCursorPosX(262);
 
-        ImGui::MenuChild(_("Auto Shoot"), ImVec2(200, 200), false, ImGuiWindowFlags_NoScrollWithMouse);
-        //ImGui::Checkbox(_("Active##gAS"), &Vars::Triggerbot::Shoot::Active.m_Var);
-        ImGui::Checkbox(_("Shoot players##gASsp"), &Vars::Triggerbot::Shoot::TriggerPlayers.m_Var);
-        //ImGui::Checkbox(_("Shoot buildings##gASsb"), &Vars::Triggerbot::Shoot::TriggerBuildings.m_Var);
-        ImGui::Checkbox(_("Head only##gASho"), &Vars::Triggerbot::Shoot::HeadOnly.m_Var);
-        //FixSlider;
-        //ImGui::SliderFloat(_("Head scale##gAShs"), &Vars::Triggerbot::Shoot::HeadScale.m_Var, 0.5f, 1.0f, "%.1f", ImGuiSliderFlags_Logarithmic);
-        ImGui::Checkbox(_("Wait for charge##gASwfc"), &Vars::Triggerbot::Shoot::WaitForCharge.m_Var);
-
-
-        ImGui::EndChild();
-        ImGui::EndGroup();
-    }
-    */
-    { // Left Middle Upper
-        ImGui::SetCursorPosY(42);
-        ImGui::BeginGroup();
-        ImGui::SetCursorPosX(232);
-
-        ImGui::MenuChild(_("Auto Stab"), ImVec2(220, 220), false, ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::MenuChild(_("Auto Stab"), ImVec2(250, 220), false, ImGuiWindowFlags_NoScrollWithMouse);
         ImGui::Checkbox(_("Active###gABS"), &Vars::Triggerbot::Stab::Active.m_Var);
         ImGui::Checkbox(_("Rage mode###gABSr"), &Vars::Triggerbot::Stab::RageMode.m_Var);
         ImGui::Checkbox(_("Silent###gABSs"), &Vars::Triggerbot::Stab::Silent.m_Var);
@@ -503,17 +499,51 @@ void TriggerbotTab() {
         ImGui::EndChild();
         ImGui::EndGroup();
     }
-    { // Left Middle Middle
+    { // Middle bottom
         ImGui::SetCursorPosY(262);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(232);
+        ImGui::SetCursorPosX(262);
 
-        ImGui::MenuChild(_("Auto Uber"), ImVec2(220, 180), false, ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::MenuChild(_("Auto Uber"), ImVec2(250, 250), false, ImGuiWindowFlags_NoScrollWithMouse);
         ImGui::Checkbox(_("Active###gAU"), &Vars::Triggerbot::Uber::Active.m_Var);
         ImGui::Checkbox(_("Only on friends###gAUf"), &Vars::Triggerbot::Uber::OnlyFriends.m_Var);
         ImGui::Checkbox(_("Uber self###gAUs"), &Vars::Triggerbot::Uber::PopLocal.m_Var);
         FixSlider;
         ImGui::SliderFloat(_("Health left###gAUhp"), &Vars::Triggerbot::Uber::HealthLeft.m_Var, 1.f, 99.f, _("%.0f%%"), ImGuiSliderFlags_AlwaysClamp);
+
+        ImGui::EndChild();
+        ImGui::EndGroup();
+    }
+
+    { // Right upper
+        ImGui::SetCursorPosY(42);
+        ImGui::BeginGroup();
+        ImGui::SetCursorPosX(517);
+
+        ImGui::MenuChild(_("Auto Shoot"), ImVec2(260, 220), false, ImGuiWindowFlags_NoScrollWithMouse);
+        //ImGui::Checkbox(_("Active##gAS"), &Vars::Triggerbot::Shoot::Active.m_Var);
+        ImGui::Checkbox(_("Shoot players##gASsp"), &Vars::Triggerbot::Shoot::TriggerPlayers.m_Var);
+        //ImGui::Checkbox(_("Shoot buildings##gASsb"), &Vars::Triggerbot::Shoot::TriggerBuildings.m_Var);
+        ImGui::Checkbox(_("Head only##gASho"), &Vars::Triggerbot::Shoot::HeadOnly.m_Var);
+        //FixSlider;
+        //ImGui::SliderFloat(_("Head scale##gAShs"), &Vars::Triggerbot::Shoot::HeadScale.m_Var, 0.5f, 1.0f, "%.1f", ImGuiSliderFlags_Logarithmic);
+        ImGui::Checkbox(_("Wait for charge##gASwfc"), &Vars::Triggerbot::Shoot::WaitForCharge.m_Var);
+
+
+        ImGui::EndChild();
+        ImGui::EndGroup();
+    }
+
+    { // Middle bottom
+        ImGui::SetCursorPosY(262);
+        ImGui::BeginGroup();
+        ImGui::SetCursorPosX(517);
+
+        ImGui::MenuChild(_("Auto Vaccinator"), ImVec2(260, 250), false, ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::Checkbox(_("Active###gAV"), &Vars::Triggerbot::AutoVaccinator::Active.m_Var);
+        ImGui::Checkbox(_("Only on friends###gAUf"), &Vars::Triggerbot::AutoVaccinator::OnlyFriends.m_Var);
+        FixSlider;
+        ImGui::SliderFloat(_("Health left###gAUhp"), &Vars::Triggerbot::AutoVaccinator::UberMaxPercentage.m_Var, 1.f, 99.f, _("%.0f%%"), ImGuiSliderFlags_AlwaysClamp);
 
         ImGui::EndChild();
         ImGui::EndGroup();
@@ -686,6 +716,10 @@ void ESPTab() {
             ColorPicker(_("World"), Colors::WorldModulation, false);
             AlignToRight(23);
             ColorPicker(_("Props"), Colors::StaticPropModulation, false);
+            ImGui::Checkbox(_("Sky modulation"), &Vars::Visuals::SkyModulation.m_Var);
+            AlignToRight(23);
+            ColorPicker(_("Skybox"), Colors::SkyModulation, false);
+
 
             ImGui::Checkbox(_("Dev Textures"), &Vars::Visuals::DevTextures.m_Var);
 
@@ -1001,8 +1035,6 @@ void VisualsTab() {
             ImGui::Checkbox(_("Remove recoil"), &Vars::Visuals::RemovePunch.m_Var);
             ImGui::Checkbox(_("Aimbot crosshair"), &Vars::Visuals::CrosshairAimPos.m_Var);
             ImGui::Checkbox(_("Chat info"), &Vars::Visuals::ChatInfo.m_Var);
-            ImGui::Checkbox(_("Remove Hats"), &Vars::Visuals::RemoveHats.m_Var);
-            ImGui::Checkbox(_("PlayerList"), &Vars::Visuals::PlayerList.m_Var);
             ImGui::Checkbox(_("Vote revealer"), &Vars::Misc::VoteRevealer.m_Var);
             ImGui::Checkbox(_("Clean screenshots"), &Vars::Misc::CleanScreenshot.m_Var);
            static const char* weaponTracer[]{
@@ -1109,13 +1141,14 @@ void MiscTab() {
         ImGui::SetCursorPosX(7);
         ImGui::MenuChild(_("General"), ImVec2(300, 265), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
-            ImGui::Checkbox(_("Instant Respawn MVM"), &Vars::Misc::InstantRespawn.m_Var);
             ImGui::Checkbox(_("Anti AFK"), &Vars::Misc::AntiAFK.m_Var);
             ImGui::Checkbox(_("Bypass sv_pure"), &Vars::Misc::BypassPure.m_Var);
             ImGui::Checkbox(_("Medal flip"), &Vars::Misc::MedalFlip.m_Var);
             ImGui::Checkbox(_("Noisemaker spam"), &Vars::Misc::NoisemakerSpam.m_Var);
             ImGui::Checkbox(_("Chat Spam"), &Vars::Misc::ChatSpam.m_Var);
             ImGui::Checkbox(_("No Interp"), &Vars::Misc::DisableInterpolation.m_Var);
+            ImGui::Checkbox(_("Remove Hats"), &Vars::Visuals::RemoveHats.m_Var);
+            ImGui::Checkbox(_("PlayerList"), &Vars::Visuals::PlayerList.m_Var);
             ImGui::Checkbox(_("Steam RPC"), &Vars::Misc::SteamRPC.m_Var);
             ImGui::SameLine();
             ImGui::InputTextWithHint(_("##customsteamrpc"), _("Custom Steam RPC"), &Vars::Misc::SteamRPCText);
@@ -1229,6 +1262,8 @@ void MiscTab() {
             if (ImGui::InvisibleButton(_("DTSettings"), ImVec2(20, 20))) {
                 ImGui::OpenPopup(_("DTSettings"));
             }
+
+            ImGui::Checkbox(_("Instant Respawn MVM"), &Vars::Misc::InstantRespawn.m_Var);
         }
         ImGui::EndChild();
         ImGui::EndGroup();
@@ -1343,6 +1378,92 @@ void ConfigsTab() {
     }
 }
 
+void ReplaceSpecials(std::string& str)
+{
+    int val;
+    size_t c = 0, len = str.size();
+    for (int i = 0; i + c < len; ++i)
+    {
+        str[i] = str[i + c];
+        if (str[i] != '\\')
+            continue;
+        if (i + c + 1 == len)
+            break;
+        switch (str[i + c + 1])
+        {
+            // Several control characters
+        case 'b':
+            ++c;
+            str[i] = '\b';
+            break;
+        case 'n':
+            ++c;
+            str[i] = '\n';
+            break;
+        case 'v':
+            ++c;
+            str[i] = '\v';
+            break;
+        case 'r':
+            ++c;
+            str[i] = '\r';
+            break;
+        case 't':
+            ++c;
+            str[i] = '\t';
+            break;
+        case 'f':
+            ++c;
+            str[i] = '\f';
+            break;
+        case 'a':
+            ++c;
+            str[i] = '\a';
+            break;
+        case '\\':
+            ++c;
+            break;
+            // Convert specified value from HEX
+        case 'x':
+            if (i + c + 4 > len)
+                continue;
+            std::sscanf(&str[i + c + 2], "%02X", &val);
+            c += 3;
+            str[i] = val;
+            break;
+            // Convert from unicode
+        case 'u':
+            if (i + c + 6 > len)
+                continue;
+            // 1. Scan 16bit HEX value
+            std::sscanf(&str[i + c + 2], "%04X", &val);
+            c += 5;
+            // 2. Convert value to UTF-8
+            if (val <= 0x7F)
+            {
+                str[i] = val;
+            }
+            else if (val <= 0x7FF)
+            {
+                str[i] = 0xC0 | ((val >> 6) & 0x1F);
+                str[i + 1] = 0x80 | (val & 0x3F);
+                ++i;
+                --c;
+            }
+            else
+            {
+                str[i] = 0xE0 | ((val >> 12) & 0xF);
+                str[i + 1] = 0x80 | ((val >> 6) & 0x3F);
+                str[i + 2] = 0x80 | (val & 0x3F);
+                i += 2;
+                c -= 2;
+            }
+            break;
+        }
+    }
+    str.resize(len - c);
+}
+
 void Handle()
 {
     if (!g_NewMenu.menuOpen && ImGui::GetStyle().Alpha > 0.f)
@@ -1410,7 +1531,6 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
 
     if (GetAsyncKeyState(VK_INSERT) & 1) { // Can we please fix this in WndProcHook...? :(
         g_Interfaces.Surface->SetCursorAlwaysVisible(menuOpen = !menuOpen);
-        g_Interfaces.InputSystem->ResetInputState();
         g_Menu.flTimeOnChange = g_Interfaces.Engine->Time();
     }
 
@@ -1480,8 +1600,10 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
         }
 
         if (Vars::Visuals::PlayerList.m_Var) {
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(100, 0));
             ImGui::Begin(_("##PLIST"), NULL, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_AlwaysAutoResize);
             {
+                ImGui::PopStyleVar();
                 auto draw = ImGui::GetWindowDrawList();
 
                 MenuCol = ImGui::GetStyle().Colors[ImGuiCol_MenuBarBg];
@@ -1495,13 +1617,11 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
             }
 
             ImGui::SetCursorPosY(32);
-
-            if (ImGui::BeginTable(_("PlayerList"), 4, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_Reorderable)) {
-
+            if (ImGui::BeginTable(_("PlayerList"), 4, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg)) {
                 static const char* Team[4] = { "None", "Spec", "Red", "Blue" };
                 PlayerInfo_t pi{};
                 // Please fix this for me, I failed hard :(
-                if (ImGui::BeginPopup(_("Popup")))
+                /*if (ImGui::BeginPopup(_("Popup")))
                 {
 
                     if (ImGui::Button(_("Kick"))) {
@@ -1516,12 +1636,12 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
                     }
 
                     ImGui::EndPopup();
-                }
+                }*/
                 ImGui::TableSetupColumn(_("Index"));
                 ImGui::TableSetupColumn(_("Name"));
                 ImGui::TableSetupColumn(_("Team"));
                 ImGui::TableSetupColumn(_("Uhhhhhh"));
-                ImGui::TableHeadersRow();
+                //ImGui::TableHeadersRow();
                 if (g_Interfaces.Engine->IsInGame()) {
                     for (int playerIndex = 1; playerIndex < g_Interfaces.GlobalVars->maxclients; playerIndex++) {
                         if (g_Interfaces.Engine->GetPlayerInfo(playerIndex, &pi))
@@ -1552,6 +1672,9 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
                             ImGui::TableSetColumnIndex(2);
                             ImGui::Text(_("%s"), Team[pEntity->GetTeamNum()]);
                             ImGui::TableSetColumnIndex(3);
+                            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+                            ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
+                            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
                             if (ImGui::Button(_("Kick"))) {
                                 static char buff[256];
                                 snprintf(buff, sizeof(buff), _("callvote kick %d"), (int)pi.userID);
@@ -1559,10 +1682,11 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
                                 g_Interfaces.Engine->ClientCmd_Unrestricted(buff);
                             }
                             ImGui::SameLine();
-                            if (ImGui::Button(_("Open profile"))) {
+                            if (ImGui::Button(_("Profile"))) {
                                 g_SteamInterfaces.Friends015->ActivateGameOverlayToUser(_("steamid"), CSteamID((UINT64)(0x0110000100000000ULL + pi.friendsID)));
                             }
                             ImGui::SameLine();
+                            ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(1.0f, 0.5f));
                             if (g_Playerlist.IsIgnored(pi.friendsID)) { // There's definitely a better way to do this...
                                 if (ImGui::Button(_("Unignore"), ImVec2(60, 0))) {
                                     g_Playerlist.RemoveIgnore(pi.friendsID);
@@ -1573,6 +1697,8 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
                                     g_Playerlist.AddIgnore(pi.friendsID);
                                 }
                             }
+                            ImGui::PopStyleColor(2);
+                            ImGui::PopStyleVar(2);
 
                             ImGui::PopID();
                         }

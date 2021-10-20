@@ -118,6 +118,10 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		}
 	};
 
+	if (g_NewMenu.menuOpen) {
+		g_Interfaces.InputSystem->ResetInputState();
+	}
+
 	if (dt.FastStop) {
 		AntiWarp(pCmd);
 	}

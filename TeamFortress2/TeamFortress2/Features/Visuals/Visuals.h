@@ -43,6 +43,7 @@ public:
 	void ThirdPerson();
 	void ModulateWorld();
 	void UpdateWorldModulation();
+	void UpdateSkyModulation();
 	void RestoreWorldModulation();
 };
 
