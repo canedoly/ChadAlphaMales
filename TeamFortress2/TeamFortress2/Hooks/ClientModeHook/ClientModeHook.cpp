@@ -75,6 +75,10 @@ static void updateAntiAfk(CUserCmd* pCmd)
 int badcode = 0;
 bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CUserCmd* pCmd)
 {
+	if (g_NewMenu.menuOpen) {
+		g_Interfaces.InputSystem->ResetInputState();
+		g_Interfaces.InputSystem->EnableInput(false);
+	}
 	g_GlobalInfo.m_bSilentTime = false;
 	g_GlobalInfo.m_bAttacking = false;
 
@@ -117,10 +121,6 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			dt.FastStop = false;
 		}
 	};
-
-	if (g_NewMenu.menuOpen) {
-		g_Interfaces.InputSystem->ResetInputState();
-	}
 
 	if (dt.FastStop) {
 		AntiWarp(pCmd);

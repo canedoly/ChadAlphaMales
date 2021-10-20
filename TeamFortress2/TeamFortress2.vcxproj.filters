@@ -624,6 +624,7 @@
     <ClInclude Include="TeamFortress2\Hooks\BulletTracer\BulletTracer.h" />
     <ClInclude Include="TeamFortress2\Hooks\GameMovementHook\GameMovementHook.h" />
     <ClInclude Include="TeamFortress2\Features\Auto\AutoVaccinator\AutoVaccinator.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\IInputSystem\InputSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\Include\D3DX_DXGIFormatConvert.inl" />
