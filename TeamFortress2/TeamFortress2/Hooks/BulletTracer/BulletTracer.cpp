@@ -68,11 +68,13 @@ void __fastcall BulletTracers::FireBullet::Hook(void* ecx, void* edx, CBaseComba
 			shootPos.z -= 5.0f;
 
 			if (doTracer) {
-				UTIL_ParticleTracer(fart.c_str(), shootPos, trace.vEndPos, pLocal->GetIndex(), iAttachment, true);
+				UTIL_ParticleTracer(fart.c_str(), trace.vStartPos, trace.vEndPos, pLocal->GetIndex(), iAttachment, true);
 			}
 			doTracer = true;
 		}
 	}
 
-	original(ecx, edx, pWeapon, info, bDoEffects, nDamageType, nCustomDamageType);
+	if (!Vars::Visuals::TracerEffect.m_Var) {
+		original(ecx, edx, pWeapon, info, bDoEffects, nDamageType, nCustomDamageType);
+	}
 }

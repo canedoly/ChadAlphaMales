@@ -93,6 +93,11 @@
     <ClCompile Include="TeamFortress2\Hooks\BulletTracer\BulletTracer.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\GameMovementHook\GameMovementHook.cpp" />
     <ClCompile Include="TeamFortress2\Utils\Easings\easing.cpp" />
+<<<<<<< Updated upstream
+=======
+    <ClCompile Include="TeamFortress2\Features\Auto\AutoVaccinator\AutoVaccinator.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\CalcViewModelView\CalcViewModelView.cpp" />
+>>>>>>> Stashed changes
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -622,6 +627,12 @@
     <ClInclude Include="TeamFortress2\SDK\Includes\Typedef.h" />
     <ClInclude Include="TeamFortress2\Hooks\BulletTracer\BulletTracer.h" />
     <ClInclude Include="TeamFortress2\Hooks\GameMovementHook\GameMovementHook.h" />
+<<<<<<< Updated upstream
+=======
+    <ClInclude Include="TeamFortress2\Features\Auto\AutoVaccinator\AutoVaccinator.h" />
+    <ClInclude Include="TeamFortress2\SDK\Interfaces\IInputSystem\InputSystem.h" />
+    <ClInclude Include="TeamFortress2\Hooks\CalcViewModelView\CalcViewModelView.h" />
+>>>>>>> Stashed changes
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\Include\D3DX_DXGIFormatConvert.inl" />

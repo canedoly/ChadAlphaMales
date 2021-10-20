@@ -996,10 +996,11 @@ void VisualsTab() {
                 ImGui::SliderInt(_("Viewmodel Z"), &Vars::Visuals::ViewModelZ.m_Var, -25, 25, _("%d"), ImGuiSliderFlags_AlwaysClamp);
                 ImGui::EndCombo();
             }
+            ImGui::Checkbox(_("Aimbot viewmodel"), &Vars::Visuals::AimbotViewmodel.m_Var);
+            ImGui::Checkbox(_("Aimbot crosshair"), &Vars::Visuals::CrosshairAimPos.m_Var);
             ImGui::Checkbox(_("Remove scope"), &Vars::Visuals::RemoveScope.m_Var);
             ImGui::Checkbox(_("Remove zoom"), &Vars::Visuals::RemoveZoom.m_Var);
             ImGui::Checkbox(_("Remove recoil"), &Vars::Visuals::RemovePunch.m_Var);
-            ImGui::Checkbox(_("Aimbot crosshair"), &Vars::Visuals::CrosshairAimPos.m_Var);
             ImGui::Checkbox(_("Chat info"), &Vars::Visuals::ChatInfo.m_Var);
             ImGui::Checkbox(_("Remove Hats"), &Vars::Visuals::RemoveHats.m_Var);
             ImGui::Checkbox(_("PlayerList"), &Vars::Visuals::PlayerList.m_Var);

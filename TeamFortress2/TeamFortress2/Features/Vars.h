@@ -424,6 +424,7 @@ namespace Vars
 		inline CVar<bool> DevTextures				{ false, L"Dev Textures" };
 
 		inline CVar<bool> PlayerList				{ false, L"Playerlist" };
+		inline CVar<bool> AimbotViewmodel				{ true, L"aimbot viewmodel lodaslkpadfsopksdfaopfadsjpkasfdofsapofjop" };
 
 inline CVar<int> TracerEffect{ 0, L"Tracer style" };
    inline CVar<int> RagdollEffect{ 0, L"Ragdoll effect" };
