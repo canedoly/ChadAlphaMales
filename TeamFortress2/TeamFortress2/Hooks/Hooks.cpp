@@ -12,6 +12,7 @@ void CHooks::Init()
 
 		//ChatPrintfHook::Init();
 		Scoreboard::IsPlayerDominated::Init();
+		CalcViewModelView::Init();
 	}
 
 	if (g_Interfaces.Client)

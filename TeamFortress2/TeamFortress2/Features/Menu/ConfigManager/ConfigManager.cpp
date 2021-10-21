@@ -483,6 +483,7 @@ void CConfigManager::Save(const wchar_t *name)
 //#endif
 			SAVE_VAR(Vars::Visuals::TracerEffect);
 			SAVE_VAR(Vars::Visuals::RagdollEffect);
+			SAVE_VAR(Vars::Visuals::AimbotViewmodel);
 		}
 
 		//Misc
@@ -941,6 +942,7 @@ void CConfigManager::Load(const wchar_t *name)
 //#endif
 			LOAD_VAR(Vars::Visuals::TracerEffect);
 			LOAD_VAR(Vars::Visuals::RagdollEffect);
+			LOAD_VAR(Vars::Visuals::AimbotViewmodel);
 		}
 
 		//Misc

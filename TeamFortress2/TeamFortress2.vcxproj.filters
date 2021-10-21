@@ -94,6 +94,7 @@
     <ClCompile Include="TeamFortress2\Hooks\GameMovementHook\GameMovementHook.cpp" />
     <ClCompile Include="TeamFortress2\Utils\Easings\easing.cpp" />
     <ClCompile Include="TeamFortress2\Features\Auto\AutoVaccinator\AutoVaccinator.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\CalcViewModelView\CalcViewModelView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -625,6 +626,7 @@
     <ClInclude Include="TeamFortress2\Hooks\GameMovementHook\GameMovementHook.h" />
     <ClInclude Include="TeamFortress2\Features\Auto\AutoVaccinator\AutoVaccinator.h" />
     <ClInclude Include="TeamFortress2\SDK\Interfaces\IInputSystem\InputSystem.h" />
+    <ClInclude Include="TeamFortress2\Hooks\CalcViewModelView\CalcViewModelView.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\Include\D3DX_DXGIFormatConvert.inl" />
