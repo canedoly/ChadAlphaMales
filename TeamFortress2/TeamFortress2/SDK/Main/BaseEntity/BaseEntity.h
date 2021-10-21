@@ -481,6 +481,18 @@ public: //Everything else, lol.
         DYNVAR_SET(bool, this, bState, _("DT_TFPlayer"), _("m_bGlowEnabled"));
     }
 
+    __inline void UpdateGlowEffect()
+    {
+        typedef void(__thiscall* UpdateGlowEffectFn)(void*);
+        GetVFunc<UpdateGlowEffectFn>(this, 226)(this);
+    }
+
+    __inline void DestroyGlowEffect()
+    {
+        typedef void(__thiscall* DestroyGlowEffectFn)(void*);
+        GetVFunc<DestroyGlowEffectFn>(this, 227)(this);
+    }
+
     __inline void SetCond(const int nCond) {
         DYNVAR_SET(int, this, nCond, _("DT_TFPlayer"), _("m_Shared"), _("m_nPlayerCond"));
     }

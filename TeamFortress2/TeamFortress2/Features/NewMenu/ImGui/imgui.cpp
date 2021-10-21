@@ -4063,7 +4063,7 @@ void ImGui::NewFrame()
         g.IO.KeysDownDuration[i] = g.IO.KeysDown[i] ? (g.IO.KeysDownDuration[i] < 0.0f ? 0.0f : g.IO.KeysDownDuration[i] + g.IO.DeltaTime) : -1.0f;
 
     // Update gamepad/keyboard navigation
-    NavUpdate();
+    //NavUpdate();
 
     // Update mouse input state
     UpdateMouseInputs();

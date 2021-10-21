@@ -179,6 +179,14 @@ namespace Vars
 			inline CVar<bool> PopLocal      { false, L"Pop on local" };
 			inline CVar<float> HealthLeft   { 35.0f, L"Health left" };
 		}
+
+		namespace AutoVaccinator
+		{
+			inline CVar<bool> Active{ false, L"nigger" };
+			inline CVar<bool> OnlyFriends{ false, L"nigger" };
+			inline CVar<float> UberMaxPercentage { 70.f, L"nigger" };
+			
+		}
 	}
 
 	namespace ESP
@@ -419,6 +427,7 @@ namespace Vars
 		inline CVar<float> ThirdpersonOffsetZ{ 0.f, L"cum" };
 
 		inline CVar<bool> WorldModulation			{ false, L"World Modulation" };
+		inline CVar<bool> SkyModulation			{ false, L"Sky Modulation" };
 		inline CVar<bool> SkyboxChanger				{ true, L"Skybox changer" };
 
 		inline CVar<bool> DevTextures				{ false, L"Dev Textures" };

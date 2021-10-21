@@ -305,6 +305,8 @@ public:
 	int m_nMaxRoutablePayloadSize;
 
 	int m_nSplitPacketSequence;
+
+	inline void SendFartMsg(void* msg) { return GetVFunc<void(__thiscall*) (void*, void*, int, int)>((this), 40) (this, msg, 1, 0); }
 };
 
 class INetMessage

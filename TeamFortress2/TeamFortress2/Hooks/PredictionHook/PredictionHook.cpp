@@ -8,6 +8,7 @@ void __stdcall PredictionHook::RunCommand::Hook(CBaseEntity* pEntity, CUserCmd* 
 		g_Interfaces.MoveHelper = pMoveHelper;
 }
 
+
 int CalculateTick(int simTicks, CBaseEntity* player)
 {
 	int clockcorrect = TIME_TO_TICKS(0.06f); //sv_clockcorrectmsecs

@@ -7,6 +7,7 @@
 #include "AutoDetonate/AutoDetonate.h"
 #include "AutoBlast/AutoBlast.h"
 #include "AutoUber/AutoUber.h"
+#include "AutoVaccinator/AutoVaccinator.h"
 
 bool CAuto::ShouldRun(CBaseEntity *pLocal)
 {
@@ -32,6 +33,7 @@ void CAuto::Run(CUserCmd* pCmd)
 	{
 		if (ShouldRun(pLocal))
 		{
+			g_AutoVaccinator.Run(pCmd);
 			if (g_AutoGlobal.IsKeyDown()) { // This looks dumb but oh well fuck it
 				if (Vars::Triggerbot::Global::Active.m_Var) { // I had to put the fucking global triggerbot shit here because it's unironically fucking annoying and the auto detonate thingie doesn't want to work because of it
 					g_AutoShoot.Run(pLocal, pWeapon, pCmd);
