@@ -582,6 +582,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(g_SpectatorList.m_nSpecListY);
 
 			SAVE_STRING(Vars::Skybox::SkyboxName);
+			SAVE_STRING(Vars::Fart::customFont);
 		}
 
 		m_Write.close();
@@ -1041,9 +1042,76 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(g_SpectatorList.m_nSpecListY);
 
 			LOAD_STRING(Vars::Skybox::SkyboxName);
+			LOAD_STRING(Vars::Fart::customFont);
 		}
 
 		m_Read.close();
+	}
+
+	std::string fart2 = Utils::str_tolower(Vars::Fart::customFont);
+	if (Vars::Fart::customFont.c_str() == "" || fart2 == "default") {
+		g_Draw.ReInitFonts(
+			{
+				//FONT_ESP
+				{ 0x0, _("Segoe UI"), 12, 0, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS },
+				//FONT_ESP_OUTLINED
+				{ 0x0, _("Segoe UI"), 12, 0, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS },
+
+				//FONT_ESP_NAME
+				{ 0x0, _("Verdana"), 12, 0, FONTFLAG_DROPSHADOW },
+				//FONT_ESP_NAME_OUTLINED
+				{ 0x0, _("Segoe UI"), 13, 100, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS},
+
+				//FONT_ESP_COND
+				{ 0x0, _("Segoe UI"), 12, 100, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS },
+				//FONT_ESP_COND_OUTLINED
+				{ 0x0, _("Consolas"), 10, 0, FONTFLAG_OUTLINE },
+
+				//FONT_ESP_PICKUPS
+				{ 0x0, _("Consolas"), 13, 0, FONTFLAG_NONE },
+				//FONT_ESP_PICKUPS_OUTLINED
+				{ 0x0, _("Segoe UI"), 13, 100, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS},
+
+				//FONT_MENU
+				{ 0x0, _("Verdana"), 12, 0, FONTFLAG_NONE | FONTFLAG_DROPSHADOW },
+				//FONT_MENU_OUTLINED
+				{ 0x0, _("Verdana"), 12, 0, FONTFLAG_OUTLINE },
+
+				/*FONT_ICONS*/
+				{ 0x0, _("Tf2weaponicons Regular"), 20, 0, FONTFLAG_NONE},
+			}
+		);
+	}
+	else {
+		g_Draw.ReInitFonts(
+			{
+				//FONT_ESP
+				{ 0x0, Vars::Fart::customFont.c_str(), 12, 0, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS },
+				//FONT_ESP_OUTLINED
+				{ 0x0, Vars::Fart::customFont.c_str(), 12, 0, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS },
+
+				//FONT_ESP_NAME
+				{ 0x0, Vars::Fart::customFont.c_str(), 12, 0, FONTFLAG_DROPSHADOW },
+				//FONT_ESP_NAME_OUTLINED
+
+				{ 0x0, Vars::Fart::customFont.c_str(), 13, 100, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS},
+
+				//FONT_ESP_COND
+				{ 0x0, Vars::Fart::customFont.c_str(), 12, 100, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS },
+				//FONT_ESP_COND_OUTLINED
+				{ 0x0, Vars::Fart::customFont.c_str(), 10, 0, FONTFLAG_OUTLINE },
+
+				//FONT_ESP_PICKUPS
+				{ 0x0, Vars::Fart::customFont.c_str(), 13, 0, FONTFLAG_NONE },
+				//FONT_ESP_PICKUPS_OUTLINED
+				{ 0x0, Vars::Fart::customFont.c_str(), 13, 100, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS},
+
+				//FONT_MENU
+				{ 0x0, _("Verdana"), 12, 0, FONTFLAG_NONE | FONTFLAG_DROPSHADOW },
+				//FONT_MENU_OUTLINED
+				{ 0x0, _("Verdana"), 12, 0, FONTFLAG_OUTLINE },
+			}
+		);
 	}
 }
 

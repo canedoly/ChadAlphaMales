@@ -455,6 +455,9 @@ inline CVar<int> TracerEffect{ 0, L"Tracer style" };
 		inline std::string SkyboxName = "";
 	}
 
+	namespace Fart {
+		inline std::string customFont = "";
+	}
 	namespace Misc
 	{
 		inline CVar<bool> AutoJump				{ true, L"Auto Jump" };

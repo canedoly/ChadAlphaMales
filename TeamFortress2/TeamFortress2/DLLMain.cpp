@@ -24,6 +24,7 @@ int StringToWString(std::wstring& ws, const std::string& s)
 	return 0;
 }
 
+
 DWORD WINAPI MainThread(LPVOID lpParam)
 {
 	/*
@@ -109,6 +110,39 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		std::wstring s;
 		StringToWString(s, "Default");
 		g_CFG.Load(s.c_str());
+		std::string fart = Utils::str_tolower(Vars::Fart::customFont);
+		//std::transform(fart.begin(), fart.end(), fart.begin(), std::tolower);
+		if (Vars::Fart::customFont.c_str() == "" || fart == "default") {
+			g_Draw.ReInitFonts(
+				{
+					//FONT_ESP
+					{ 0x0, Vars::Fart::customFont.c_str(), 12, 0, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS },
+					//FONT_ESP_OUTLINED
+					{ 0x0, Vars::Fart::customFont.c_str(), 12, 0, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS },
+
+					//FONT_ESP_NAME
+					{ 0x0, Vars::Fart::customFont.c_str(), 12, 0, FONTFLAG_DROPSHADOW },
+					//FONT_ESP_NAME_OUTLINED
+
+					{ 0x0, Vars::Fart::customFont.c_str(), 13, 100, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS},
+
+					//FONT_ESP_COND
+					{ 0x0, Vars::Fart::customFont.c_str(), 12, 100, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS },
+					//FONT_ESP_COND_OUTLINED
+					{ 0x0, Vars::Fart::customFont.c_str(), 10, 0, FONTFLAG_OUTLINE },
+
+					//FONT_ESP_PICKUPS
+					{ 0x0, Vars::Fart::customFont.c_str(), 13, 0, FONTFLAG_NONE },
+					//FONT_ESP_PICKUPS_OUTLINED
+					{ 0x0, Vars::Fart::customFont.c_str(), 13, 100, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS},
+
+					//FONT_MENU
+					{ 0x0, _("Verdana"), 12, 0, FONTFLAG_NONE | FONTFLAG_DROPSHADOW },
+					//FONT_MENU_OUTLINED
+					{ 0x0, _("Verdana"), 12, 0, FONTFLAG_OUTLINE },
+				}
+			);
+		}
 		g_Visuals.AddToEventLog(_("Default config loaded!"));
 	}
 
