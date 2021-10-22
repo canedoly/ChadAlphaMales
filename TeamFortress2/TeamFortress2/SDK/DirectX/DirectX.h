@@ -8,3 +8,5 @@
 #pragma warning (pop)
 
 inline DWORD g_dwDirectXDevice;
+inline WNDPROC pOldWindowProc;
+inline HWND hWindow;
