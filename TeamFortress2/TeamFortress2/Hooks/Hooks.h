@@ -23,6 +23,7 @@
 #include "ChatPrintfHook/ChatPrintfHook.h"
 #include "BulletTracer/BulletTracer.h"
 #include "CalcViewModelView/CalcViewModelView.h"
+#include "MaterialHook/MaterialHook.h"
 
 class CHooks
 {

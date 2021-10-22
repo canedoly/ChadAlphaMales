@@ -48,6 +48,14 @@ void CHooks::Init()
 		Table.Hook(DoPostScreenSpaceEffects::index, &DoPostScreenSpaceEffects::Hook);
 	}
 
+	if (g_Interfaces.MatSystem)
+	{
+		using namespace Material;
+
+		Table.Init(g_Interfaces.MatSystem);
+		Table.Hook(Uncache::fartcumballs69sexweed, &Uncache::Hook);
+	}
+
 	if (g_Interfaces.Prediction)
 	{
 		using namespace PredictionHook;

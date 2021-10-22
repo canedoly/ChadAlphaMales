@@ -148,6 +148,7 @@
     <ClCompile Include="TeamFortress2\Hooks\Hooks.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\InCondHook\InCondHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\InventoryExpander\InventoryExpander.cpp" />
+    <ClCompile Include="TeamFortress2\Hooks\MaterialHook\MaterialHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\ModelRenderHook\ModelRenderHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\PanelHook\PanelHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\PerformScreenSpaceEffectsHook\PerformScreenSpaceEffectsHook.cpp" />
@@ -247,6 +248,7 @@
     <ClInclude Include="TeamFortress2\Hooks\Hooks.h" />
     <ClInclude Include="TeamFortress2\Hooks\InCondHook\InCondHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\InventoryExpander\InventoryExpander.h" />
+    <ClInclude Include="TeamFortress2\Hooks\MaterialHook\MaterialHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\ModelRenderHook\ModelRenderHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\PanelHook\PanelHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\PerformScreenSpaceEffectsHook\PerformScreenSpaceEffectsHook.h" />
