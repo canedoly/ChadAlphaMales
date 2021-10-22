@@ -494,7 +494,7 @@ bool CAimbotHitscan::ShouldFire(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon,
 		CTraceFilterHitscan filter = { };
 		filter.pSkip = pLocal;
 
-		Utils::Trace(vTraceStart, vTraceEnd, (MASK_SHOT /* | CONTENTS_GRATE | MASK_VISIBLE*/), &filter, &trace);
+		Utils::Trace(vTraceStart, vTraceEnd, (MASK_SHOT_HULL /* | CONTENTS_GRATE | MASK_VISIBLE*/), &filter, &trace);
 
 		if (trace.entity != Target.m_pEntity)
 			return false;
