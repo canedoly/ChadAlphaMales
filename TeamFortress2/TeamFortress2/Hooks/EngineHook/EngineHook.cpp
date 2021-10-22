@@ -29,7 +29,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 		}
 	}
 
-	if (dt.Recharging && dt.Charged != dt.ToShift) //recharge
+	if (dt.Recharging && dt.Charged < dt.ToShift) //recharge
 	{
 		dt.barAlpha = 255;
 		dt.FastStop = false;
