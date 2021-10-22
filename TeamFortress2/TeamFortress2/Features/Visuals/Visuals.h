@@ -43,8 +43,10 @@ public:
 	void ThirdPerson();
 	void ModulateWorld();
 	void UpdateWorldModulation();
+	void ModulateSky();
 	void UpdateSkyModulation();
 	void RestoreWorldModulation();
+	void RestoreSkyModulation();
 };
 
 inline CVisuals g_Visuals;

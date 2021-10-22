@@ -90,6 +90,12 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	if (OriginalFn(g_Interfaces.ClientMode, input_sample_frametime, pCmd))
 		g_Interfaces.Prediction->SetLocalViewAngles(pCmd->viewangles);
 
+	if (dt.Charged == 0 && dt.barAlpha > 0) {
+		if (!dt.barAlpha - 3 < 0) {
+			dt.barAlpha -= 3;
+		}
+	}
+
 	uintptr_t _bp; __asm mov _bp, ebp;
 	bool* pSendPacket = (bool*)(***(uintptr_t***)_bp - 0x1);
 

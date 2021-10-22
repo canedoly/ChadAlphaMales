@@ -18,6 +18,7 @@ void __stdcall ClientHook::PostEntity::Hook()
 	g_Interfaces.Engine->ClientCmd_Unrestricted(_("r_maxdlights 69420"));
 	g_Interfaces.Engine->ClientCmd_Unrestricted(_("r_dynamic 1"));
 	g_Visuals.ModulateWorld();
+	g_Visuals.ModulateSky();
 }
 
 void __stdcall ClientHook::ShutDown::Hook()
@@ -177,6 +178,7 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 
 	case EClientFrameStage::FRAME_RENDER_START: {
 		g_Visuals.UpdateWorldModulation();
+		g_Visuals.UpdateSkyModulation();
 		break;
 	}
 
