@@ -36,7 +36,6 @@
     <ClCompile Include="TeamFortress2\Hooks\SurfaceHook\SurfaceHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\UniformRandomStreamHook\UniformRandomStreamHook.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\WndProcHook\WndProcHook.cpp" />
-    <ClCompile Include="TeamFortress2\SDK\Includes\bitbuf.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Includes\MD5.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\ConVar\ConVar.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Interfaces\Interfaces.cpp" />
@@ -96,6 +95,7 @@
     <ClCompile Include="TeamFortress2\Features\Auto\AutoVaccinator\AutoVaccinator.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\CalcViewModelView\CalcViewModelView.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\MaterialHook\MaterialHook.cpp" />
+    <ClCompile Include="TeamFortress2\SDK\Includes\bitbuf.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -133,7 +133,6 @@
     <ClInclude Include="TeamFortress2\Hooks\SurfaceHook\SurfaceHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\UniformRandomStreamHook\UniformRandomStreamHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\WndProcHook\WndProcHook.h" />
-    <ClInclude Include="TeamFortress2\SDK\Includes\bitbuf.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\Classes.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\Const.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\dt_common.h" />
@@ -629,6 +628,7 @@
     <ClInclude Include="TeamFortress2\SDK\Interfaces\IInputSystem\InputSystem.h" />
     <ClInclude Include="TeamFortress2\Hooks\CalcViewModelView\CalcViewModelView.h" />
     <ClInclude Include="TeamFortress2\Hooks\MaterialHook\MaterialHook.h" />
+    <ClInclude Include="TeamFortress2\SDK\Includes\bitbuf.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\Include\D3DX_DXGIFormatConvert.inl" />

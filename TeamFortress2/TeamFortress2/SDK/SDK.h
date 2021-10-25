@@ -76,6 +76,20 @@ enum InitReturnVal_t
 	INIT_LAST_VAL,
 };
 
+////Takes hex number (00FF00) and returns an std::string of that escaped into chat
+//bool ChatColor(const char* colorString, std::string& out) {
+//	if (strlen(colorString) != 5) {
+//		return false;
+//	}
+//	else {
+//		out[0] = '\x7';
+//		for (int i = 0; i < 6; i++) {
+//			out[i + 1] = colorString[i];
+//		}
+//		return true;
+//	}
+//}
+
 struct ShaderStencilState_t
 {
 	bool                        m_bEnable;

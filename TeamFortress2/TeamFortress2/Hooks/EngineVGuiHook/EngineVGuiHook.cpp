@@ -9,6 +9,7 @@
 #include "../../Features/Radar/Radar.h"
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/Playerlist/Playerlist.h"
+#include "../../Utils/TFM/tfm.h"
 
 int ticksChoked = 0;
 int nig = 0;
@@ -131,9 +132,8 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 
 				int width = g_ScreenSize.w;
 				int	height = g_ScreenSize.h;
-				static wchar_t buff[512];
+				static char buff[512];
 				int label_w, label_h;
-				static int nignog = 0;
 				static auto fps = 0;
 
 				static float flPressedTime = g_Interfaces.Engine->Time();
@@ -146,9 +146,11 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 
 				int ms = std::max(0, (int)std::round(g_GlobalInfo.m_Latency * 1000.f));
 				// Change admin to something else if you really need to, it was for the protection thing
-				_snwprintf(buff, sizeof(buff), _(L"CAM [v1.3] | fps: %i | delay: %ims") ,fps, ms);
+				//_snprintf(buff, sizeof(buff), _("CAM [v1.3] | fps: %i | delay: %ims") ,fps, ms);
+				std::string waterMark = tfm::format(_("CAM [v1.3b] | fps: %d | delay: %ims"), fps, ms);
+				std::wstring waterMarkW(waterMark.begin(), waterMark.end());
 
-				g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_MENU].dwFont, buff, label_w, label_h);
+				g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_MENU].dwFont, waterMarkW.c_str(), label_w, label_h);
 
 				int boxw = label_w + 10;
 
@@ -163,7 +165,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 
 						g_Draw.Rect(width - 10 - boxw, 11, boxw, 18, { 0, 0, 0, 200 });
 						g_Draw.Rect(width - 10 - boxw, 10, boxw, 2, Vars::Menu::Colors::WidgetActive);
-						g_Draw.String(FONT_MENU, width - 10 - boxw + 5, 20, { 255,255,255,255 }, ALIGN_CENTERVERTICAL, buff);
+						g_Draw.String(FONT_MENU, width - 10 - boxw + 5, 20, { 255,255,255,255 }, ALIGN_CENTERVERTICAL, waterMarkW.c_str());
 					}
 				}
 			}

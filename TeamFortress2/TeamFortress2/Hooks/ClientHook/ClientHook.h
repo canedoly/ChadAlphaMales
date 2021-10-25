@@ -38,7 +38,7 @@ namespace ClientHook
 	{
 		const int index = 36;
 		using fn = bool(__thiscall*)(CBaseClientDLL*, int, bf_read&);
-		bool __stdcall Hook(int msg_type, bf_read& msg_data);
+		bool __stdcall Hook(int type, bf_read& buf);
 	}
 
 	//23 WriteUsercmdDeltaToBuffer(int, bf_write*, int, int, bool)

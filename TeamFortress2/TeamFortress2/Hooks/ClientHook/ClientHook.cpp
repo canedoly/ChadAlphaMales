@@ -6,6 +6,7 @@
 #include "../../Features/AttributeChanger/AttributeChanger.h"
 #include "../../Features/RichPresence/RichPresence.h"
 #include "../../SDK/Includes/bitbuf.h"
+#include "../../Utils/TFM/tfm.h"
 void __stdcall ClientHook::PreEntity::Hook(char const* szMapName)
 {
 	Table.Original<fn>(index)(g_Interfaces.Client, szMapName);
@@ -186,39 +187,126 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 	}
 }
 
-bool __stdcall ClientHook::DispatchUserMessage::Hook(int msg_type, bf_read& msg_data)
+bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& buf)
 {
-	/*bf_read msg_copy = msg_data;
-	msg_copy.Seek(0);
-	switch (msg_type) {
-	case 3:
+	static auto oDispatchUserMessage = Table.Original<fn>(index);
+
+	/*g_Interfaces.CVars->ConsoleColorPrintf({0, 155, 255, 255}, tfm::format("[!] Message ID: %d", type).c_str());
+
+	if (buf.IsOverflowed()) {
+		return false;
+	}
+
+	int s, i;
+	char c;
+	const char* buf_data = reinterpret_cast<const char*>(buf.m_pData);
+
+	std::string data;
+	switch (type) {
 	case 4:
-		{
-			char msg_name[50], playerName[128] params1 , msg[127] params2 ;
-
-
-			int ent_idx = msg_copy.ReadByte();
-			BOOL chat = msg_copy.ReadShort();
-			msg_copy.ReadString(msg_name, 50);
-			msg_copy.ReadString(playerName, 128);
-			msg_copy.ReadString(msg, 127);
-			BOOL textallchat = msg_copy.ReadShort();
-
-			//std::cout << "msg_name: " << msg_name << std::endl;
-			//std::cout << "player_name: " << playerName << std::endl;
-			//std::cout << "message: " << msg << std::endl;
-			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("msg_type: %d\n"), msg_type);
-			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("msg_type: %d\n"), ent_idx);
-			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("msg_type: %d\n"), chat);
-			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("msg_name: %s\n"), msg_name);
-			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("playerName: %s\n"), playerName);
-			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("msg: %s\n"), msg);
-			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("textallchat: %d\n"), textallchat);
+		s = buf.GetNumBytesLeft();
+		if (s >= 256 || !g_EntityCache.m_pLocal) {
 			break;
 		}
-	}*/
-	return Table.Original<fn>(index)(g_Interfaces.Client, msg_type, msg_data);
+		for (i = 0; i < s; i++) {
+			data.push_back(buf_data[i]);
+		}
+
+		const char* p = data.c_str() + 2;
+		std::string event(p), name((p += event.size() + 1)), message(p + name.size() + 1);
+		g_Interfaces.CVars->ConsoleColorPrintf({ 0, 155, 255, 255 }, tfm::format("[!] Event: %s", event).c_str());
+		g_Interfaces.CVars->ConsoleColorPrintf({ 0, 155, 255, 255 }, tfm::format("[!] Name: %s", name).c_str());
+		g_Interfaces.CVars->ConsoleColorPrintf({ 0, 155, 255, 255 }, tfm::format("[!] Message: %s", message).c_str());
+		buf.Seek(0);
+		break;
+	}
+
+	return true;//oDispatchUserMessage(g_Interfaces.Client, type, buf);
+		/*if (event.find("TF_Chat") == 0) {
+			PlayerInfo_t pi;
+			if (g_Interfaces.Engine->GetPlayerInfo(g_Interfaces.Engine->GetLocalPlayer()))
+		}*/
+
+	if (type == 25) {
+		return true;
+	}
+	return oDispatchUserMessage(g_Interfaces.Client, type, buf);
 }
+	/*g_Interfaces.CVars->ConsoleColorPrintf({0, 155, 255, 255}, tfm::format("[!] Message ID: %d", iMessageID).c_str());
+
+	if (pBFMessage.IsOverflowed()) {
+		return oDispatchUserMessage(g_Interfaces.Client, pDumbArg, iMessageID, pBFMessage);
+	}
+
+	bool bCallOriginal = true;2
+
+	switch (iMessageID) {
+	case 45:
+	{
+		int iReason = pBFMessage.ReadByte();
+		int iSeconds = pBFMessage.ReadShort();
+		std::string const str({ '\x7', 'F', 'F', '0', '0', 'F', 'F' });
+		g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%sReason: %d", str, iReason).c_str());
+		g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%sSeconds: %d", str, iSeconds).c_str());
+		pBFMessage.Seek(0);
+		break;
+	}
+	case 46:
+	{
+		int iTeam = pBFMessage.ReadByte();
+		int iCaller = pBFMessage.ReadByte();
+		char cReason[64], cDummyName[64];
+		pBFMessage.ReadString(cReason, 64, false, nullptr);
+		pBFMessage.ReadString(cDummyName, 64, false, nullptr);
+		int iTarget = (int)(((unsigned char)pBFMessage.ReadByte()) >> 1);
+		//CCatConnect::OnPotentialVoteKickStarted(iTeam, iCaller, iTarget, cReason);
+		std::string const str({ '\x7', 'F', 'F', '0', '0', 'F', 'F' });
+		g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%sTeam: %d", str, iTeam).c_str());
+		g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%sCaller: %d", str, iCaller).c_str());
+		g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%sReason: %s", str, cReason).c_str());
+		g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%sDummyName: %s", str, cDummyName).c_str());
+		g_Interfaces.ClientMode->m_pChatElement->ChatPrintf(0, tfm::format("%sTarget: %d", str, iTarget).c_str());
+		pBFMessage.Seek(0);
+		break;
+	}
+	}
+	return oDispatchUserMessage(g_Interfaces.Client, pDumbArg, iMessageID, pBFMessage);*/
+
+
+
+//bool __stdcall ClientHook::DispatchUserMessage::Hook(int msg_type, bf_read& msg_data)
+//{
+//	/*bf_read msg_copy = msg_data;
+//	msg_copy.Seek(0);
+//	switch (msg_type) {
+//	case 3:
+//	case 4:
+//		{
+//			char msg_name[50], playerName[128] params1 , msg[127] params2 ;
+//
+//
+//			int ent_idx = msg_copy.ReadByte();
+//			BOOL chat = msg_copy.ReadShort();
+//			msg_copy.ReadString(msg_name, 50);
+//			msg_copy.ReadString(playerName, 128);
+//			msg_copy.ReadString(msg, 127);
+//			BOOL textallchat = msg_copy.ReadShort();
+//
+//			//std::cout << "msg_name: " << msg_name << std::endl;
+//			//std::cout << "player_name: " << playerName << std::endl;
+//			//std::cout << "message: " << msg << std::endl;
+//			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("msg_type: %d\n"), msg_type);
+//			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("msg_type: %d\n"), ent_idx);
+//			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("msg_type: %d\n"), chat);
+//			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("msg_name: %s\n"), msg_name);
+//			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("playerName: %s\n"), playerName);
+//			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("msg: %s\n"), msg);
+//			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("textallchat: %d\n"), textallchat);
+//			break;
+//		}
+//	}*/
+//	return Table.Original<fn>(index)(g_Interfaces.Client, msg_type, msg_data);
+//}
 
 using WriteUserCmd_t = void(__fastcall*)(void*, CUserCmd*, CUserCmd*);
 
@@ -238,8 +326,6 @@ void WriteUserCmd(bf_write* buffer, CUserCmd* to, CUserCmd* from) {
 		add esp, 4h;
 	}
 }
-
-
 bool __stdcall ClientHook::WriteUserCmdDeltaToBuffer::Hook(bf_write* buffer, int from, int to, bool isNewCmd) {
 	/*std::cout << from << std::endl;
 	std::cout << buffer << std::endl;
@@ -293,3 +379,4 @@ bool __stdcall ClientHook::WriteUserCmdDeltaToBuffer::Hook(bf_write* buffer, int
 	return true;*/
 	return Table.Original<fn>(index)(g_Interfaces.Client, buffer, from, to, isNewCmd);
 }
+
