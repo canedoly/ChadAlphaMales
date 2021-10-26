@@ -1303,7 +1303,7 @@ void CMenu::Run()
 						CheckBox(Vars::Triggerbot::Shoot::TriggerPlayers, _(L"Shoot players"));
 						CheckBox(Vars::Triggerbot::Shoot::TriggerBuildings, _(L"Shoot buildings"));
 						CheckBox(Vars::Triggerbot::Shoot::HeadOnly, _(L"Only shoot when aiming at head"));
-						CheckBox(Vars::Triggerbot::Shoot::WaitForCharge, _(L"Sniper waits for enough charge"));
+						CheckBox(Vars::Triggerbot::Shoot::WaitForHeadshot, _(L"Sniper waits for enough charge"));
 						InputFloat(Vars::Triggerbot::Shoot::HeadScale, 0.5f, 1.0f, 0.1f, L"%.1f");
 					}
 					GroupBoxEnd(_(L"AutoShoot"), 170);

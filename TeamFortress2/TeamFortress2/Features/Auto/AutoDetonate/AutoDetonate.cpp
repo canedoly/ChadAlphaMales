@@ -57,6 +57,9 @@ void CAutoDetonate::Run(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCm
 
 						if (Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var && !pEntity->IsVulnerable())
 							continue;
+
+						if (Vars::Triggerbot::Global::IgnoreTaunts.m_Var && pEntity->IsTaunting())
+							continue;
 					}
 
 					CTraceFilterWorldAndPropsOnly Filter = { };

@@ -129,21 +129,23 @@ namespace Vars
 	{
 		namespace Global
 		{
-			inline CVar<bool> Active				{ false, L"Active" };
-			inline CVar<int> TriggerKey				{ VK_LSHIFT, L"Trigger Key" };
-			inline CVar<bool> IgnoreInvlunerable	{ true, L"Ignore Invulnerable" };
-			inline CVar<bool> IgnoreCloaked			{ false, L"Ignore Cloaked" };
-			inline CVar<bool> IgnoreFriends			{ false, L"Ignore Friends" };
+			inline CVar<bool> Active{ false, L"Active" };
+			inline CVar<int> TriggerKey{ VK_LSHIFT, L"Trigger Key" };
+			inline CVar<bool> IgnoreInvlunerable{ true, L"Ignore Invulnerable" };
+			inline CVar<bool> IgnoreCloaked{ false, L"Ignore Cloaked" };
+			inline CVar<bool> IgnoreFriends{ false, L"Ignore Friends" };
+			inline CVar<bool> IgnoreTaunts{ false, L"Ignore Taunts" };
 		}
 
 		namespace Shoot
 		{
-			inline CVar<bool> Active			{ false, L"Active" };
-			inline CVar<bool> TriggerPlayers	{ true, L"Trigger Players" };
-			inline CVar<bool> TriggerBuildings	{ true, L"Trigger Buildings" };
-			inline CVar<bool> HeadOnly			{ false, L"Head Only" };
-			inline CVar<bool> WaitForCharge		{ true, L"Wait For Charge" };
-			inline CVar<float> HeadScale		{ 0.7f, L"Head Scale" };
+			inline CVar<bool> Active{ false, L"Active" };
+			inline CVar<bool> TriggerPlayers{ true, L"Trigger Players" };
+			inline CVar<bool> TriggerBuildings{ true, L"Trigger Buildings" };
+			inline CVar<bool> HeadOnly{ false, L"Head Only" };
+			inline CVar<bool> WaitForHeadshot{ true, L"Wait For Charge" };
+			inline CVar<float> HeadScale{ 0.7f, L"Head Scale" };
+			inline CVar<bool> ScopedOnly{ false, L"Scoped Only" };
 		}
 
 		namespace Stab

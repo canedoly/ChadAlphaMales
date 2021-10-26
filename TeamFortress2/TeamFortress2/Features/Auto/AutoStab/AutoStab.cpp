@@ -71,6 +71,9 @@ bool CAutoStab::IsEntityValid(CBaseEntity *pLocal, CBaseEntity *pEntity)
 	if (Vars::Triggerbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[pEntity->GetIndex()])
 		return false;
 
+	if (Vars::Triggerbot::Global::IgnoreTaunts.m_Var && pEntity->IsTaunting())
+		return false;
+
 	return true;
 }
 
