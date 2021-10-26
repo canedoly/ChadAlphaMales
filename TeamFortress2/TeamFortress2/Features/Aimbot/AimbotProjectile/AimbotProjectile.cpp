@@ -324,7 +324,6 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 
 				break;
 			}
-
 			default: break;
 			}
 
@@ -443,9 +442,14 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 				if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[Player->GetIndex()])
 					continue;
 
-				if (pLocal->GetClassNum() == CLASS_PYRO && pWeapon->GetSlot() == 0)
+				if (pLocal->GetClassNum() == ETFClass::CLASS_PYRO && pWeapon->GetSlot() == EWeaponSlots::SLOT_PRIMARY)
 				{
 					if (Vars::Aimbot::Global::IgnoreVaccinator.m_Var && Player->IsFireImmune())
+						continue;
+				}
+				else if (nWeaponID == TF_WEAPON_COMPOUND_BOW && pLocal->GetClassNum() == ETFClass::CLASS_SNIPER && pWeapon->GetSlot() == EWeaponSlots::SLOT_PRIMARY)
+				{
+					if (Vars::Aimbot::Global::IgnoreVaccinator.m_Var && Player->IsBulletImmune())
 						continue;
 				}
 				else
