@@ -317,7 +317,7 @@ void AimbotTab() {
             ColorPicker(_("Cloaked"), Colors::Cloak);
             ImGui::Checkbox(_("Ignore friends"), &Vars::Aimbot::Global::IgnoreFriends.m_Var);
             ImGui::Checkbox(_("Ignore taunting"), &Vars::Aimbot::Global::IgnoreTaunting.m_Var);
-
+            ImGui::Checkbox(_("Ignore Vaccinator"), &Vars::Aimbot::Global::IgnoreVaccinator.m_Var);
         }
         ImGui::EndChild();
         ImGui::EndGroup();
@@ -440,12 +440,10 @@ void TriggerbotTab() {
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(MenuCol.x, MenuCol.y, MenuCol.z, 255));
             InputKeybind(_("Trigger key"), Vars::Triggerbot::Global::TriggerKey);
             ImGui::PopStyleColor(3);
-            ImGui::Checkbox(_("Shoot players##gASsp"), &Vars::Triggerbot::Shoot::TriggerPlayers.m_Var);
-            ImGui::Checkbox(_("Head only"), &Vars::Triggerbot::Shoot::HeadOnly.m_Var);
             ImGui::Checkbox(_("Ignore Invulnerable"), &Vars::Triggerbot::Global::IgnoreInvlunerable.m_Var);
             ImGui::Checkbox(_("Ignore Cloaked"), &Vars::Triggerbot::Global::IgnoreCloaked.m_Var);
             ImGui::Checkbox(_("Ignore Friends"), &Vars::Triggerbot::Global::IgnoreFriends.m_Var);
-            ImGui::Checkbox(_("Wait for charge##gASwfc"), &Vars::Triggerbot::Shoot::WaitForCharge.m_Var);
+            ImGui::Checkbox(_("Ignore Taunts"), &Vars::Triggerbot::Global::IgnoreTaunts.m_Var);
         }
         ImGui::EndChild();
         ImGui::EndGroup();
@@ -475,6 +473,7 @@ void TriggerbotTab() {
         ImGui::Checkbox(_("Detonator flares###gADd"), &Vars::Triggerbot::Detonate::Flares.m_Var);
         //FixSlider;
         //ImGui::SliderFloat("Detonate radius###gADr", &Vars::Triggerbot::Detonate::RadiusScale.m_Var, 0.5f, 1.0f, "%.1f", ImGuiSliderFlags_Logarithmic);
+
         ImGui::EndChild();
         ImGui::EndGroup();
     }
@@ -521,14 +520,14 @@ void TriggerbotTab() {
         ImGui::SetCursorPosX(517);
 
         ImGui::MenuChild(_("Auto Shoot"), ImVec2(260, 220), false, ImGuiWindowFlags_NoScrollWithMouse);
-        //ImGui::Checkbox(_("Active##gAS"), &Vars::Triggerbot::Shoot::Active.m_Var);
+        ImGui::Checkbox(_("Active##gAS"), &Vars::Triggerbot::Shoot::Active.m_Var);
         ImGui::Checkbox(_("Shoot players##gASsp"), &Vars::Triggerbot::Shoot::TriggerPlayers.m_Var);
-        //ImGui::Checkbox(_("Shoot buildings##gASsb"), &Vars::Triggerbot::Shoot::TriggerBuildings.m_Var);
+        ImGui::Checkbox(_("Shoot buildings##gASsb"), &Vars::Triggerbot::Shoot::TriggerBuildings.m_Var);
         ImGui::Checkbox(_("Head only##gASho"), &Vars::Triggerbot::Shoot::HeadOnly.m_Var);
-        //FixSlider;
-        //ImGui::SliderFloat(_("Head scale##gAShs"), &Vars::Triggerbot::Shoot::HeadScale.m_Var, 0.5f, 1.0f, "%.1f", ImGuiSliderFlags_Logarithmic);
-        ImGui::Checkbox(_("Wait for charge##gASwfc"), &Vars::Triggerbot::Shoot::WaitForCharge.m_Var);
-
+        ImGui::Checkbox(_("Wait for headshot##gASwfc"), &Vars::Triggerbot::Shoot::WaitForHeadshot.m_Var);
+        ImGui::Checkbox(_("Scoped Only##gASwfc"), &Vars::Triggerbot::Shoot::ScopedOnly.m_Var);
+        FixSlider;
+        ImGui::SliderFloat(_("Head scale##gAShs"), &Vars::Triggerbot::Shoot::HeadScale.m_Var, 0.5f, 1.0f, "%.1f", ImGuiSliderFlags_Logarithmic);
 
         ImGui::EndChild();
         ImGui::EndGroup();

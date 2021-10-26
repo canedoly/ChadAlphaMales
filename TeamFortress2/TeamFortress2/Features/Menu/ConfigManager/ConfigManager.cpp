@@ -148,6 +148,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Aimbot::Global::IgnoreCloaked);
 				SAVE_VAR(Vars::Aimbot::Global::IgnoreFriends);
 				SAVE_VAR(Vars::Aimbot::Global::IgnoreTaunting);
+				SAVE_VAR(Vars::Aimbot::Global::IgnoreVaccinator);
 			}
 
 			//Hitscan
@@ -201,6 +202,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Triggerbot::Global::IgnoreInvlunerable);
 				SAVE_VAR(Vars::Triggerbot::Global::IgnoreCloaked);
 				SAVE_VAR(Vars::Triggerbot::Global::IgnoreFriends);
+				SAVE_VAR(Vars::Triggerbot::Global::IgnoreTaunts);
 			}
 
 			//Shoot
@@ -209,7 +211,8 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Triggerbot::Shoot::TriggerPlayers);
 				SAVE_VAR(Vars::Triggerbot::Shoot::TriggerBuildings);
 				SAVE_VAR(Vars::Triggerbot::Shoot::HeadOnly);
-				SAVE_VAR(Vars::Triggerbot::Shoot::WaitForCharge);
+				SAVE_VAR(Vars::Triggerbot::Shoot::WaitForHeadshot);
+				SAVE_VAR(Vars::Triggerbot::Shoot::ScopedOnly);
 				SAVE_VAR(Vars::Triggerbot::Shoot::HeadScale);
 			}
 
@@ -608,6 +611,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Aimbot::Global::IgnoreCloaked);
 				LOAD_VAR(Vars::Aimbot::Global::IgnoreFriends);
 				LOAD_VAR(Vars::Aimbot::Global::IgnoreTaunting);
+				LOAD_VAR(Vars::Aimbot::Global::IgnoreVaccinator);
 			}
 
 			//Hitscan
@@ -661,6 +665,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Triggerbot::Global::IgnoreInvlunerable);
 				LOAD_VAR(Vars::Triggerbot::Global::IgnoreCloaked);
 				LOAD_VAR(Vars::Triggerbot::Global::IgnoreFriends);
+				LOAD_VAR(Vars::Triggerbot::Global::IgnoreTaunts);
 			}
 
 			//Shoot
@@ -669,7 +674,8 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Triggerbot::Shoot::TriggerPlayers);
 				LOAD_VAR(Vars::Triggerbot::Shoot::TriggerBuildings);
 				LOAD_VAR(Vars::Triggerbot::Shoot::HeadOnly);
-				LOAD_VAR(Vars::Triggerbot::Shoot::WaitForCharge);
+				LOAD_VAR(Vars::Triggerbot::Shoot::WaitForHeadshot);
+				LOAD_VAR(Vars::Triggerbot::Shoot::ScopedOnly);
 				LOAD_VAR(Vars::Triggerbot::Shoot::HeadScale);
 			}
 
