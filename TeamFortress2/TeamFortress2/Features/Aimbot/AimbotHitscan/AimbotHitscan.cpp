@@ -89,7 +89,7 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 			if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[Player->GetIndex()])
 				continue;
 
-			if (Vars::Aimbot::Global::IgnoreVaccinator.m_Var && Player->IsBulletImmune())
+			if (Vars::Aimbot::Global::IgnoreVaccinator.m_Var && g_GlobalInfo.m_nCurItemDefIndex != Spy_m_TheEnforcer && Player->IsBulletImmune())
 				continue;
 
 			if (Vars::Aimbot::Hitscan::AimHitbox.m_Var == 2)
