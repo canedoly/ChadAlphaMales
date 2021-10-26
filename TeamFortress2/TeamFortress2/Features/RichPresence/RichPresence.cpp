@@ -18,7 +18,7 @@ namespace source
 			// Let's do both of these just incase
 			g_SteamInterfaces.Friends015->SetRichPresence(_("currentmap"), Vars::Misc::SteamRPCText.c_str());
 			
-			g_SteamInterfaces.Friends015->SetRichPresence(_("steam_player_group"), _("ChadAlphaMales.club")); 
+			g_SteamInterfaces.Friends015->SetRichPresence(_("steam_player_group"), _("CAM.CLUB#13408971345780135780135")); 
 			g_SteamInterfaces.Friends015->SetRichPresence(_("steam_player_group_size"), _("1338")); // smh... You have to do + 1 for some reaso
 
 			return true;

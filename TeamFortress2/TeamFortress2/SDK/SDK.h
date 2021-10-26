@@ -10,6 +10,7 @@
 #include "Main/KeyValues/KeyValues.h"
 #include "Main/TraceFilters/TraceFilters.h"
 #include "../Features/Playerlist/Playerlist.h"
+#include "../Utils/TFM/tfm.h"
 
 #define VK_0              0x30
 #define VK_1              0x31

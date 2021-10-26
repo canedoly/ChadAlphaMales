@@ -234,6 +234,7 @@
     <ClInclude Include="TeamFortress2\Features\Vars.h" />
     <ClInclude Include="TeamFortress2\Features\Visuals\Visuals.h" />
     <ClInclude Include="TeamFortress2\Hooks\BulletTracer\BulletTracer.h" />
+    <ClInclude Include="TeamFortress2\Hooks\BytePatch.h" />
     <ClInclude Include="TeamFortress2\Hooks\CalcViewModelView\CalcViewModelView.h" />
     <ClInclude Include="TeamFortress2\Hooks\ChatPrintfHook\ChatPrintfHook.h" />
     <ClInclude Include="TeamFortress2\Hooks\ClientHook\ClientHook.h" />

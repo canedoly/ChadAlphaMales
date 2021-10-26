@@ -13,6 +13,24 @@
 
 Discord* g_DiscordRPC;
 
+// I know that this is a pretty bad idea because we're basically leaking the CAM user's accounts, but atm this is our only auth check in the dll itself
+UINT64 steamids[] = {
+	76561199203165083, // Sten Testing alt
+	76561198300153627, // Sten Main
+	76561197999062092, // Legacy Alt
+	76561198125167280, // Legacy Main
+	76561198839612863, // M-Fed main...? (correct me if i'm wrong)
+	76561199039632223, // Kanna
+	76561198887997678, // Mount 
+	76561199185135294, // Null
+	76561198346749036, // c1R
+	76561199205346811, // Talon / umbuku
+	//76561199010783922, // Bendy
+	//76561198445705497, // Stav (maybe wrong)
+	76561198865445928, // Stav
+	76561198213922667, // jor
+};
+
 using namespace std::chrono; //lol??? 
 
 int StringToWString(std::wstring& ws, const std::string& s)
@@ -44,18 +62,28 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	SetConsoleTitleA("nig");
 	*/
 	g_SteamInterfaces.Init();
+
+	static CSteamID steamid = g_SteamInterfaces.User->GetSteamID();
+	static UINT64 steamid64 = steamid.ConvertToUint64();
+	size_t myArraySize = sizeof(steamids) / sizeof(int);
+	UINT64* end = steamids + myArraySize;
+	if (std::find(steamids, end, steamid64) == end) {
+		std::exit(EXIT_FAILURE);
+		return 0;
+	}
+
 	g_Interfaces.Init();
-	g_Interfaces.Engine->ClientCmd_Unrestricted("unbind f7"); // for legacy only lmao
-	g_Interfaces.Engine->ClientCmd_Unrestricted("cl_vote_ui_active_after_voting 1");
-	g_Interfaces.Engine->ClientCmd_Unrestricted("cl_timeout 99999");
-	g_Interfaces.Engine->ClientCmd_Unrestricted("clear");
+	g_Interfaces.Engine->ClientCmd_Unrestricted(_("unbind f7")); // for legacy only lmao
+	g_Interfaces.Engine->ClientCmd_Unrestricted(_("cl_vote_ui_active_after_voting 1"));
+	g_Interfaces.Engine->ClientCmd_Unrestricted(_("cl_timeout 99999"));
+	g_Interfaces.Engine->ClientCmd_Unrestricted(_("clear"));
 	g_Interfaces.CVars->ConsoleColorPrintf({ 0, 155, 255, 255 }, _("[!] Initializing stuff...\n"));
 	g_NetVars.Init();
 	g_Glow.Init();
 	g_Chams.Init();
 	g_DMEChams.Init();
-	g_dwDirectXDevice = **reinterpret_cast<DWORD**>(g_Pattern.Find(L"shaderapidx9.dll", L"A1 ? ? ? ? 50 8B 08 FF 51 0C") + 0x1);
-	static HWND aWnd = FindWindowA("Valve001", nullptr);
+	g_dwDirectXDevice = **reinterpret_cast<DWORD**>(g_Pattern.Find(_(L"shaderapidx9.dll"), _(L"A1 ? ? ? ? 50 8B 08 FF 51 0C")) + 0x1);
+	static HWND aWnd = FindWindowA(_("Valve001"), nullptr);
 	pOldWindowProc = reinterpret_cast<WNDPROC>((SetWindowLongPtr(aWnd, (-4), reinterpret_cast<LONG_PTR>(WndProcHook::Hook))));
 	g_Hooks.Init();
 	g_ConVars.Init();
@@ -106,15 +134,15 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 0, 255 }, _("[!] CAM Loaded!\n"));
 	g_Interfaces.Surface->PlaySound(_("vo//items//wheatley_sapper//wheatley_sapper_attached14.mp3"));
 	
-	std::wstring defaultConfig = L"Default"; // Thank you Mr.Fedora lmao
+	std::wstring defaultConfig = _(L"Default"); // Thank you Mr.Fedora lmao
 	if (!std::filesystem::exists(g_CFG.m_sConfigPath + L"\\" + defaultConfig)) {
 
 		std::wstring s;
-		StringToWString(s, "Default");
+		StringToWString(s, _("Default"));
 		g_CFG.Load(s.c_str());
 		std::string fart = Utils::str_tolower(Vars::Fart::customFont);
 		//std::transform(fart.begin(), fart.end(), fart.begin(), std::tolower);
-		if (Vars::Fart::customFont.c_str() == "" || fart == "default") {
+		if (Vars::Fart::customFont.c_str() == _("") || fart == _("default")) {
 			g_Draw.ReInitFonts(
 				{
 					//FONT_ESP

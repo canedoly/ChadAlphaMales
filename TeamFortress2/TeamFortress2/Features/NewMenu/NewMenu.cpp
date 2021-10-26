@@ -747,7 +747,7 @@ void ESPTab() {
             if (ImGui::InputText(_("###CustomFont"), &Vars::Fart::customFont, ImGuiInputTextFlags_EnterReturnsTrue)) {
                 std::string fart = Utils::str_tolower(Vars::Fart::customFont);
                 //std::transform(fart.begin(), fart.end(), fart.begin(), std::tolower);
-                if (Vars::Fart::customFont.c_str() == "" || fart == "default") {
+                if (Vars::Fart::customFont.c_str() == _("") || fart == _("default")) {
                     g_Draw.ReInitFonts(
                         {
                             //FONT_ESP
@@ -1586,6 +1586,16 @@ std::vector<float> frames;
 static auto s2 = ImVec2{};
 static auto p2 = ImVec2{};
 
+Color_t GetTeamColor(int nTeamNum)
+{
+    switch (nTeamNum)
+    {
+        case 2: return Colors::TeamRed;
+        case 3: return Colors::TeamBlu;
+        default: return Colors::White;
+    }
+}
+
 void CNMenu::Render(IDirect3DDevice9* pDevice) {
     static bool bInitImGui = false;
     static bool bColumnsWidthened = false;
@@ -1754,6 +1764,7 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
                                 continue;
 
                             int teamNum = pEntity->GetTeamNum();
+
                             //static int selected = 0;
                             //static bool row_selected[64] = {};
                             ImGui::PushID(pi.friendsID);

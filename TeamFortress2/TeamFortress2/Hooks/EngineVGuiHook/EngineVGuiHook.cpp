@@ -146,8 +146,8 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 
 				int ms = std::max(0, (int)std::round(g_GlobalInfo.m_Latency * 1000.f));
 				// Change admin to something else if you really need to, it was for the protection thing
-				//_snprintf(buff, sizeof(buff), _("CAM [v1.3] | fps: %i | delay: %ims") ,fps, ms);
-				std::string waterMark = tfm::format(_("CAM [v1.3b] | fps: %d | delay: %ims"), fps, ms);
+				//_snprintf(buff, sizeof(buff), _("CAM [v1.5] | fps: %i | delay: %ims") ,fps, ms);
+				std::string waterMark = tfm::format(_("CAM [v1.5] | fps: %d | delay: %ims"), fps, ms);
 				std::wstring waterMarkW(waterMark.begin(), waterMark.end());
 
 				g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_MENU].dwFont, waterMarkW.c_str(), label_w, label_h);

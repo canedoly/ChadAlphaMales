@@ -96,6 +96,7 @@
     <ClCompile Include="TeamFortress2\Hooks\CalcViewModelView\CalcViewModelView.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\MaterialHook\MaterialHook.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Includes\bitbuf.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Playerlist\Playerlist.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
