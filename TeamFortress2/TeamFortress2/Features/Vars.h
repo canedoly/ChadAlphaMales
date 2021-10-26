@@ -79,6 +79,7 @@ namespace Vars
 			inline CVar<bool> IgnoreCloaked			{ false, L"Ignore Cloaked" };
 			inline CVar<bool> IgnoreFriends			{ true, L"Ignore Friends" };
 			inline CVar<bool> IgnoreTaunting		{ true, L"Ignore Taunting" };
+			inline CVar<bool> IgnoreVaccinator		{ false, L"Ignore Vaccinator" };
 		}
 
 		namespace Hitscan

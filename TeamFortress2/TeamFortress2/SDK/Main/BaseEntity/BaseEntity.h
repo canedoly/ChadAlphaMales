@@ -99,9 +99,9 @@ public: //Netvars & conditions
         M_CONDGET(AGhost, GetCondEx2(), TFCondEx2_HalloweenGhostMode)
         M_CONDGET(InBumperKart, GetCondEx2(), TFCondEx_InKart)
         M_CONDGET(PhlogUbered, GetCondEx(), TFCondEx_PhlogUber)
-        M_CONDGET(BlastImmune, GetCondEx2(), TFCondEx2_BlastImmune)
-        M_CONDGET(BulletImmune, GetCondEx2(), TFCondEx2_BulletImmune)
-        M_CONDGET(FireImmune, GetCondEx2(), TFCondEx2_FireImmune)
+        M_CONDGET(BlastImmune, GetCondEx(), TFCondEx_ExplosiveCharge)
+        M_CONDGET(BulletImmune, GetCondEx(), TFCondEx_BulletCharge)
+        M_CONDGET(FireImmune, GetCondEx(), TFCondEx_FireCharge)
 
 public: //Virtuals
     M_VIRTUALGET(UpdateGlowEffect, void, this, void(__thiscall*)(void*), 226)

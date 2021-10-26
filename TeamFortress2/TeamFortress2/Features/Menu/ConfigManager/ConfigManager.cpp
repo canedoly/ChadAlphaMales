@@ -148,6 +148,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Aimbot::Global::IgnoreCloaked);
 				SAVE_VAR(Vars::Aimbot::Global::IgnoreFriends);
 				SAVE_VAR(Vars::Aimbot::Global::IgnoreTaunting);
+				SAVE_VAR(Vars::Aimbot::Global::IgnoreVaccinator);
 			}
 
 			//Hitscan
@@ -610,6 +611,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Aimbot::Global::IgnoreCloaked);
 				LOAD_VAR(Vars::Aimbot::Global::IgnoreFriends);
 				LOAD_VAR(Vars::Aimbot::Global::IgnoreTaunting);
+				LOAD_VAR(Vars::Aimbot::Global::IgnoreVaccinator);
 			}
 
 			//Hitscan

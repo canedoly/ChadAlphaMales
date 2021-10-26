@@ -442,6 +442,17 @@ bool CAimbotProjectile::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeap
 
 				if (Vars::Aimbot::Global::IgnoreFriends.m_Var && g_EntityCache.Friends[Player->GetIndex()])
 					continue;
+
+				if (pLocal->GetClassNum() == CLASS_PYRO && pWeapon->GetSlot() == 0)
+				{
+					if (Vars::Aimbot::Global::IgnoreVaccinator.m_Var && Player->IsFireImmune())
+						continue;
+				}
+				else
+				{
+					if (Vars::Aimbot::Global::IgnoreVaccinator.m_Var && Player->IsBlastImmune())
+						continue;
+				}
 			}
 
 			Vec3 vPos = GetAimPos(pLocal, Player);

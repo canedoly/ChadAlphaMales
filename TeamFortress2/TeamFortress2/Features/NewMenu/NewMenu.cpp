@@ -317,7 +317,7 @@ void AimbotTab() {
             ColorPicker(_("Cloaked"), Colors::Cloak);
             ImGui::Checkbox(_("Ignore friends"), &Vars::Aimbot::Global::IgnoreFriends.m_Var);
             ImGui::Checkbox(_("Ignore taunting"), &Vars::Aimbot::Global::IgnoreTaunting.m_Var);
-
+            ImGui::Checkbox(_("Ignore Vaccinator"), &Vars::Aimbot::Global::IgnoreVaccinator.m_Var);
         }
         ImGui::EndChild();
         ImGui::EndGroup();
