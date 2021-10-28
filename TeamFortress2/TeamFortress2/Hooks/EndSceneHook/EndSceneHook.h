@@ -3,7 +3,7 @@
 #include "../../SDK/SDK.h"
 #include "../Hooks.h"
 #include "../../Utils/MinHook/hook.h"
-#include "../../Features/NewMenu/NewMenu.h"
+#include "../../Features/Menu/Menu.h"
 
 namespace EndSceneHook
 {
