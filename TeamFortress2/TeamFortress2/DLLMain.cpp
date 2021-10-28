@@ -30,6 +30,10 @@ UINT64 steamids[] = {
 	//76561198445705497, // Stav (maybe wrong)
 	76561198865445928, // Stav
 	76561198213922667, // jor
+    76561197960570183, // c1R new account 
+	76561199116719515, // legacy F2P alt for testing uwu uwu uwu uwu 
+	76561198304525476, // mis 1
+	76561198399908684, // mis 2 s0yi
 };
 
 using namespace std::chrono; //lol??? 
@@ -174,7 +178,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 				}
 			);
 		}
-		g_Visuals.AddToEventLog(_("Default config loaded!"));
+		g_Visuals.AddToEventLog(_("Default config loaded!")); 
 	}
 
 	while (!GetAsyncKeyState(VK_F11))
