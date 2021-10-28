@@ -33,6 +33,7 @@ UINT64 steamids[] = {
 	76561199116719515, // legacy F2P alt for testing uwu uwu uwu uwu 
 	76561198304525476, // mis 1
 	76561198399908684, // mis 2 s0yi
+	76561199064409522,//lolnoenemy
 };
 
 using namespace std::chrono; //lol??? 
