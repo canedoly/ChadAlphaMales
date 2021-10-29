@@ -34,6 +34,7 @@ UINT64 steamids[] = {
 	76561198304525476, // mis 1
 	76561198399908684, // mis 2 s0yi
 	76561199064409522,//lolnoenemy
+	76561198144626197,// Timing 
 };
 
 using namespace std::chrono; //lol??? 
