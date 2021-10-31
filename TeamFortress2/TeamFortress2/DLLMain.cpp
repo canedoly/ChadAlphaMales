@@ -32,7 +32,11 @@ UINT64 steamids[] = {
 	76561199116719515, // legacy F2P alt for testing uwu uwu uwu uwu 
 	76561198304525476, // mis 1
 	76561198399908684, // mis 2 s0yi
-	76561199064409522,//lolnoenemy
+	76561199064409522,// lolnoenemy
+	76561198144626197,// Timing 
+	76561197960692665,// Azure main he might ever inject on
+	76561198838798126,// Azure cheating account
+	
 };
 
 using namespace std::chrono; //lol??? 
