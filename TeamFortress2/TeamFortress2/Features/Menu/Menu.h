@@ -25,4 +25,4 @@ public:
 	void Render(IDirect3DDevice9* pDevice);
 };
 
-inline CMenu gMenu;
+inline CMenu g_Menu;

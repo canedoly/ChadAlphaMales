@@ -74,7 +74,7 @@ static void updateAntiAfk(CUserCmd* pCmd)
 int badcode = 0;
 bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CUserCmd* pCmd)
 {
-	if (gMenu.menuOpen) {
+	if (g_Menu.menuOpen) {
 		g_Interfaces.InputSystem->ResetInputState();
 		g_Interfaces.InputSystem->EnableInput(false);
 	}

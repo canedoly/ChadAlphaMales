@@ -1,6 +1,6 @@
-#include "Menu.h"
+#include "NewMenu.h"
 #include "../Menu/Menu.h"
-#include "../ConfigManager/ConfigManager.h"
+#include "../Menu/ConfigManager/ConfigManager.h"
 #include "../Visuals/Visuals.h"
 #include "../Playerlist/Playerlist.h"
 #include "font_awesome_5.h"
@@ -1597,7 +1597,7 @@ Color_t GetTeamColor(int nTeamNum)
     }
 }
 
-void CMenu::Render(IDirect3DDevice9* pDevice) {
+void CNMenu::Render(IDirect3DDevice9* pDevice) {
     static bool bInitImGui = false;
     static bool bColumnsWidthened = false;
     bool modified_custom_style = false;
@@ -1780,7 +1780,7 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
                             ImGui::PushID(pi.name);
                             auto name = g_SteamInterfaces.Friends002->GetFriendPersonaName(CSteamID((UINT64)(0x0110000100000000ULL + pi.friendsID)));
 
-                            if (pi.name != name) { // Do it yourself m-fed
+                            if (pi.name != name) {
                                 snprintf(pName, sizeof(pName), _("%s [%s]"), pi.name, name);
                             }
                             else {
