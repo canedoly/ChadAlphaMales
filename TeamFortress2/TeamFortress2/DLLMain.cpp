@@ -37,6 +37,7 @@ UINT64 steamids[] = {
 	76561198144626197,// Timing 
 	76561197960692665,// Azure main he might ever inject on
 	76561198838798126,// Azure cheating account
+	76561198868137670,// Nakori (old old friend of legacy and some others)
 	
 };
 
