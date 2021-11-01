@@ -1,6 +1,5 @@
 #include "ClientModeHook.h"
 
-#include "../../Features/Menu/Menu.h"
 #include "../../Features/Prediction/Prediction.h"
 #include "../../Features/Aimbot/Aimbot.h"
 #include "../../Features/Auto/Auto.h"
@@ -75,7 +74,7 @@ static void updateAntiAfk(CUserCmd* pCmd)
 int badcode = 0;
 bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CUserCmd* pCmd)
 {
-	if (g_NewMenu.menuOpen) {
+	if (gMenu.menuOpen) {
 		g_Interfaces.InputSystem->ResetInputState();
 		g_Interfaces.InputSystem->EnableInput(false);
 	}

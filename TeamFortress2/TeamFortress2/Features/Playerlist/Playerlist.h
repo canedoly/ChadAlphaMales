@@ -1,6 +1,7 @@
 #pragma once
-#include "../NewMenu/NewMenu.h"
-#include "../Menu/ConfigManager/ConfigManager.h"
+
+#include "../Menu/Menu.h"
+#include "../ConfigManager/ConfigManager.h"
 #include "../Vars.h"
 #include <set>
 
