@@ -10,8 +10,8 @@
 // Before you add stuff here please tell me first what you're going to add and we'll discuss about it
 // Please test stuff before you push, don't pull a fedoraware moment pls :(
 // YOU MUST encrypt every string with "_(stuffgoeshere)" except for vectors and shit like that
-	// Q: Why can't I do that on vectors?
-	// A: Because they fuck up for some reason, idk honestly lol
+    // Q: Why can't I do that on vectors?
+    // A: Because they fuck up for some reason, idk honestly lol
 // Try to fit in as much features as possible without making it look out of place / not user friendly (if that makes sense)
 // If you have b1g problems with the menu then message me on discord
 
@@ -223,50 +223,50 @@ bool InputKeybind(const char* label, CVar<int>& output, bool bAllowNone = true)
         ImGui::Button("...", ImVec2(45, 17));
         ImGui::PopStyleColor();
 
-    static float time = g_Interfaces.Engine->Time();
-    float elapsed = g_Interfaces.Engine->Time() - time;
-    static CVar<int>* curr = nullptr, * prevv = curr;
-    if (curr != prevv) {
-        time = g_Interfaces.Engine->Time();
-        prevv = curr;
-    }
-
-    if (curr == nullptr && elapsed > 0.1f) {
-        for (short n = 0; n < 256; n++) {
-            if ((n > 0x0 && n < 0x7) || (n > L'A' - 1 && n < L'Z' + 1) || (n > L'0' - 1 && n < L'9' + 1) || n == VK_LSHIFT || n == VK_RSHIFT || n == VK_SHIFT || n == VK_ESCAPE || n == VK_HOME || n == VK_CONTROL || n == VK_MENU) {
-                if ((!ImGui::IsItemHovered() && ImGui::GetIO().MouseClicked[0])) {
-                    ImGui::ClearActiveID();
-                    break;
-                }
-                if (GetAsyncKeyState(n) & 0x8000)
-                {
-                    if (n == VK_HOME || n == VK_INSERT) {
-                        break;
-                    }
-
-                    if (n == VK_ESCAPE && bAllowNone) {
-                        ImGui::ClearActiveID();
-                        output.m_Var = 0x0;
-                        break;
-                    }
-
-                    output.m_Var = n;
-                    ImGui::ClearActiveID();
-                    break;
-                }
-            } //loop
+        static float time = g_Interfaces.Engine->Time();
+        float elapsed = g_Interfaces.Engine->Time() - time;
+        static CVar<int>* curr = nullptr, * prevv = curr;
+        if (curr != prevv) {
+            time = g_Interfaces.Engine->Time();
+            prevv = curr;
         }
-    }
 
-    if (curr != prevv) {
-        time = g_Interfaces.Engine->Time();
-        prevv = curr;
-    }
+        if (curr == nullptr && elapsed > 0.1f) {
+            for (short n = 0; n < 256; n++) {
+                if ((n > 0x0 && n < 0x7) || (n > L'A' - 1 && n < L'Z' + 1) || (n > L'0' - 1 && n < L'9' + 1) || n == VK_LSHIFT || n == VK_RSHIFT || n == VK_SHIFT || n == VK_ESCAPE || n == VK_HOME || n == VK_CONTROL || n == VK_MENU) {
+                    if ((!ImGui::IsItemHovered() && ImGui::GetIO().MouseClicked[0])) {
+                        ImGui::ClearActiveID();
+                        break;
+                    }
+                    if (GetAsyncKeyState(n) & 0x8000)
+                    {
+                        if (n == VK_HOME || n == VK_INSERT) {
+                            break;
+                        }
 
-    ImGui::GetCurrentContext()->ActiveIdAllowOverlap = true;
+                        if (n == VK_ESCAPE && bAllowNone) {
+                            ImGui::ClearActiveID();
+                            output.m_Var = 0x0;
+                            break;
+                        }
 
-    if ((!ImGui::IsItemHovered() && ImGui::GetIO().MouseClicked[0]))
-        ImGui::ClearActiveID();
+                        output.m_Var = n;
+                        ImGui::ClearActiveID();
+                        break;
+                    }
+                } //loop
+            }
+        }
+
+        if (curr != prevv) {
+            time = g_Interfaces.Engine->Time();
+            prevv = curr;
+        }
+
+        ImGui::GetCurrentContext()->ActiveIdAllowOverlap = true;
+
+        if ((!ImGui::IsItemHovered() && ImGui::GetIO().MouseClicked[0]))
+            ImGui::ClearActiveID();
     }
     else if (ImGui::Button(VK2STR(output.m_Var), ImVec2(45, 17))) {
         ImGui::SetActiveID(id, ImGui::GetCurrentWindow());
@@ -351,7 +351,7 @@ void AimbotTab() {
         ImGui::EndChild();
         ImGui::EndGroup();
     }
-    
+
     {//right
         ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
@@ -411,9 +411,9 @@ void AimbotTab() {
         ImGui::MenuChild(_("Melee"), ImVec2(260, 280), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Active###Melee"), &Vars::Aimbot::Melee::Active.m_Var);
-            static const char* meleeSortMethod[]{ "FoV", "Distance" }; 
+            static const char* meleeSortMethod[]{ "FoV", "Distance" };
             ImGui::Combo(_("Sort method###meleeSortMethod"), &Vars::Aimbot::Melee::SortMethod.m_Var, meleeSortMethod, IM_ARRAYSIZE(meleeSortMethod));
-            static const char* meleeAimMethod[]{ "Plain", "Smooth", "Silent" }; 
+            static const char* meleeAimMethod[]{ "Plain", "Smooth", "Silent" };
             ImGui::Combo(_("Aim method###meleeAimMethod"), &Vars::Aimbot::Melee::AimMethod.m_Var, meleeAimMethod, IM_ARRAYSIZE(meleeAimMethod));
             FixSlider;
             ImGui::SliderFloat(_("Smooth factor###meleeSmooth"), &Vars::Aimbot::Melee::SmoothingAmount.m_Var, 1.0f, 10.f, "%.0f", ImGuiSliderFlags_AlwaysClamp);
@@ -448,7 +448,7 @@ void TriggerbotTab() {
         ImGui::EndChild();
         ImGui::EndGroup();
     }
-    
+
     { // Left Middle
         ImGui::SetCursorPosY(262);
         ImGui::BeginGroup();
@@ -478,8 +478,8 @@ void TriggerbotTab() {
         ImGui::EndGroup();
     }
     // Left middle row
-   
-    
+
+
     { // Middle Upper
         ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
@@ -574,7 +574,7 @@ void ESPTab() {
 
             ImGui::Checkbox(_("Enabled"), &Vars::ESP::Players::Active.m_Var);
             AlignToRight(23);
-            ColorPicker(_("Team Blu"), Colors::TeamBlu,false);
+            ColorPicker(_("Team Blu"), Colors::TeamBlu, false);
             AlignToRight(43);
             ColorPicker(_("Team Red"), Colors::TeamRed, false);
             ImGui::Checkbox(_("Local ESP"), &Vars::ESP::Players::ShowLocal.m_Var);
@@ -604,10 +604,10 @@ void ESPTab() {
             static const char* classEsp[]{ "Off", "Icon", "Text" };
             ImGui::Combo(_("Player class"), &Vars::ESP::Players::Class.m_Var, classEsp, IM_ARRAYSIZE(classEsp));
 
-            static const char* uberESP[]{ "Off", "Text", "Bar" }; 
+            static const char* uberESP[]{ "Off", "Text", "Bar" };
             ImGui::Combo(_("Player ubercharge"), &Vars::ESP::Players::Uber.m_Var, uberESP, IM_ARRAYSIZE(uberESP));
 
-            static const char* boxESP[]{ "Off", "Simple", "Cornered", "3D" }; 
+            static const char* boxESP[]{ "Off", "Simple", "Cornered", "3D" };
             ImGui::Combo(_("Player box"), &Vars::ESP::Players::Box.m_Var, boxESP, IM_ARRAYSIZE(boxESP));
 
             FixSlider;
@@ -725,15 +725,15 @@ void ESPTab() {
             ImGui::Checkbox(_("Skybox changer"), &Vars::Visuals::SkyboxChanger.m_Var);
 
             // Probably a bad idea to do it like this...?
-            if(ImGui::Combo(_("Skybox"), &Vars::Skybox::skyboxnum, skyNames, IM_ARRAYSIZE(skyNames), 6)) 
+            if (ImGui::Combo(_("Skybox"), &Vars::Skybox::skyboxnum, skyNames, IM_ARRAYSIZE(skyNames), 6))
                 g_Visuals.SkyboxChanger();
-            
+
             if (Vars::Skybox::skyboxnum == 0) { // God damnit, this made the menu look a bit more messier :(
                 ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0));
                 ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0.23f, 0.23f, 0.23f, 1.f));
                 ImGui::SetCursorPosX(8);
                 ImGui::PushItemWidth(ImGui::GetContentRegionMax().x - 16);
-                if(ImGui::InputTextWithHint(_("##Custom skybox"), _("Custom skybox name"), &Vars::Skybox::SkyboxName))
+                if (ImGui::InputTextWithHint(_("##Custom skybox"), _("Custom skybox name"), &Vars::Skybox::SkyboxName))
                     g_Visuals.SkyboxChanger();
 
                 ImGui::PopStyleColor(2);
@@ -743,7 +743,7 @@ void ESPTab() {
             ImGui::Text(_("Custom ESP font"));
             ImGui::SetCursorPosX(5);
             ImGui::PushItemWidth(ImGui::GetContentRegionMax().x - 10);
-           
+
             if (ImGui::InputText(_("###CustomFont"), &Vars::Fart::customFont, ImGuiInputTextFlags_EnterReturnsTrue)) {
                 std::string fart = Utils::str_tolower(Vars::Fart::customFont);
                 //std::transform(fart.begin(), fart.end(), fart.begin(), std::tolower);
@@ -835,7 +835,7 @@ void ESPTab() {
     ImGui::SetCursorPosX(ImGui::GetContentRegionMax().x - 43);
     ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(MenuCol.x, MenuCol.y, MenuCol.z, 255));
 
-    if (ImGui::Button(_(">>"), ImVec2(35,0)))
+    if (ImGui::Button(_(">>"), ImVec2(35, 0)))
         nESPTab = 2;
     ImGui::PopStyleColor();
 }
@@ -1004,7 +1004,7 @@ void ESPTab3() {
             //static const char* ignoreTeammatesGlow[]{ "Off", "All", "Keep friends" }; ImGui::PushItemWidth(100); ImGui::Combo("Ignore teammates###glowteam", &Vars::Glow::Buildings::IgnoreTeammates.m_Var, ignoreTeammatesGlow, IM_ARRAYSIZE(ignoreTeammatesGlow)); ImGui::PopItemWidth(); HelpMarker("Which teammates the glow will ignore drawing on");
             FixSlider;
             ImGui::SliderFloat(_("Building glow opacity"), &Vars::Glow::Buildings::Alpha.m_Var, 0.1f, 1.0f, _("%.2f"), ImGuiSliderFlags_Logarithmic | ImGuiSliderFlags_AlwaysClamp);
-            static const char* colorGlow[]{ "Team", "Health" }; 
+            static const char* colorGlow[]{ "Team", "Health" };
             ImGui::Combo(_("Building glow color"), &Vars::Glow::Buildings::Color.m_Var, colorGlow, IM_ARRAYSIZE(colorGlow));
         }
         ImGui::EndChild();
@@ -1074,12 +1074,12 @@ void VisualsTab() {
             ImGui::Checkbox(_("Chat info"), &Vars::Visuals::ChatInfo.m_Var);
             ImGui::Checkbox(_("Vote revealer"), &Vars::Misc::VoteRevealer.m_Var);
             ImGui::Checkbox(_("Clean screenshots"), &Vars::Misc::CleanScreenshot.m_Var);
-           static const char* weaponTracer[]{
-                "None",
-                "Machina",
-                "Capper",
-                "Merasmus Vortex",
-                "Merasmus Zap",
+            static const char* weaponTracer[]{
+                 "None",
+                 "Machina",
+                 "Capper",
+                 "Merasmus Vortex",
+                 "Merasmus Zap",
             };
             ImGui::Combo(_("Bullet Tracer"), &Vars::Visuals::TracerEffect.m_Var, weaponTracer, IM_ARRAYSIZE(weaponTracer));
             static const char* ragdollEffect[]{
@@ -1130,11 +1130,11 @@ void VisualsTab() {
             ImGui::Checkbox(_("Show silent angles"), &Vars::Visuals::ThirdPersonSilentAngles.m_Var);
             ImGui::Checkbox(_("Instant yaw"), &Vars::Visuals::ThirdPersonInstantYaw.m_Var);
             FixSlider;
-            ImGui::SliderFloat(_("Forward offset"),    &Vars::Visuals::ThirdpersonOffsetX.m_Var, -100.0f, 100.f, _("%.0f"), ImGuiSliderFlags_AlwaysClamp);
+            ImGui::SliderFloat(_("Forward offset"), &Vars::Visuals::ThirdpersonOffsetX.m_Var, -100.0f, 100.f, _("%.0f"), ImGuiSliderFlags_AlwaysClamp);
             FixSlider;
-            ImGui::SliderFloat(_("Right offset"),      &Vars::Visuals::ThirdpersonOffsetY.m_Var, -100.0f, 100.f, _("%.0f"), ImGuiSliderFlags_AlwaysClamp);
+            ImGui::SliderFloat(_("Right offset"), &Vars::Visuals::ThirdpersonOffsetY.m_Var, -100.0f, 100.f, _("%.0f"), ImGuiSliderFlags_AlwaysClamp);
             FixSlider;
-            ImGui::SliderFloat(_("Up offset"),         &Vars::Visuals::ThirdpersonOffsetZ.m_Var, -100.0f, 100.f, _("%.0f"), ImGuiSliderFlags_AlwaysClamp);
+            ImGui::SliderFloat(_("Up offset"), &Vars::Visuals::ThirdpersonOffsetZ.m_Var, -100.0f, 100.f, _("%.0f"), ImGuiSliderFlags_AlwaysClamp);
             ImGui::Checkbox(_("Thirdperson crosshair"), &Vars::Visuals::ThirdpersonCrosshair.m_Var);
         }
         ImGui::EndChild();
@@ -1230,21 +1230,21 @@ void MiscTab() {
             ImGui::PopStyleVar();
 
             ImGui::Checkbox(_("AntiAim"), &Vars::AntiHack::AntiAim::Active.m_Var);
-            const char* pitch[]{ "None", "Up", "Down", "Fake up", "Fake down", "Center", "Half Up"}; ImGui::Combo(_("Pitch"), &Vars::AntiHack::AntiAim::Pitch.m_Var, pitch, IM_ARRAYSIZE(pitch));
-            const char* realYaw[]{ "None", "Left", "Right", "Backwards", "Spin", "Random", "Edge"}; ImGui::Combo(_("Real yaw"), &Vars::AntiHack::AntiAim::YawReal.m_Var, realYaw, IM_ARRAYSIZE(realYaw));
-            const char* fakeYaw[]{ "None", "Left", "Right", "Backwards", "Spin", "Random", "Edge"}; ImGui::Combo(_("Fake yaw"), &Vars::AntiHack::AntiAim::YawFake.m_Var, fakeYaw, IM_ARRAYSIZE(fakeYaw));
+            const char* pitch[]{ "None", "Up", "Down", "Fake up", "Fake down", "Center", "Half Up" }; ImGui::Combo(_("Pitch"), &Vars::AntiHack::AntiAim::Pitch.m_Var, pitch, IM_ARRAYSIZE(pitch));
+            const char* realYaw[]{ "None", "Left", "Right", "Backwards", "Spin", "Random", "Edge" }; ImGui::Combo(_("Real yaw"), &Vars::AntiHack::AntiAim::YawReal.m_Var, realYaw, IM_ARRAYSIZE(realYaw));
+            const char* fakeYaw[]{ "None", "Left", "Right", "Backwards", "Spin", "Random", "Edge" }; ImGui::Combo(_("Fake yaw"), &Vars::AntiHack::AntiAim::YawFake.m_Var, fakeYaw, IM_ARRAYSIZE(fakeYaw));
             FixSlider;
             ImGui::SliderInt(_("Spin Speed"), &Vars::AntiHack::AntiAim::SpinSpeed.m_Var, 1, 20, _("%d"), ImGuiSliderFlags_AlwaysClamp);
 
             ImGui::Checkbox(_("Fakelag"), &Vars::Misc::CL_Move::Fakelag.m_Var);
             AlignToRight(70);
-            
+
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(MenuCol.x / 1.5, MenuCol.y / 1.5, MenuCol.z / 1.5, 255));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(MenuCol.x, MenuCol.y, MenuCol.z, 255));
             InputKeybind(_("Fakelag key"), Vars::Misc::CL_Move::FakelagKey);
             ImGui::PopStyleColor(3);
-            
+
             AlignToRight(20);
             ImGui::Text(ICON_FA_COG);
             AlignToRight(23);
@@ -1285,7 +1285,7 @@ void MiscTab() {
             }
             ImGui::PopStyleVar();
 
-             ImGui::Checkbox(_("DoubleTap"), &Vars::Misc::CL_Move::Doubletap.m_Var);
+            ImGui::Checkbox(_("DoubleTap"), &Vars::Misc::CL_Move::Doubletap.m_Var);
             AlignToRight(70);
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(MenuCol.x / 1.5, MenuCol.y / 1.5, MenuCol.z / 1.5, 255));
@@ -1320,7 +1320,7 @@ void ConfigsTab() {
 
             static std::wstring selected = {};
             int nConfig = 0;
-
+            /*
             for (const auto& entry : std::filesystem::directory_iterator(g_CFG.m_sConfigPath)) {
                 if (std::string(std::filesystem::path(entry).filename().string()).find(_(".CAM")) == std::string_view::npos)
                 {
@@ -1328,12 +1328,12 @@ void ConfigsTab() {
                 }
                 nConfig++;
             }
-
+            */
             for (const auto& entry : std::filesystem::directory_iterator(g_CFG.m_sConfigPath)) {
                 if (std::string(std::filesystem::path(entry).filename().string()).find(_(".CAM")) == std::string_view::npos) {
                     continue;
                 }
-
+                nConfig++;
                 std::wstring s = entry.path().filename().wstring();
                 s.erase(s.end() - 4, s.end());
 
@@ -1345,6 +1345,7 @@ void ConfigsTab() {
 
                     ImGui::ListBoxFooter();
                 }
+                nConfig++;
             }
 
             if (nConfig < 100) {
@@ -1365,7 +1366,7 @@ void ConfigsTab() {
 
             ImGui::SetCursorPosX(5);
 
-            if (ImGui::Button(_("Save"), { ImGui::GetContentRegionMax().x - 10, 0})) {
+            if (ImGui::Button(_("Save"), { ImGui::GetContentRegionMax().x - 10, 0 })) {
                 g_CFG.Save(selected.c_str());
                 selected.clear();
                 g_Visuals.AddToEventLog(_("Config %s saved!"), selected.data());
@@ -1568,19 +1569,19 @@ void ReplaceSpecials(std::string& str)
 
 void Handle()
 {
-    if (!g_NewMenu.menuOpen && ImGui::GetStyle().Alpha > 0.f)
+    if (!g_Menu.menuOpen && ImGui::GetStyle().Alpha > 0.f)
     {
         float fc = 255.f / 0.2f * ImGui::GetIO().DeltaTime;
         ImGui::GetStyle().Alpha = std::clamp(ImGui::GetStyle().Alpha - fc / 255.f, 0.f, 0.9f);
     }
 
-    if (g_NewMenu.menuOpen && ImGui::GetStyle().Alpha < 1.f)
+    if (g_Menu.menuOpen && ImGui::GetStyle().Alpha < 1.f)
     {
         float fc = 255.f / 0.2f * ImGui::GetIO().DeltaTime;
         ImGui::GetStyle().Alpha = std::clamp(ImGui::GetStyle().Alpha + fc / 255.f, 0.f, 0.9f);
     }
 }
-
+//
 IDirect3DStateBlock9* pixel_state = NULL; IDirect3DVertexDeclaration9* vertDec; IDirect3DVertexShader9* vertShader;
 std::vector<float> frames;
 static auto s2 = ImVec2{};
@@ -1590,9 +1591,9 @@ Color_t GetTeamColor(int nTeamNum)
 {
     switch (nTeamNum)
     {
-        case 2: return Colors::TeamRed;
-        case 3: return Colors::TeamBlu;
-        default: return Colors::White;
+    case 2: return Colors::TeamRed;
+    case 3: return Colors::TeamBlu;
+    default: return Colors::White;
     }
 }
 
@@ -1655,8 +1656,8 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
 
     ImGui::GetIO().MouseDrawCursor = menuOpen;
     Handle();
-	if (menuOpen)
-	{
+    if (menuOpen)
+    {
         // I know it's probably a bad idea to do these under a loop but oh well you got to sacrifice some stuff sometimes just to get the perfect result.
         MenuCol = mColor(Vars::Menu::Colors::WidgetActive);
         ShadowCol = mColor(Vars::Menu::Colors::ShadowColor);
@@ -1689,7 +1690,7 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
                 Vars::Misc::CheatsBypass.m_Var = 1;
             }
 
-            if(ImGui::Button(_("CL_FullUpdate"),ImVec2(120,20)))
+            if (ImGui::Button(_("CL_FullUpdate"), ImVec2(120, 20)))
                 g_Interfaces.Engine->ClientCmd_Unrestricted(_("cl_fullupdate"));
 
             if (ImGui::Button(_("SND_Restart"), ImVec2(120, 20)))
@@ -1774,14 +1775,22 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
                             static int hovered_column = -1;
 
                             ImGui::TableSetColumnIndex(0);
-                            static char buffWAAAAA[64];
-                            snprintf(buffWAAAAA, sizeof(buffWAAAAA), _("%d"), playerIndex);
+                            static char pName[64];
 
                             ImGui::PushID(pi.name);
+                            auto name = g_SteamInterfaces.Friends002->GetFriendPersonaName(CSteamID((UINT64)(0x0110000100000000ULL + pi.friendsID)));
+
+                            if (pi.name != name) {
+                                snprintf(pName, sizeof(pName), _("%s [%s]"), pi.name, name);
+                            }
+                            else {
+                                snprintf(pName, sizeof(pName), _("%s"), pi.name);
+                            }
+
                             //ImGui::Selectable2(buffWAAAAA, row_selected[playerIndex], ImGuiSelectableFlags_SpanAllColumns, ImVec2(0.f, 0.f)); // I don't want to mess with this bullshit anymore tbh...
                             ImGui::Text(_("%d"), playerIndex);
                             ImGui::TableSetColumnIndex(1);
-                            ImGui::Text(_("%s"), pi.name);
+                            ImGui::Text(_("%s"), pName);
                             ImGui::TableSetColumnIndex(2);
                             ImGui::Text(_("%s"), Team[pEntity->GetTeamNum()]);
                             ImGui::TableSetColumnIndex(3);
@@ -1823,7 +1832,7 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
         }
         ImGui::PopStyleColor();
         ImGui::PopFont();
-        
+
 
         // Horrible code...
         ImGui::SetNextWindowPos(ImVec2((g_ScreenSize.w / 2) - MenuSize.x / 2, (g_ScreenSize.h / 2) - MenuSize.y / 2), ImGuiCond_Once);
@@ -1840,7 +1849,7 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
                 draw->AddRectFilled(ImVec2(p.x, p.y + 40), ImVec2(p.x + s.x, p.y + s.y), ImColor(18, 20, 21, 200), 5, ImDrawCornerFlags_Bot); // Background
 
                 ImGui::PushFont(name);
-                draw->AddText(ImVec2(p.x + 36 / 2, p.y + 29 / 2), ImColor(255,255,255,255), _("ChadAlphaMales"));
+                draw->AddText(ImVec2(p.x + 36 / 2, p.y + 29 / 2), ImColor(255, 255, 255, 255), _("ChadAlphaMales"));
                 draw->AddText(ImVec2(p.x + 36 / 2 + ImGui::CalcTextSize(_("ChadAlphaMales")).x, p.y + 29 / 2), ImColor(MenuCol.x, MenuCol.y, MenuCol.z, 255.f), _(".club"));
                 ImGui::PopFont();
             }
@@ -1855,7 +1864,7 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
                 if (ImGui::Tab(_(ICON_FA_PALETTE " Visuals"), tab == 3))tab = 3; ImGui::SameLine();
                 if (ImGui::Tab(_(ICON_FA_COGS " Misc"), tab == 4))tab = 4; ImGui::SameLine();
                 if (ImGui::Tab(_(ICON_FA_FILE " Config"), tab == 5))tab = 5;
-                
+
                 ImGui::PopStyleVar();
                 ImGui::EndGroup();
                 ImGui::PopFont();
@@ -1863,50 +1872,50 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
             ImGui::PushFont(font);
             {
                 switch (tab) {
-                    case 0: {
-                        AimbotTab();
-                        break;
-                    }
-                    case 1: {
-                        TriggerbotTab();
-                        break;
-                    }
-                    case 2: {
-                        // Probably inefficient, how unfortunate.
-                        if (nESPTab == 1)
-                            ESPTab();
-                        if (nESPTab == 2)
-                            ESPTab2();
-                        if (nESPTab == 3)
-                            ESPTab3();
-                        break;
-                    }
-                    case 3: {
-                        VisualsTab();
-                        break;
-                    }
-                    case 4: {
-                        MiscTab();
-                        break;
-                    }
-                    case 5: {
-                        ConfigsTab();
-                        break;
-                    }
-                    default: {
-                        ImGui::SetCursorPosX(7);
-                        ImGui::Text(_("How the fuck did you manage to get here?\nInvalid tab value : 5 / %d"), tab);
-                    }
+                case 0: {
+                    AimbotTab();
+                    break;
+                }
+                case 1: {
+                    TriggerbotTab();
+                    break;
+                }
+                case 2: {
+                    // Probably inefficient, how unfortunate.
+                    if (nESPTab == 1)
+                        ESPTab();
+                    if (nESPTab == 2)
+                        ESPTab2();
+                    if (nESPTab == 3)
+                        ESPTab3();
+                    break;
+                }
+                case 3: {
+                    VisualsTab();
+                    break;
+                }
+                case 4: {
+                    MiscTab();
+                    break;
+                }
+                case 5: {
+                    ConfigsTab();
+                    break;
+                }
+                default: {
+                    ImGui::SetCursorPosX(7);
+                    ImGui::Text(_("How the fuck did you manage to get here?\nInvalid tab value : 5 / %d"), tab);
+                }
                 }
                 ImGui::PopFont();
             }
             ImGui::End();
         }
         ImGui::PopStyleVar();
-	}
+    }
 
-	ImGui::EndFrame();
-	ImGui::Render();
-	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+    ImGui::EndFrame();
+    ImGui::Render();
+    ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
     pDevice->SetRenderState(D3DRS_SRGBWRITEENABLE, true);
 }

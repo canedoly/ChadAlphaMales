@@ -166,6 +166,9 @@ void CMisc::AutoStrafe(CUserCmd* pCmd)
 			const float speed = pLocal->GetVelocity().Lenght2D();
 			auto vel = pLocal->GetVelocity();
 
+			if (pLocal->GetMoveType() & (MOVETYPE_LADDER | MOVETYPE_NOCLIP))
+				return;
+
 			if (speed < 2.0f)
 				return;
 
@@ -360,7 +363,6 @@ void CMisc::AutoRocketJump(CUserCmd* pCmd)
 }
 
 static void(__thiscall* ob_SetConVar)(void*, const char*, const char*) = reinterpret_cast<void(__thiscall*)(void*, const char*, const char*)>(g_Pattern.Find(L"engine.dll", L"08 C6 47 04 01 C7") - 0x1);
-
 
 void CMisc::ChangeName(std::string name)
 {

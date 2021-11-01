@@ -1,7 +1,6 @@
 #include "SpectatorList.h"
 
 #include "../Vars.h"
-#include "../Menu/Menu.h"
 
 bool CSpectatorList::GetSpectators(CBaseEntity *pLocal)
 {
@@ -46,7 +45,7 @@ void CSpectatorList::Run()
 
 void CSpectatorList::DragSpecList(int& x, int& y, int w, int h, int offsety)
 {
-	if (!g_NewMenu.menuOpen)
+	if (!g_Menu.menuOpen)
 		return;
 
 	int mousex, mousey;
@@ -91,7 +90,7 @@ void CSpectatorList::DrawClassic()
 	int wz, hz;
 	g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_MENU].dwFont, _(L"Spectators"), wz, hz);
 
-	if (g_NewMenu.menuOpen || m_vecSpectators.size() > 0) {
+	if (g_Menu.menuOpen || m_vecSpectators.size() > 0) {
 		g_Draw.Rect(m_nSpecListX, m_nSpecListY, m_nSpecListW, 2, Vars::Menu::Colors::WidgetActive);
 		g_Draw.Rect(m_nSpecListX, m_nSpecListY + 2, m_nSpecListW, g_Draw.m_vecFonts[FONT_MENU].nTall + 5, { 0,0,0,200 });
 		g_Draw.String(FONT_MENU, m_nSpecListX + wz, m_nSpecListY + 10, { 255,255,255,255 }, ALIGN_CENTERVERTICAL, _("Spectators"));

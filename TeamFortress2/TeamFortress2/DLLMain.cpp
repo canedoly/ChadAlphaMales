@@ -8,7 +8,6 @@
 #include "Utils/DiscordRPC/Discord.h"
 #include "Utils/Events/Events.h"
 #include "Features/Menu/Menu.h"
-#include "Features/NewMenu/NewMenu.h"
 #include "Features/Playerlist/Playerlist.h"
 
 Discord* g_DiscordRPC;
@@ -25,6 +24,7 @@ UINT64 steamids[] = {
 	76561199185135294, // Null
 	76561198346749036, // c1R
 	76561199205346811, // Talon / umbuku
+	76561198304525476, // s0yi
 	//76561199010783922, // Bendy
 	//76561198445705497, // Stav (maybe wrong)
 	76561198865445928, // Stav
@@ -78,12 +78,13 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	size_t myArraySize = sizeof(steamids) / sizeof(int);
 	UINT64* end = steamids + myArraySize;
 	if (std::find(steamids, end, steamid64) == end) {
+		//MessageBoxW(NULL,(LPCWSTR)L"fuck you",(LPCWSTR)L"fuck you", MB_ICONSTOP);
 		std::exit(EXIT_FAILURE);
 		return 0;
 	}
 
 	g_Interfaces.Init();
-	g_Interfaces.Engine->ClientCmd_Unrestricted(_("unbind f7")); // for legacy only lmao
+	g_Interfaces.Engine->ClientCmd_Unrestricted(_("unbind f7"));
 	g_Interfaces.Engine->ClientCmd_Unrestricted(_("cl_vote_ui_active_after_voting 1"));
 	g_Interfaces.Engine->ClientCmd_Unrestricted(_("cl_timeout 99999"));
 	g_Interfaces.Engine->ClientCmd_Unrestricted(_("clear"));

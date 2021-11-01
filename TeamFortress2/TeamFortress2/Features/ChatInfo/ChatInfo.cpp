@@ -53,7 +53,7 @@ void CChatInfo::Event(CGameEvent* pEvent, const FNV1A_t uNameHash) {
 							kv->SetInt(_("achievementID"), 0xCA8);
 							g_Interfaces.Engine->ServerCmdKeyValues(kv);
 						}
-
+						g_Playerlist.AddIgnore(info.friendsID);
 						m_known_bots[info.friendsID] = true;
 					}
 				}

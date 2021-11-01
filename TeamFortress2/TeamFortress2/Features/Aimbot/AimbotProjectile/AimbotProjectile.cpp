@@ -205,6 +205,16 @@ bool CAimbotProjectile::CalcProjAngle(const Vec3& vLocalPos, const Vec3& vTarget
 }
 
 
+void DrawDebugArrow(const Vector& vecFrom, const Vector& vecTo)
+{
+	QAngle angRotation;
+	Math::VectorAngles(vecTo - vecFrom, angRotation);
+	Vector vecForward, vecRight, vecUp;
+	Math::AngleVectors(angRotation, &vecForward, &vecRight, &vecUp);
+	g_Interfaces.DebugOverlay->AddLineOverlay(vecFrom, vecTo, 255, 0, 0, true, 0.0f);
+	g_Interfaces.DebugOverlay->AddLineOverlay(vecFrom, vecFrom - vecRight * 10.0f, 0, 255, 255, true, 0.0f);
+}
+
 bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Predictor_t& Predictor, const ProjectileInfo_t& ProjInfo, Solution_t& out)
 {
 	INetChannelInfo* pNetChannel = reinterpret_cast<INetChannelInfo*>(g_Interfaces.Engine->GetNetChannelInfo());
@@ -218,6 +228,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 
 	TraceFilter.pSkip = Predictor.m_pEntity;
 
+	
 	Vec3 vLocalPos = pLocal->GetEyePosition();
 
 	float fLatency = pNetChannel->GetLatency(FLOW_OUTGOING) + pNetChannel->GetLatency(FLOW_INCOMING);
@@ -327,6 +338,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 			default: break;
 			}
 
+			DrawDebugArrow(vVisCheck, vPredictedPos);
 			Utils::TraceHull(vVisCheck, vPredictedPos, Vec3(-2, -2, -2), Vec3(2, 2, 2), MASK_SOLID_BRUSHONLY, &TraceFilter, &Trace);
 
 			if (Trace.DidHit())

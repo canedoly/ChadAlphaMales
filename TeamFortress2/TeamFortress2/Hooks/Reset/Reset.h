@@ -2,7 +2,7 @@
 #include "../../SDK/SDK.h"
 #include "../Hooks.h"
 #include "../../SDK/DirectX/DirectX.h"
-#include "../../Features/NewMenu/NewMenu.h"
+#include "../../Features/Menu/Menu.h"
 
 namespace ResetHook {
 	using fn = HRESULT(__stdcall*)(IDirect3DDevice9*, D3DPRESENT_PARAMETERS*);
