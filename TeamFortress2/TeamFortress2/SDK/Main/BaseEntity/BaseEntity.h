@@ -39,7 +39,7 @@ public: //Netvars & conditions
         M_DYNVARGET(FeignDeathReady, bool, this, _("DT_TFPlayer"), _("m_Shared"), _("m_bFeignDeathReady"))
         M_DYNVARGET(StepSize, float, this, _("DT_BasePlayer"), _("localdata"), _("m_flStepSize"))
         M_DYNVARGET(ConveyorSpeed, float, this, _("DT_FuncConveyor"), _("m_flConveyorSpeed"))
-        M_DYNVARGET(MoveType, MoveType_t, this, _("DT_BaseEntity"), _("movetype"))
+        M_DYNVARGET(MoveType, MoveType_t, this + 0x1A4, _("DT_BaseEntity"), _("movetype")) // 0x1A4 fixes the movetype, you can finally noclip
         M_DYNVARGET(MaxSpeed, float, this, _("DT_BasePlayer"), _("m_flMaxspeed"))
         M_DYNVARGET(State, int, this, _("DT_TFPlayer"), _("m_Shared"), _("m_nPlayerState"))
         M_DYNVARGET(ViewOffset, Vec3, this, _("DT_BasePlayer"), _("localdata"), _("m_vecViewOffset[0]"))

@@ -1320,7 +1320,7 @@ void ConfigsTab() {
 
             static std::wstring selected = {};
             int nConfig = 0;
-
+            /*
             for (const auto& entry : std::filesystem::directory_iterator(g_CFG.m_sConfigPath)) {
                 if (std::string(std::filesystem::path(entry).filename().string()).find(_(".CAM")) == std::string_view::npos)
                 {
@@ -1328,12 +1328,12 @@ void ConfigsTab() {
                 }
                 nConfig++;
             }
-
+            */
             for (const auto& entry : std::filesystem::directory_iterator(g_CFG.m_sConfigPath)) {
                 if (std::string(std::filesystem::path(entry).filename().string()).find(_(".CAM")) == std::string_view::npos) {
                     continue;
                 }
-
+                nConfig++;
                 std::wstring s = entry.path().filename().wstring();
                 s.erase(s.end() - 4, s.end());
 
@@ -1345,6 +1345,7 @@ void ConfigsTab() {
 
                     ImGui::ListBoxFooter();
                 }
+                nConfig++;
             }
 
             if (nConfig < 100) {
@@ -1774,14 +1775,22 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
                             static int hovered_column = -1;
 
                             ImGui::TableSetColumnIndex(0);
-                            static char buffWAAAAA[64];
-                            snprintf(buffWAAAAA, sizeof(buffWAAAAA), _("%d"), playerIndex);
-
+                            static char pName[64];
+                            
                             ImGui::PushID(pi.name);
+                            auto name = g_SteamInterfaces.Friends002->GetFriendPersonaName(CSteamID((UINT64)(0x0110000100000000ULL + pi.friendsID)));
+
+                            if (pi.name != name) {
+                                snprintf(pName, sizeof(pName), _("%s [%s]"), pi.name, name);
+                            }
+                            else {
+                                snprintf(pName, sizeof(pName), _("%s"), pi.name);
+                            }
+
                             //ImGui::Selectable2(buffWAAAAA, row_selected[playerIndex], ImGuiSelectableFlags_SpanAllColumns, ImVec2(0.f, 0.f)); // I don't want to mess with this bullshit anymore tbh...
                             ImGui::Text(_("%d"), playerIndex);
                             ImGui::TableSetColumnIndex(1);
-                            ImGui::Text(_("%s"), pi.name);
+                            ImGui::Text(_("%s"), pName);
                             ImGui::TableSetColumnIndex(2);
                             ImGui::Text(_("%s"), Team[pEntity->GetTeamNum()]);
                             ImGui::TableSetColumnIndex(3);

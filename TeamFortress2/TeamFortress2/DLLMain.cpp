@@ -73,12 +73,13 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	size_t myArraySize = sizeof(steamids) / sizeof(int);
 	UINT64* end = steamids + myArraySize;
 	if (std::find(steamids, end, steamid64) == end) {
+		//MessageBoxW(NULL,(LPCWSTR)L"fuck you",(LPCWSTR)L"fuck you", MB_ICONSTOP);
 		std::exit(EXIT_FAILURE);
 		return 0;
 	}
 
 	g_Interfaces.Init();
-	g_Interfaces.Engine->ClientCmd_Unrestricted(_("unbind f7")); // for legacy only lmao
+	g_Interfaces.Engine->ClientCmd_Unrestricted(_("unbind f7"));
 	g_Interfaces.Engine->ClientCmd_Unrestricted(_("cl_vote_ui_active_after_voting 1"));
 	g_Interfaces.Engine->ClientCmd_Unrestricted(_("cl_timeout 99999"));
 	g_Interfaces.Engine->ClientCmd_Unrestricted(_("clear"));

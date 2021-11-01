@@ -461,6 +461,7 @@ inline CVar<int> TracerEffect{ 0, L"Tracer style" };
 	namespace Fart {
 		inline std::string customFont = "";
 	}
+
 	namespace Misc
 	{
 		inline CVar<bool> AutoJump				{ true, L"Auto Jump" };
