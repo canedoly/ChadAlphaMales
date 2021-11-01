@@ -1,7 +1,6 @@
 #include "EngineVGuiHook.h"
 
 #include "../../SDK/Includes/icons.h"
-#include "../../Features/Menu/Menu.h"
 #include "../../Features/SpectatorList/SpectatorList.h"
 #include "../../Features/SpyWarning/SpyWarning.h"
 #include "../../Features/ESP/ESP.h"

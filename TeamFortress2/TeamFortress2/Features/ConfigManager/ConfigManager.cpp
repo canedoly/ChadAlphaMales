@@ -2,10 +2,10 @@
 
 #include <string>
 
-#include "../../Vars.h"
-#include "../../../SDK/SDK.h"
-#include "../../Radar/Radar.h"
-#include "../../SpectatorList/SpectatorList.h"
+#include "../Vars.h"
+#include "../../SDK/SDK.h"
+#include "../Radar/Radar.h"
+#include "../SpectatorList/SpectatorList.h"
 
 #define SAVE_VAR(x) Save(_(L#x), x.m_Var)
 #define LOAD_VAR(x) Load(_(L#x), x.m_Var)

@@ -1,7 +1,7 @@
 #include "Radar.h"
 #include "../Vars.h"
 #include "../Menu/Menu.h"
-#include "../NewMenu/NewMenu.h"
+
 constexpr Color_t clrBlack = { 0, 0, 0, 255 };
 constexpr Color_t clrWhite = { 255, 255, 255, 255 };
 
@@ -37,14 +37,14 @@ void CRadar::DrawRadar()
 {
 	//If menu is open, check for input and draw the titlebar.
 	//The titlebar also indicates where we can drag / move the radar.
-	if (g_NewMenu.menuOpen || g_Menu.m_flFadeElapsed < g_Menu.m_flFadeDuration)
+	if (gMenu.menuOpen || gMenu.m_flFadeElapsed < gMenu.m_flFadeDuration)
 	{
 		//A quick notify, common sense but I made it by accident:
 		//If on drawing, it's important to update position first before drawing
 		//Causes unwanted behaviour if you draw the title first and then call "DragRadar()"
 		DragRadar();
 
-		g_Interfaces.Surface->DrawSetAlphaMultiplier(g_Menu.m_flFadeAlpha);
+		g_Interfaces.Surface->DrawSetAlphaMultiplier(gMenu.m_flFadeAlpha);
 		g_Draw.Rect(m_nRadarX - m_nRadarSize, m_nRadarY - m_nRadarSize - 10, m_nRadarSize * 2, 10, { 60, 60, 60, 255 });
 		g_Interfaces.Surface->DrawSetAlphaMultiplier(1.0f);
 	}

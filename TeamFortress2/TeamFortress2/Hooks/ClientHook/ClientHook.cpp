@@ -2,11 +2,11 @@
 
 #include "../../Features/Misc/Misc.h"
 #include "../../Features/Visuals/Visuals.h"
-#include "../../Features/Menu/Menu.h"
 #include "../../Features/AttributeChanger/AttributeChanger.h"
 #include "../../Features/RichPresence/RichPresence.h"
 #include "../../SDK/Includes/bitbuf.h"
 #include "../../Utils/TFM/tfm.h"
+
 void __stdcall ClientHook::PreEntity::Hook(char const* szMapName)
 {
 	Table.Original<fn>(index)(g_Interfaces.Client, szMapName);

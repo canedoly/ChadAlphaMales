@@ -2,7 +2,6 @@
 
 #include "../../SDK/SDK.h"
 #include "../../Features/Menu/Menu.h"
-#include "../../Features/NewMenu/NewMenu.h"
 
 typedef LONG(WINAPI* WNDPROC)(HWND, UINT, WPARAM, LPARAM);
 

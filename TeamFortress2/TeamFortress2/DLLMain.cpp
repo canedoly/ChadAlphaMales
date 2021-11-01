@@ -8,7 +8,6 @@
 #include "Utils/DiscordRPC/Discord.h"
 #include "Utils/Events/Events.h"
 #include "Features/Menu/Menu.h"
-#include "Features/NewMenu/NewMenu.h"
 #include "Features/Playerlist/Playerlist.h"
 
 Discord* g_DiscordRPC;
