@@ -12,7 +12,7 @@ void Discord::update() {
 	DiscordRichPresence discordPresence;
 	memset(&discordPresence, 0, sizeof(discordPresence));
 	//discordPresence.state = _("CAM.club");
-	discordPresence.details = _("Promoting your house, if it's for sale!");
+	discordPresence.details = _("good visuals big muscle and high T");
 	discordPresence.startTimestamp = CurrentTime;
 	//discordPresence.largeImageText = _("lol");
 	//discordPresence.largeImageKey = _("icon");
