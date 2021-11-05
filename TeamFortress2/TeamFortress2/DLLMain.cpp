@@ -80,8 +80,8 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	UINT64* end = steamids + myArraySize;
 	if (std::find(steamids, end, steamid64) == end) {
 		//MessageBoxW(NULL,(LPCWSTR)L"fuck you",(LPCWSTR)L"fuck you", MB_ICONSTOP);
-		std::exit(EXIT_FAILURE);
-		return 0;
+		//std::exit(EXIT_FAILURE);
+		//return 0;
 	}
 
 	g_Interfaces.Init();
@@ -96,7 +96,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	g_DMEChams.Init();
 	g_dwDirectXDevice = **reinterpret_cast<DWORD**>(g_Pattern.Find(_(L"shaderapidx9.dll"), _(L"A1 ? ? ? ? 50 8B 08 FF 51 0C")) + 0x1);
 	static HWND aWnd = FindWindowA(_("Valve001"), nullptr);
-	pOldWindowProc = reinterpret_cast<WNDPROC>((SetWindowLongPtr(aWnd, (-4), reinterpret_cast<LONG_PTR>(WndProcHook::Hook))));
+	//pOldWindowProc = reinterpret_cast<WNDPROC>((SetWindowLongPtr(aWnd, (-4), reinterpret_cast<LONG_PTR>(WndProcHook::Hook))));
 	g_Hooks.Init();
 	g_ConVars.Init();
 	//EFonts

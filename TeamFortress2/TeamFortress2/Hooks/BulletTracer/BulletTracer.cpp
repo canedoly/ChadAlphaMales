@@ -9,11 +9,17 @@ void __fastcall BulletTracers::FireBullet::Hook(void* ecx, void* edx, CBaseComba
 	Vec3 vecStart = info.m_vecSrc;
 	Vec3 vecnd = info.m_vecSrc + info.m_vecDirShooting * info.m_flDistance;
 	CGameTrace trace;
-
+	CTraceFilterHitscan filter = { };
+	auto pLocal = g_EntityCache.m_pLocal;
+	if (!pLocal)
+		return;
+	filter.pSkip = pLocal;
+	//CTraceFilterHitscan* filter = nullptr;
+	//filter->pSkip = pWeapon;
 	Ray_t ray;
 	ray.Init(vecStart, vecnd);
 
-	g_Interfaces.EngineTrace->TraceRay(ray, MASK_SOLID | CONTENTS_HITBOX, NULL, &trace);
+	g_Interfaces.EngineTrace->TraceRay(ray, MASK_SHOT, &filter, &trace);
 
 	if (auto& pLocal = g_EntityCache.m_pLocal) {
 

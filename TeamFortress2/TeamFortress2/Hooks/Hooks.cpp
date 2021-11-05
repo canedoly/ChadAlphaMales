@@ -8,8 +8,13 @@ void CHooks::Init()
 {
 	MH_Initialize();
 	{
-		EndSceneHook::Init();
+		while (!m_hwWindow) {
+			m_hwWindow = WinAPI::FindWindowW(0, _(L"Team Fortress 2"));
+			std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		}
 
+		WndProcHook::WndProc = (WNDPROC)SetWindowLongPtr(m_hwWindow, GWL_WNDPROC, (LONG_PTR)WndProcHook::Hook);
+		EndSceneHook::Init();
 		ChatPrintfHook::Init();
 		Scoreboard::IsPlayerDominated::Init();
 		CalcViewModelView::Init();
@@ -113,13 +118,6 @@ void CHooks::Init()
 		Table.Init(g_Interfaces.UniformRandomStream);
 		Table.Hook(RandInt::index, &RandInt::Hook);
 	}
-
-	while (!m_hwWindow) {
-		m_hwWindow = WinAPI::FindWindowW(0, _(L"Team Fortress 2"));
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
-	}
-
-	WndProcHook::WndProc = (WNDPROC)SetWindowLongPtr(m_hwWindow, GWL_WNDPROC, (LONG_PTR)WndProcHook::Hook);
 
 	//Inventory expander
 	{
