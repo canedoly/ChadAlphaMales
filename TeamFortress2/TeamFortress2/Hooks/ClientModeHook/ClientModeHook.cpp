@@ -218,22 +218,6 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		}
 	}
 
-	auto ShouldNoPush = [&]() -> bool
-	{
-		if (const auto& pLocal = g_EntityCache.m_pLocal)
-		{
-			if (!Vars::Misc::NoPush.m_Var)
-				return false;
-
-			if (pLocal->IsTaunting() || pLocal->IsInBumperKart())
-				return false;
-
-			return true;
-		}
-
-		return false;
-	};
-
 	static bool bWasSet = false;
 
 	if (g_GlobalInfo.m_bSilentTime) {
@@ -272,8 +256,6 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		|| g_GlobalInfo.m_bAAActive
 		|| g_GlobalInfo.m_bHitscanSilentActive
 		|| g_GlobalInfo.m_bProjectileSilentActive
-		|| g_GlobalInfo.m_bRollExploiting
-		|| ShouldNoPush()
 		? false : OriginalFn(g_Interfaces.ClientMode, input_sample_frametime, pCmd);
 }
 
