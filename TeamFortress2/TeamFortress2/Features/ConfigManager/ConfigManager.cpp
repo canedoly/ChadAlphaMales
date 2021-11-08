@@ -478,6 +478,9 @@ void CConfigManager::Save(const wchar_t *name)
 
 			SAVE_VAR(Vars::Visuals::WorldModulation);
 
+			SAVE_VAR(Vars::Visuals::SkyboxChanger);
+			SAVE_VAR(Vars::Visuals::SkyModulation);
+
 			SAVE_VAR(Vars::Visuals::DevTextures);
 
 			SAVE_VAR(Vars::Visuals::PlayerList);
@@ -569,6 +572,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::WorldModulation);
 			SAVE_OTHER(Colors::FresnelBase);
 			SAVE_OTHER(Colors::StaticPropModulation);
+			SAVE_OTHER(Colors::SkyModulation);
 			SAVE_OTHER(Colors::FOVCircle);
 			SAVE_OTHER(Colors::Bones);
 			SAVE_OTHER(Colors::HealthBarTopColor);
@@ -585,6 +589,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(g_SpectatorList.m_nSpecListY);
 
 			SAVE_STRING(Vars::Skybox::SkyboxName);
+			SAVE_STRING(Vars::Skybox::skyboxnum);
 			SAVE_STRING(Vars::Fart::customFont);
 		}
 
@@ -941,6 +946,9 @@ void CConfigManager::Load(const wchar_t *name)
 
 			LOAD_VAR(Vars::Visuals::WorldModulation);
 
+			LOAD_VAR(Vars::Visuals::SkyboxChanger);
+			LOAD_VAR(Vars::Visuals::SkyModulation);
+
 			LOAD_VAR(Vars::Visuals::DevTextures);
 
 			LOAD_VAR(Vars::Visuals::PlayerList);
@@ -1033,6 +1041,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::WorldModulation);
 			LOAD_OTHER(Colors::FresnelBase);
 			LOAD_OTHER(Colors::StaticPropModulation);
+			LOAD_OTHER(Colors::SkyModulation);
 			LOAD_OTHER(Colors::FOVCircle);
 			LOAD_OTHER(Colors::Bones);
 			LOAD_OTHER(Colors::HealthBarTopColor);
@@ -1048,6 +1057,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(g_SpectatorList.m_nSpecListY);
 
 			LOAD_STRING(Vars::Skybox::SkyboxName);
+			LOAD_STRING(Vars::Skybox::skyboxnum);
 			LOAD_STRING(Vars::Fart::customFont);
 		}
 
