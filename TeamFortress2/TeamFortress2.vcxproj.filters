@@ -94,6 +94,9 @@
     <ClCompile Include="TeamFortress2\Hooks\CalcViewModelView\CalcViewModelView.cpp" />
     <ClCompile Include="TeamFortress2\Hooks\MaterialHook\MaterialHook.cpp" />
     <ClCompile Include="TeamFortress2\SDK\Includes\bitbuf.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Playerlist\Playerlist.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Cache\Cache.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Backtrack\Backtrack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TeamFortress2\Features\Aimbot\Aimbot.h" />
@@ -626,6 +629,8 @@
     <ClInclude Include="TeamFortress2\Hooks\MaterialHook\MaterialHook.h" />
     <ClInclude Include="TeamFortress2\SDK\Includes\bitbuf.h" />
     <ClInclude Include="TeamFortress2\Hooks\BytePatch.h" />
+    <ClInclude Include="TeamFortress2\Features\Cache\Cache.h" />
+    <ClInclude Include="TeamFortress2\Features\Backtrack\Backtrack.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TeamFortress2\SDK\DirectX\Include\D3DX_DXGIFormatConvert.inl" />

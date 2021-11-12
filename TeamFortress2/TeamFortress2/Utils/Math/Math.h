@@ -852,6 +852,35 @@ namespace Math
 		angles[2] = 0;
 	}
 
+	inline Vec2 VectorAngles(float radians, float length)
+	{
+		return Vec2(sin(radians) * length, cos(radians) * length);
+	}
+
+	inline float ToAngle(const Vec2& vec)
+	{
+		return atan2(vec.x, vec.y);
+	}
+
+	inline Vec2 RotateVec2(Vec2& point, const Vec2& origin, float radians)
+	{
+		float s = sin(radians);
+		float c = cos(radians);
+
+		//Translate point back to origin
+		point.x -= origin.x;
+		point.y -= origin.y;
+
+		//Rotate point
+		float xnew = point.x * c - point.y * s;
+		float ynew = point.x * s + point.y * c;
+
+		//Translate point back
+		point.x = xnew + origin.x;
+		point.y = ynew + origin.y;
+		return point;
+	}
+
 	inline float GetFov(const Vec3& angle, const Vec3& source, const Vec3& destination)
 	{
 		Vec3 ang, aim;

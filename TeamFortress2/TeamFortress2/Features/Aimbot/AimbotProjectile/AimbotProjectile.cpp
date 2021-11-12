@@ -1,5 +1,6 @@
 #include "AimbotProjectile.h"
 #include "../../Vars.h"
+#include "../../Cache/Cache.h"
 
 Vec3 CAimbotProjectile::Predictor_t::Extrapolate(float time)
 {
@@ -11,6 +12,58 @@ Vec3 CAimbotProjectile::Predictor_t::Extrapolate(float time)
 	else vecOut = (m_vPosition + (m_vVelocity * time) - m_vAcceleration * 0.5f * time * time);
 
 	return vecOut;
+}
+
+#define MAX_CACHE TIME_TO_TICKS(1)
+
+Vec3 CAimbotProjectile::Predictor_t::Extrapolate2(float flTime)
+{
+	/*if (!flTime)
+		return target->GetAbsOrigin();*/
+
+	static ConVar* sv_gravity = g_Interfaces.CVars->FindVar("sv_gravity");
+
+	Vector startPos = m_pEntity->GetAbsOrigin(), velocity = m_vVelocity;
+	float zdrop;
+	if (m_pEntity->GetFlags() & FL_ONGROUND) {
+		zdrop = velocity.z * flTime;
+	}
+	else {
+		zdrop = 0.5 * -sv_gravity->GetInt() * pow(flTime, 2) + velocity.z * flTime;
+	}
+
+	Vector result(
+		startPos.x + (velocity.x * flTime),
+		startPos.y + (velocity.y * flTime),
+		startPos.z + zdrop);
+
+	float endZ = result.z;
+
+	float angleY = 0;
+	PlayerCache* cache = g_Cache.FindPlayer(m_pEntity);
+	if (cache && cache->Full()) // Determine player strafe by averaging cache data
+	{
+		// A = Last, B = Mid, C = Current (startPos)
+		int last = (MAX_CACHE - 1) / 3, mid = (MAX_CACHE - 1) / 6;
+		Vector vLast, vMid;
+		if (HitboxData* data = cache->FindTick(g_Interfaces.GlobalVars->tickcount - last))
+		{
+			vLast = data->vCenter;
+			if (data = cache->FindTick(g_Interfaces.GlobalVars->tickcount - mid))
+				vMid = data->vCenter;
+		}
+		// Approximate angle
+		Vector forward, strafe;
+		Math::VectorAngles(vMid - vLast, forward);
+		Math::VectorAngles(startPos - vMid, strafe);
+		// Divide our angle to measure by distance
+		angleY = (strafe.y - forward.y) / ((vMid - vLast).Lenght2D() + (startPos - vMid).Lenght2D());
+	}
+	Math::RotateVec2(*(Vec2*)&result, *(Vec2*)&startPos, DEG2RAD(angleY * (result - startPos).Lenght2D()));
+
+	result.z = endZ;
+
+	return result;
 }
 
 bool CAimbotProjectile::GetProjectileInfo(CBaseCombatWeapon* pWeapon, ProjectileInfo_t& out)
@@ -239,7 +292,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	for (float fPredTime = 0.0f; fPredTime < MAX_TIME; fPredTime += TIME_STEP)
 	{
 		float fCorrectTime = (fPredTime + fLatency);
-		Vec3 vPredictedPos = Predictor.Extrapolate(fCorrectTime);
+		Vec3 vPredictedPos = Predictor.Extrapolate2(fCorrectTime);
 
 		switch (pWeapon->GetWeaponID())
 		{

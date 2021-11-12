@@ -59,6 +59,7 @@
 
 //I for some reason have to include this here, if I don't then one steam header goes apeshit full of errors
 #include "../Utils/CRC/CRC.h"
+#include "../Features/Playerlist/Playerlist.h"
 
 #pragma warning (disable : 6385)
 #pragma warning (disable : 26451)
@@ -76,6 +77,8 @@ enum InitReturnVal_t
 	INIT_OK,
 	INIT_LAST_VAL,
 };
+
+
 
 ////Takes hex number (00FF00) and returns an std::string of that escaped into chat
 //bool ChatColor(const char* colorString, std::string& out) {
@@ -289,14 +292,6 @@ namespace Utils
 
 			if (!pEntity->IsVulnerable())
 				out = Colors::Invuln;
-
-			PlayerInfo_t pi{};
-
-			if (g_Interfaces.Engine->GetPlayerInfo(pEntity->GetIndex(), &pi))
-			{
-				if (g_Playerlist.IsIgnored(pi.friendsID))
-					out = Colors::IgnoredTarget;
-			}
 		}
 
 		if (pEntity->GetIndex() == g_GlobalInfo.m_nCurrentTargetIdx)

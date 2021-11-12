@@ -122,34 +122,33 @@ namespace CBacktrack {
 				if (!pEntity->SetupBones(ticks[i].at(t).bone_matrix, 128, 256, 0)) {
 					continue;
 				}
-			}
-		}
-
-		float final_target_index = -1;
-		if (best_target_index != -1) {
-			for (unsigned int i = 0; i < ticks[best_target_index].size(); i++) {
-				float field_of_view_distance = Math::DistPointToLine(ticks[best_target_index].at(i).head_position, pLocal->GetEyePosition(), newViewDirection);
-				if (field_of_view_distance < best_field_of_view) {
-					best_field_of_view = field_of_view_distance;
-					final_target_index = ticks[best_target_index].at(i).simulation_time;
-				}
-			}
-
-			if (final_target_index != -1) {
-				if (pCmd->buttons & IN_ATTACK || g_GlobalInfo.m_bAttacking) {
-					pCmd->tick_count = TIME_TO_TICKS(final_target_index);
-				}
-			}
 		}
 	}
 
-	void CBacktrack::DoBacktrack(CUserCmd* pCmd) {
-		auto pLocal = GLOCAL;
-		if (pLocal == nullptr || !pLocal || pCmd == nullptr || !pCmd) {
-			return;
+	float final_target_index = -1;
+	if (best_target_index != -1) {
+		for (unsigned int i = 0; i < ticks[best_target_index].size(); i++) {
+			float field_of_view_distance = Math::DistPointToLine(ticks[best_target_index].at(i).head_position, pLocal->GetEyePosition(), newViewDirection);
+			if (field_of_view_distance < best_field_of_view) {
+				best_field_of_view = field_of_view_distance;
+				final_target_index = ticks[best_target_index].at(i).simulation_time;
+			}
 		}
 
-		Start(pCmd);
-		Calculate(pCmd);
+		if (final_target_index != -1) {
+			if (pCmd->buttons & IN_ATTACK || g_GlobalInfo.m_bAttacking) {
+				pCmd->tick_count = TIME_TO_TICKS(final_target_index);
+			}
+		}
 	}
+}
+
+void CBacktrack::DoBacktrack(CUserCmd* pCmd) {
+	auto pLocal = GLOCAL;
+	if (pLocal == nullptr || !pLocal || pCmd == nullptr || !pCmd) {
+		return;
+	}
+
+	Start(pCmd);
+	Calculate(pCmd);
 }

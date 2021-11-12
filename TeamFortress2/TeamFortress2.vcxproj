@@ -103,6 +103,8 @@
     <ClCompile Include="TeamFortress2\Features\Auto\AutoDetonate\AutoDetonate.cpp" />
     <ClCompile Include="TeamFortress2\Features\Auto\AutoUber\AutoUber.cpp" />
     <ClCompile Include="TeamFortress2\Features\Auto\AutoVaccinator\AutoVaccinator.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Backtrack\Backtrack.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Cache\Cache.cpp" />
     <ClCompile Include="TeamFortress2\Features\ChatInfo\ChatInfo.cpp" />
     <ClCompile Include="TeamFortress2\Features\Chams\DMEChams.cpp" />
     <ClCompile Include="TeamFortress2\Features\ESP\ESP.cpp" />
@@ -120,6 +122,7 @@
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_tables.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="TeamFortress2\Features\Menu\Menu.cpp" />
+    <ClCompile Include="TeamFortress2\Features\Playerlist\Playerlist.cpp" />
     <ClCompile Include="TeamFortress2\Features\Prediction\Prediction.cpp" />
     <ClCompile Include="TeamFortress2\Features\Radar\Radar.cpp" />
     <ClCompile Include="TeamFortress2\Features\AttributeChanger\AttributeChanger.cpp" />
@@ -196,6 +199,8 @@
     <ClInclude Include="TeamFortress2\Features\Auto\AutoDetonate\AutoDetonate.h" />
     <ClInclude Include="TeamFortress2\Features\Auto\AutoUber\AutoUber.h" />
     <ClInclude Include="TeamFortress2\Features\Auto\AutoVaccinator\AutoVaccinator.h" />
+    <ClInclude Include="TeamFortress2\Features\Backtrack\Backtrack.h" />
+    <ClInclude Include="TeamFortress2\Features\Cache\Cache.h" />
     <ClInclude Include="TeamFortress2\Features\ChatInfo\ChatInfo.h" />
     <ClInclude Include="TeamFortress2\Features\Chams\DMEChams.h" />
     <ClInclude Include="TeamFortress2\Features\ESP\ESP.h" />

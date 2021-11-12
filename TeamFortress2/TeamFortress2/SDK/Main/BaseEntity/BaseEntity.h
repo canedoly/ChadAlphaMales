@@ -133,6 +133,23 @@ public: //Virtuals from renderable
 		return GetVFunc<bool(__thiscall*)(void*, matrix3x4*, int, int, float)>(pRend, 16)(pRend, pOut, nMax, nMask, flTime);
 	}
 
+    __inline PlayerInfo_t GetInfo()
+    {
+        PlayerInfo_t pInfo{};
+        g_Interfaces.Engine->GetPlayerInfo(this->GetIndex(), &pInfo);
+        return pInfo;
+    }
+
+    __inline bool ToPlayer(CBaseEntity*& player)
+    {
+        if (this != nullptr && !this->GetDormant() && this->GetClassID() == ETFClassID::CTFPlayer)
+        {
+            player = (CBaseEntity*)this;
+            return true;
+        }
+        return false;
+    }
+
 	__inline int DrawModel(int nFlags) {
 		const auto pRend = Renderable();
 		return GetVFunc<int(__thiscall*)(void*, int)>(pRend, 10)(pRend, nFlags);

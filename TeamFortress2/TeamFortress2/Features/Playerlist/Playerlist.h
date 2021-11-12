@@ -6,15 +6,19 @@
 #include <set>
 
 // I want a playerlist that will show
-// Name - Kick - Checkbox with ignore - Profile?
-
-// File will consist of pi.friendsID on each newline
-// If not checkbox the friendsID is in the file - they are ignored
-// If checkbox && friendsID is in file - remove it from file
-
+// Name - Kick - Checkbox with ignore - Profile? [x]
+// File will consist of pi.friendsID on each newline [x]
+// If not checkbox the friendsID is in the file - they are ignored [x]
+// If checkbox && friendsID is in file - remove it from file [x]\
 // Kick = callvote kick pi.userID
-
 // Profile = g_SteamInterfaces.Friends015->ActivateGameOverlayToUser("steamid", CSteamID((UINT64)(0x0110000100000000ULL + pi.friendsID)));
+
+struct plistPlayer
+{
+	int index;
+	PlayerInfo_t info;
+	int teamNum;
+};
 
 class CPlayerlist {
 private:
@@ -22,9 +26,7 @@ private:
 	std::wstring ignorePath = (g_CFG.m_sConfigPath + _(L"\\CAMCore\\IGNORE.cam"));
 	//A set of friendsIDs
 	std::set<uint32_t> ignoredPlayers;
-
 public:
-
 	//Saves the file
 	void SaveSet() {
 		std::wofstream IgnoreWrite(ignorePath, std::ios::out);
@@ -58,11 +60,14 @@ public:
 		ignoredPlayers.erase(friendsID);
 		SaveSet();
 	}
-
+public:
 	// Use this for checkbox?
 	bool IsIgnored(uint32_t friendsID) {
 		return ignoredPlayers.find(friendsID) != ignoredPlayers.end();
 	}
+	void GetPlayers();
+	//A vector of the plistPlayer struct (honestly not sure why i used std::set for ignoredPlayers but oh well)
+	std::vector<plistPlayer> players;
 };
 
 inline CPlayerlist g_Playerlist;

@@ -240,6 +240,14 @@ void CChams::RenderPlayers(CBaseEntity* pLocal, IMatRenderContext* pRenderContex
 
 		if (bMatWasForced) {
 			Color_t DrawColor = Utils::GetEntityDrawColor(Player);
+			PlayerInfo_t pi{};
+
+			if (g_Interfaces.Engine->GetPlayerInfo(Player->GetIndex(), &pi))
+			{
+				if (g_Playerlist.IsIgnored(pi.friendsID)) {
+					DrawColor = Colors::IgnoredTarget;
+				}
+			}
 			//Color_t DrawColor = Utils::Rainbow();
 			if (Vars::Chams::Players::Material.m_Var != 4) {
 				g_Interfaces.RenderView->SetColorModulation(Color::TOFLOAT(DrawColor.r), Color::TOFLOAT(DrawColor.g), Color::TOFLOAT(DrawColor.b));

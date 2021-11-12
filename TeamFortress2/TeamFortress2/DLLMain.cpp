@@ -188,8 +188,10 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 		g_Visuals.AddToEventLog(_("Default config loaded!")); 
 	}
 
-	while (!GetAsyncKeyState(VK_F11))
-		std::this_thread::sleep_for(420ms);
+	while (!GetAsyncKeyState(VK_F11)) {
+		source::features::steamrichpresence.Update();
+		std::this_thread::sleep_for(5000ms);
+	}
 
 	/*
 	fclose(static_cast<FILE*>(stdin));

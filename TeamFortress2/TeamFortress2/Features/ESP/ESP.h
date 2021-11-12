@@ -7,6 +7,7 @@ private:
 	bool ShouldRun();
 	void AAIndicator();
 	bool GetDrawBounds(CBaseEntity* pEntity, Vec3* vTrans, int& x, int& y, int& w, int& h);
+	void DrawPaths(CBaseEntity* You);
 	void HandleDormancy(CBaseEntity* entity, int index);
 	std::wstring GetPlayerConds(CBaseEntity* pEntity);
 	const wchar_t* GetPlayerClass(int nClassNum);
