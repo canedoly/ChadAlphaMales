@@ -400,6 +400,8 @@ void AimbotTab() {
 
             static const char* projectileAimHitbox[]{ "Body", "Feet", "Auto" };
             ImGui::Combo(_("Aim position###projectileAimPosition"), &Vars::Aimbot::Projectile::AimPosition.m_Var, projectileAimHitbox, IM_ARRAYSIZE(projectileAimHitbox));
+
+            ImGui::Checkbox(_("R8 Method"), &Vars::Aimbot::Projectile::R8Method.m_Var);
         }
         ImGui::EndChild();
         ImGui::EndGroup();

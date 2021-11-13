@@ -315,25 +315,34 @@ SColor hsv2rgb(float hue, float saturation, float brightness, int alpha = 255) {
 	}
 }
 
-void CESP::DrawPaths(CBaseEntity* You)
+void CESP::DrawPaths()
 {
-	for (auto &Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
+	/*for (auto& Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
 		if (!(Player->GetIndex() == g_GlobalInfo.m_nCurrentTargetIdx)) {
 			return;
+		}*/
+
+	if (!Vars::Aimbot::Projectile::R8Method.m_Var)
+		return;
+
+	if (g_GlobalInfo.m_nCurrentTargetIdx) {
+		CBaseEntity* aimTarget = g_Interfaces.EntityList->GetClientEntity(g_GlobalInfo.m_nCurrentTargetIdx);
+		if (!aimTarget) {
+			return;
 		}
-		Vector velocity = You->GetVelocity() / 10, predPos[101];
-		int flags = You->GetFlags();
+		Vector velocity = aimTarget->GetVelocity() / 10, predPos[101];
+		int flags = aimTarget->GetFlags();
 
 		int max = (flags & FL_ONGROUND) ? 21 : 101;
 		for (int i = 0; i < max; i++)
-			predPos[i] = predPosAt(i * 0.05, You);
+			predPos[i] = predPosAt(i * 0.05, aimTarget);
 
 		SColor lineColor;
 		for (int i = 0; i < max - 1; i++)
 		{
 			CGameTrace result; // Check to see if we're about to hit a surface
-			if (!AssumeVis(You, predPos[i], predPos[i + 1], &result))
+			if (!AssumeVis(aimTarget, predPos[i], predPos[i + 1], &result))
 			{
 				// Draw a circle to show our landing position/angle
 				if (!(flags & FL_ONGROUND))
@@ -431,7 +440,7 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 		int nIndex = Player->GetIndex();
 		bool bIsLocal = nIndex == g_Interfaces.Engine->GetLocalPlayer();
 		
-		DrawPaths(Player);
+		DrawPaths();
 
 		HandleDormancy(Player, nIndex);
 		if (m_flEntityAlpha[nIndex] <= 0.0f)

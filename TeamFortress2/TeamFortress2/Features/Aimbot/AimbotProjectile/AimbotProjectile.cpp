@@ -14,33 +14,75 @@ Vec3 CAimbotProjectile::Predictor_t::Extrapolate(float time)
 	return vecOut;
 }
 
+//Vec3 CAimbotProjectile::Predictor_t::Extrapolate2(float flTime)
+//{
+//	Vec3 vecOut = {};
+//
+//	static ConVar* sv_gravity = g_Interfaces.CVars->FindVar("sv_gravity");
+//
+//	if (m_pEntity->IsOnGround()) {
+//		vecOut = (m_vPosition + (m_vVelocity * flTime));
+//	}
+//	else {
+//		Vec3 startPos = m_vPosition;
+//		vecOut = (m_vPosition + (m_vVelocity * flTime) - m_vAcceleration * 0.5f * flTime * flTime);
+//		float angleY = 0;
+//		PlayerCache* cache = g_Cache.FindPlayer(m_pEntity);
+//		if (cache && cache->Full()) // Determine player strafe by averaging cache data
+//		{
+//			// A = Last, B = Mid, C = Current (startPos)
+//			int last = (MAX_CACHE - 1) / 3, mid = (MAX_CACHE - 1) / 6;
+//			Vector vLast, vMid;
+//			if (HitboxData* data = cache->FindTick(g_Interfaces.GlobalVars->tickcount - last))
+//			{
+//				vLast = data->vCenter;
+//				if (data = cache->FindTick(g_Interfaces.GlobalVars->tickcount - mid))
+//					vMid = data->vCenter;
+//			}
+//			// Approximate angle
+//			Vector forward, strafe;
+//			Math::VectorAngles(vMid - vLast, forward);
+//			Math::VectorAngles(startPos - vMid, strafe);
+//			// Divide our angle to measure by distance
+//			angleY = (strafe.y - forward.y) / ((vMid - vLast).Lenght2D() + (startPos - vMid).Lenght2D());
+//		}
+//		Math::RotateVec2(*(Vec2*)&vecOut, *(Vec2*)&vecOut, DEG2RAD(angleY * (vecOut - startPos).Lenght2D()));
+//	}
+//
+//
+//
+//	return vecOut;
+//}
+
 #define MAX_CACHE TIME_TO_TICKS(1)
 
 Vec3 CAimbotProjectile::Predictor_t::Extrapolate2(float flTime)
 {
-	/*if (!flTime)
-		return target->GetAbsOrigin();*/
+	if (!flTime)
+		return m_pEntity->GetAbsOrigin();
+
+	//Vec3 vecOut = {};
 
 	static ConVar* sv_gravity = g_Interfaces.CVars->FindVar("sv_gravity");
 
-	Vector startPos = m_pEntity->GetAbsOrigin(), velocity = m_vVelocity;
+	Vector startPos = m_vPosition;
 	float zdrop;
 	if (m_pEntity->GetFlags() & FL_ONGROUND) {
-		zdrop = velocity.z * flTime;
+		return (m_vPosition + (m_vVelocity * flTime));
 	}
 	else {
-		zdrop = 0.5 * -sv_gravity->GetInt() * pow(flTime, 2) + velocity.z * flTime;
+		zdrop = 0.5 * -sv_gravity->GetInt() * pow(flTime, 2) + m_vVelocity.z * flTime;
 	}
 
 	Vector result(
-		startPos.x + (velocity.x * flTime),
-		startPos.y + (velocity.y * flTime),
+		startPos.x + (m_vVelocity.x * flTime),
+		startPos.y + (m_vVelocity.y * flTime),
 		startPos.z + zdrop);
 
 	float endZ = result.z;
 
 	float angleY = 0;
-	PlayerCache* cache = g_Cache.FindPlayer(m_pEntity);
+	/*PlayerCache* cache = g_Cache.FindPlayer(m_pEntity);
 	if (cache && cache->Full()) // Determine player strafe by averaging cache data
 	{
 		// A = Last, B = Mid, C = Current (startPos)
@@ -58,10 +100,10 @@ Vec3 CAimbotProjectile::Predictor_t::Extrapolate2(float flTime)
 		Math::VectorAngles(startPos - vMid, strafe);
 		// Divide our angle to measure by distance
 		angleY = (strafe.y - forward.y) / ((vMid - vLast).Lenght2D() + (startPos - vMid).Lenght2D());
-	}
+	}*/
 	Math::RotateVec2(*(Vec2*)&result, *(Vec2*)&startPos, DEG2RAD(angleY * (result - startPos).Lenght2D()));
 
-	result.z = endZ;
+	//result.z = endZ + 10.f;
 
 	return result;
 }
@@ -264,8 +306,8 @@ void DrawDebugArrow(const Vector& vecFrom, const Vector& vecTo)
 	Math::VectorAngles(vecTo - vecFrom, angRotation);
 	Vector vecForward, vecRight, vecUp;
 	Math::AngleVectors(angRotation, &vecForward, &vecRight, &vecUp);
-	g_Interfaces.DebugOverlay->AddLineOverlay(vecFrom, vecTo, 255, 0, 0, true, 0.0f);
-	g_Interfaces.DebugOverlay->AddLineOverlay(vecFrom, vecFrom - vecRight * 10.0f, 0, 255, 255, true, 0.0f);
+	g_Interfaces.DebugOverlay->AddLineOverlay(vecFrom, vecTo, 255, 0, 0, true, 1.0f);
+	g_Interfaces.DebugOverlay->AddLineOverlay(vecFrom, vecFrom - vecRight * 10.0f, 0, 255, 255, true, 1.0f);
 }
 
 bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserCmd* pCmd, Predictor_t& Predictor, const ProjectileInfo_t& ProjInfo, Solution_t& out)
@@ -292,7 +334,17 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	for (float fPredTime = 0.0f; fPredTime < MAX_TIME; fPredTime += TIME_STEP)
 	{
 		float fCorrectTime = (fPredTime + fLatency);
-		Vec3 vPredictedPos = Predictor.Extrapolate2(fCorrectTime);
+		Vec3 vPredictedPos{};
+		vPredictedPos = Vars::Aimbot::Projectile::R8Method.m_Var ? Predictor.Extrapolate2(fCorrectTime) : Predictor.Extrapolate(fCorrectTime);
+		/*if (Predictor.m_vVelocity.IsZero() ||
+			pWeapon->GetWeaponID() == 56 ||
+			pWeapon->GetWeaponID() == 1005 ||
+			pWeapon->GetWeaponID() == 1092) {
+			vPredictedPos = Predictor.Extrapolate(fCorrectTime);
+		}
+		else {
+			vPredictedPos = Predictor.Extrapolate2(fCorrectTime);
+		}*/
 
 		switch (pWeapon->GetWeaponID())
 		{
@@ -391,7 +443,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 			default: break;
 			}
 
-			DrawDebugArrow(vVisCheck, vPredictedPos);
+			//DrawDebugArrow(vVisCheck, vPredictedPos);
 			Utils::TraceHull(vVisCheck, vPredictedPos, Vec3(-2, -2, -2), Vec3(2, 2, 2), MASK_SOLID_BRUSHONLY, &TraceFilter, &Trace);
 
 			if (Trace.DidHit())
@@ -418,11 +470,11 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 			//case CLASS_SOLDIER: 
 		case CLASS_SOLDIER: //soldier just aims at legs
 		{
-			return pEntity->GetWorldSpaceCenter() - Vec3(0.0f, 0.0f, 27.0f);
+			return pEntity->GetWorldSpaceCenter() - Vec3(0.0f, 0.0f, 24.0f);
 		}
 		case CLASS_DEMOMAN:
 		{
-			if (Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var && pEntity->GetFlags() & FL_ONGROUND) return pEntity->GetWorldSpaceCenter() - Vec3(0.0f, 0.0f, 27.0f);
+			if (Vars::Aimbot::Projectile::FeetAimIfOnGround.m_Var && pEntity->GetFlags() & FL_ONGROUND) return pEntity->GetWorldSpaceCenter() - Vec3(0.0f, 0.0f, 24.0f);
 			else return pEntity->GetWorldSpaceCenter();
 		}
 		case CLASS_SNIPER:
@@ -436,7 +488,9 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 
 			//yes\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 			//if (pEntity->GetClassNum() == 2 || pEntity->GetClassNum() == 4)
-			vPos.z += 6.0f;
+			if (vToEnt.Dot(vEntForward) > 0.1071f) {
+				vPos.z += 6.0f;
+			}
 
 			return vPos;
 		}
