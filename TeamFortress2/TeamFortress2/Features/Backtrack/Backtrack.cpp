@@ -33,95 +33,94 @@ float LerpTime()
 	return std::max(lerpurmom, ratiourmom / updaterateurmom);
 }
 
-namespace CBacktrack {
-	std::vector<tick_record> CBacktrack::ticks[64];
+//std::vector<tick_record> CBacktrack::ticks[64];
 
-	bool CBacktrack::GoodTick(int tick)
-	{
-		auto nci = g_Interfaces.Engine->GetNetChannelInfo();
+bool CBacktrack::GoodTick(int tick)
+{
+	auto nci = g_Interfaces.Engine->GetNetChannelInfo();
 
-		if (!nci) {
-			return false;
-		}
-
-		float correct = std::clamp(nci->GetLatency(FLOW_OUTGOING) + LerpTime(), 0.f, 1.f);
-
-		float delta_time = correct - (g_Interfaces.GlobalVars->curtime - TICKS_TO_TIME(tick));
-
-		return fabsf(delta_time) < 0.2f;
+	if (!nci) {
+		return false;
 	}
 
-	void CBacktrack::Start(CUserCmd* pCmd) {
-		auto pLocal = GLOCAL;
-		if (pLocal == nullptr || !pLocal || pCmd == nullptr || !pCmd) {
-			return;
-		}
+	float correct = std::clamp(nci->GetLatency(FLOW_OUTGOING) + LerpTime(), 0.f, 1.f);
 
-		CBaseCombatWeapon* pWeapon = pLocal->GetActiveWeapon();
-		if (!pWeapon) {
-			return;
-		}
+	float delta_time = correct - (g_Interfaces.GlobalVars->curtime - TICKS_TO_TIME(tick));
 
-		for (int i = 0; i < g_Interfaces.Engine->GetMaxClients(); i++) {
-			CBaseEntity* pEntity = g_Interfaces.EntityList->GetClientEntity(i);
-			if (!pEntity || pEntity->GetDormant() || pEntity->GetLifeState() != LIFE_ALIVE) {
-				continue;
-			}
+	return fabsf(delta_time) < 0.2f;
+}
 
-			if (pEntity->GetTeamNum() == pLocal->GetTeamNum()) {
-				continue;
-			}
-
-			int hitbox = 0;
-
-			ticks[i].insert(ticks[i].begin(), tick_record{ pEntity->GetSimulationTime(), pEntity->GetHitboxPos(hitbox), pEntity->GetAbsOrigin() });
-
-			if (ticks[i].size() > 12) {
-				ticks[i].pop_back();
-			}
-		}
+void CBacktrack::Start(CUserCmd* pCmd) {
+	auto pLocal = GLOCAL;
+	if (pLocal == nullptr || !pLocal || pCmd == nullptr || !pCmd) {
+		return;
 	}
 
-	void CBacktrack::Calculate(CUserCmd* pCmd) {
-		auto pLocal = GLOCAL;
-		if (pLocal == nullptr || !pLocal || pCmd == nullptr || !pCmd) {
-			return;
+	CBaseCombatWeapon* pWeapon = pLocal->GetActiveWeapon();
+	if (!pWeapon) {
+		return;
+	}
+
+	for (int i = 0; i < g_Interfaces.Engine->GetMaxClients(); i++) {
+		CBaseEntity* pEntity = g_Interfaces.EntityList->GetClientEntity(i);
+		if (!pEntity || pEntity->GetDormant() || pEntity->GetLifeState() != LIFE_ALIVE) {
+			continue;
 		}
 
-		Vec3 viewDirection, newViewDirection;
-		g_Interfaces.Engine->GetViewAngles(viewDirection);
-		Math::AngleVectors(viewDirection, &newViewDirection);
-
-		CBaseCombatWeapon* pWeapon = pLocal->GetActiveWeapon();
-		if (!pWeapon) {
-			return;
+		if (pEntity->GetTeamNum() == pLocal->GetTeamNum()) {
+			continue;
 		}
 
-		int best_target_index = -1; float best_field_of_view = FLT_MAX;
-		for (int i = 0; i < g_Interfaces.Engine->GetMaxClients(); i++) {
-			CBaseEntity* pEntity = g_Interfaces.EntityList->GetClientEntity(i);
-			if (!pEntity || pEntity->GetDormant() || pEntity->GetLifeState() != LIFE_ALIVE) {
+		int hitbox = 0;
+
+		ticks[i].insert(ticks[i].begin(), tick_record{ pEntity->GetSimulationTime(), pEntity->GetHitboxPos(hitbox), pEntity->GetAbsOrigin() });
+
+		if (ticks[i].size() > 12) {
+			ticks[i].pop_back();
+		}
+	}
+}
+
+void CBacktrack::Calculate(CUserCmd* pCmd) {
+	auto pLocal = GLOCAL;
+	if (pLocal == nullptr || !pLocal || pCmd == nullptr || !pCmd) {
+		return;
+	}
+
+	Vec3 viewDirection, newViewDirection;
+	g_Interfaces.Engine->GetViewAngles(viewDirection);
+	Math::AngleVectors(viewDirection, &newViewDirection);
+
+	CBaseCombatWeapon* pWeapon = pLocal->GetActiveWeapon();
+	if (!pWeapon) {
+		return;
+	}
+
+	int best_target_index = -1; float best_field_of_view = FLT_MAX;
+	for (int i = 0; i < g_Interfaces.Engine->GetMaxClients(); i++) {
+		CBaseEntity* pEntity = g_Interfaces.EntityList->GetClientEntity(i);
+		if (!pEntity || pEntity->GetDormant() || pEntity->GetLifeState() != LIFE_ALIVE) {
+			continue;
+		}
+
+		if (pEntity->GetTeamNum() == pLocal->GetTeamNum()) {
+			continue;
+		}
+
+		if (ticks[i].empty()) {
+			continue;
+		}
+
+		float fovDistance = Math::DistPointToLine(pEntity->GetEyePosition(), pLocal->GetEyePosition(), newViewDirection);
+		if (fovDistance < best_field_of_view) {
+			best_field_of_view = fovDistance;
+			best_target_index = i;
+		}
+
+		for (unsigned int t = 0; t < ticks[i].size(); t++) {
+			if (!pEntity->SetupBones(ticks[i].at(t).bone_matrix, 128, 256, 0)) {
 				continue;
 			}
-
-			if (pEntity->GetTeamNum() == pLocal->GetTeamNum()) {
-				continue;
-			}
-
-			if (ticks[i].empty()) {
-				continue;
-			}
-
-			float fovDistance = Math::DistPointToLine(pEntity->GetEyePosition(), pLocal->GetEyePosition(), newViewDirection);
-			if (fovDistance < best_field_of_view) {
-				best_field_of_view = fovDistance;
-				best_target_index = i;
-			}
-
-			for (unsigned int t = 0; t < ticks[i].size(); t++) {
-				if (!pEntity->SetupBones(ticks[i].at(t).bone_matrix, 128, 256, 0)) {
-					continue;
-				}
 		}
 	}
 
