@@ -486,12 +486,9 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 			Vec3 vToEnt = pEntity->GetAbsOrigin() - pLocal->GetAbsOrigin();
 			vToEnt.NormalizeInPlace();
 
-			//yes\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-			//if (pEntity->GetClassNum() == 2 || pEntity->GetClassNum() == 4)
-			if (vToEnt.Dot(vEntForward) > 0.1071f) {
-				vPos.z += 6.0f;
-			}
-
+			//if (vToEnt.Dot(vEntForward) > 0.1071f) 
+			pEntity->IsOnGround() ? vPos.z += 6.0f : vPos.z += 4.f;
+			
 			return vPos;
 		}
 
@@ -829,7 +826,7 @@ void CAimbotProjectile::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUs
 			else
 			{
 				if (bIsAttacking) {
-					Aim(pCmd, pWeapon, Target.m_vAngleTo);
+ 					Aim(pCmd, pWeapon, Target.m_vAngleTo);
 					g_GlobalInfo.m_bSilentTime = true;
 				}
 			}
