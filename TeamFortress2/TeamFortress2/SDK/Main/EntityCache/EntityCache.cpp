@@ -101,8 +101,9 @@ void CEntityCache::Fill()
 							m_vecGroups[EGroupType::LOCAL_STICKIES].push_back(pEntity);
 						}
 
-						if (thrower->GetTeamNum() != m_pLocal->GetTeamNum()) {
-							m_vecGroups[EGroupType::BUILDINGS_ENEMIES].push_back(pEntity);
+						if ((thrower->GetTeamNum() == 2 && m_pLocal->GetTeamNum() == 3) ||
+							(thrower->GetTeamNum() == 3 && m_pLocal->GetTeamNum() == 2)) {
+							m_vecGroups[EGroupType::ENEMY_STICKIES].push_back(pEntity);
 						}
 
 						/*if ()
