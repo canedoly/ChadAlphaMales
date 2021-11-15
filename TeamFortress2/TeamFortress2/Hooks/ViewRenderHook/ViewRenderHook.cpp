@@ -2,7 +2,7 @@
 #include "../../Features/Chams/Chams.h"
 #include "../../Features/Visuals/Visuals.h"
 #include "../../Features/RichPresence/RichPresence.h"
-void __stdcall ViewRenderHook::LevelInit::Hook() {
+void __fastcall ViewRenderHook::LevelInit::Hook() {
 	//g_Interfaces.CVars->ConsoleColorPrintf({ 255, 200, 0, 255 }, _("[!] Level init\n"));
 
 	g_Visuals.DevTextures();
@@ -18,7 +18,7 @@ void __stdcall ViewRenderHook::LevelInit::Hook() {
 	Table.Original<fn>(index)(g_Interfaces.ViewRender);
 }
 
-void __stdcall ViewRenderHook::LevelShutdown::Hook() {
+void __fastcall ViewRenderHook::LevelShutdown::Hook() {
 	//g_Interfaces.CVars->ConsoleColorPrintf({ 255, 200, 0, 255 }, _("[!] Level shutdown\n"));
 	g_Chams.Delete();
 	Table.Original<fn>(index)(g_Interfaces.ViewRender);
