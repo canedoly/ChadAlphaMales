@@ -179,6 +179,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Aimbot::Projectile::AimMethod);
 				SAVE_VAR(Vars::Aimbot::Projectile::AimPosition);
 				SAVE_VAR(Vars::Aimbot::Projectile::AimFOV);
+				SAVE_VAR(Vars::Aimbot::Projectile::R8Method);
 			}
 
 			//Melee
@@ -647,6 +648,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Aimbot::Projectile::AimMethod);
 				LOAD_VAR(Vars::Aimbot::Projectile::AimPosition);
 				LOAD_VAR(Vars::Aimbot::Projectile::AimFOV);
+				LOAD_VAR(Vars::Aimbot::Projectile::R8Method);
 			}
 
 			//Melee

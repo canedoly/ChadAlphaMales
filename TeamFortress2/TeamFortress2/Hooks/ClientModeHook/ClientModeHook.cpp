@@ -8,6 +8,7 @@
 #include "../../Features/AntiHack/AntiAim.h"
 #include "../../Features/KatzeB0t/AntiCat.h"
 #include "../../SDK/Timer.h"
+#include "../../Features/Cache/Cache.h"
 
 //#include "../../Features/KatzeB0t/AntiCat.h"
 
@@ -94,6 +95,20 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	uintptr_t _bp; __asm mov _bp, ebp;
 	bool* pSendPacket = (bool*)(***(uintptr_t***)_bp - 0x1);
 
+	if (pCmd->command_number)
+	{
+		g_GlobalInfo.lastChlTick = pCmd->tick_count;
+	}
+
+	CBaseEntity* you;
+	if (!g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetLocalPlayer())->ToPlayer(you) || you->GetLifeState() != LIFE_ALIVE)
+		return OriginalFn(g_Interfaces.ClientMode, input_sample_frametime, pCmd);
+
+	if (pCmd->command_number)
+	{
+		g_Cache.Update(you, pCmd);
+	}
+
 	int nOldFlags = 0;
 	Vec3 vOldAngles = pCmd->viewangles;
 	float fOldSide = pCmd->sidemove;
@@ -179,6 +194,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	g_EnginePrediction.Start(pCmd);
 	{
 		g_Aimbot.Run(pCmd);
+		
 		g_Auto.Run(pCmd);
 		g_AntiAim.Run(pCmd, pSendPacket);
 		g_Misc.EdgeJump(pCmd, nOldFlags);

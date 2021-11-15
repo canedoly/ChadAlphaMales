@@ -96,8 +96,23 @@ void CEntityCache::Fill()
 
 					if (nClassID == ETFClassID::CTFGrenadePipebombProjectile && pEntity->GetPipebombType() == TYPE_STICKY)
 					{
-						if (g_Interfaces.EntityList->GetClientEntityFromHandle(reinterpret_cast<int>(pEntity->GetThrower())) == m_pLocal)
+						auto thrower = g_Interfaces.EntityList->GetClientEntityFromHandle(reinterpret_cast<int>(pEntity->GetThrower()));
+						if (thrower == m_pLocal) {
 							m_vecGroups[EGroupType::LOCAL_STICKIES].push_back(pEntity);
+						}
+
+						if ((thrower->GetTeamNum() == 2 && m_pLocal->GetTeamNum() == 3) ||
+							(thrower->GetTeamNum() == 3 && m_pLocal->GetTeamNum() == 2)) {
+							m_vecGroups[EGroupType::ENEMY_STICKIES].push_back(pEntity);
+						}
+
+						/*if ()
+
+							if (g_Interfaces.EntityList->GetClientEntityFromHandle(reinterpret_cast<int>(pEntity->GetThrower())) != g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES)) {
+								m_vecGroups[EGroupType::ENEMY_STICKIES].push_back(pEntity);
+							}*/
+			
+					
 
 						break;
 					}

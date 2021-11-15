@@ -138,6 +138,25 @@ bool CAimbotHitscan::GetTargets(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon)
 		}
 	}
 
+	if (Vars::Aimbot::Global::AimStickies.m_Var) {
+		for (const auto& Sticky : g_EntityCache.GetGroup(EGroupType::ENEMY_STICKIES))
+		{
+			Vec3 vPos = Sticky->GetAbsOrigin();
+			Vec3 vAngleTo = Math::CalcAngle(vLocalPos, vPos);
+			float flFOVTo = SortMethod == ESortMethod::FOV ? Math::CalcFov(vLocalAngles, vAngleTo) : 0.0f;
+
+			if (!Sticky->GetTouched())
+				continue;
+
+			if (SortMethod == ESortMethod::FOV && flFOVTo > Vars::Aimbot::Hitscan::AimFOV.m_Var)
+				continue;
+
+			float flDistTo = SortMethod == ESortMethod::DISTANCE ? vLocalPos.DistTo(vPos) : 0.0f;
+
+			g_AimbotGlobal.m_vecTargets.push_back({ Sticky, ETargetType::PROJECTILE, vPos, vAngleTo, flFOVTo, flDistTo });
+		}
+	}
+
 	return !g_AimbotGlobal.m_vecTargets.empty();
 }
 

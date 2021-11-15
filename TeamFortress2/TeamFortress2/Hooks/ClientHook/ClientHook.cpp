@@ -72,9 +72,6 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 
 	Table.Original<fn>(index)(g_Interfaces.Client, FrameStage);
 
-	if (Vars::Misc::SteamRPC.m_Var)
-		source::features::steamrichpresence.Update();
-
 	switch (FrameStage)
 	{
 	case EClientFrameStage::FRAME_NET_UPDATE_START: {
@@ -84,62 +81,64 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 		case EClientFrameStage::FRAME_NET_UPDATE_POSTDATAUPDATE_START: {
 			g_AttributeChanger.Run();
 
-			for (int i = 1; i < g_Interfaces.EntityList->GetHighestEntityIndex(); i++)
-			{
-				auto Ent = g_Interfaces.EntityList->GetClientEntity(i);
-				if (!Ent)
-					continue;
-				if (Ent->GetClientClass()->iClassID == 282)
+			if (Vars::Visuals::RagdollEffect.m_Var) {
+				for (int i = 1; i < g_Interfaces.EntityList->GetHighestEntityIndex(); i++)
 				{
-					if (Vars::Visuals::RagdollEffect.m_Var == 1) {
-						disableRagdollEffects(Ent);
-						*reinterpret_cast<bool*>(Ent + 0xC91) = true;
+					auto Ent = g_Interfaces.EntityList->GetClientEntity(i);
+					if (!Ent)
+						continue;
+					if (Ent->GetClientClass()->iClassID == 282)
+					{
+						if (Vars::Visuals::RagdollEffect.m_Var == 1) {
+							disableRagdollEffects(Ent);
+							*reinterpret_cast<bool*>(Ent + 0xC91) = true;
+						}
+						if (Vars::Visuals::RagdollEffect.m_Var == 2) {
+							disableRagdollEffects(Ent);
+							*reinterpret_cast<bool*>(Ent + 0xC92) = true;
+						}
+						if (Vars::Visuals::RagdollEffect.m_Var == 3) {
+							disableRagdollEffects(Ent);
+							*reinterpret_cast<bool*>(Ent + 0xC93) = true;
+						}
+						if (Vars::Visuals::RagdollEffect.m_Var == 4) {
+							disableRagdollEffects(Ent);
+							*reinterpret_cast<bool*>(Ent + 0xC99) = true;
+						}
+						if (Vars::Visuals::RagdollEffect.m_Var == 5) {
+							disableRagdollEffects(Ent);
+							*reinterpret_cast<bool*>(Ent + 0xCA0) = true;
+						}
+						if (Vars::Visuals::RagdollEffect.m_Var == 6) {
+							disableRagdollEffects(Ent);
+							*reinterpret_cast<bool*>(Ent + 0xCA1) = true;
+						}
+						/*switch (Vars::Visuals::RagdollEffect.m_Var) {
+						case 1:
+							// Gib
+							*reinterpret_cast<bool*>(Ent + 0xC91) = true;
+						case 2:
+							// Burning
+							*reinterpret_cast<bool*>(Ent + 0xC92) = true;
+						case 3:
+							// Electrocuted
+							*reinterpret_cast<bool*>(Ent + 0xC93) = true;
+						case 4:
+							// Feign Death???
+							*reinterpret_cast<bool*>(Ent + 0xC96) = true;
+						case 5:
+							// Become ash
+							*reinterpret_cast<bool*>(Ent + 0xC99) = true;
+						case 6:
+							// Become gold
+							*reinterpret_cast<bool*>(Ent + 0xCA0) = true;
+						case 7:
+							// Become ice
+							*reinterpret_cast<bool*>(Ent + 0xCA1) = true;
+						}
+
+						//*reinterpret_cast<bool*>(Ent + 0xC93) = true;*/
 					}
-					if (Vars::Visuals::RagdollEffect.m_Var == 2) {
-						disableRagdollEffects(Ent);
-						*reinterpret_cast<bool*>(Ent + 0xC92) = true;
-					}
-					if (Vars::Visuals::RagdollEffect.m_Var == 3) {
-						disableRagdollEffects(Ent);
-						*reinterpret_cast<bool*>(Ent + 0xC93) = true;
-					}
-					if (Vars::Visuals::RagdollEffect.m_Var == 4) {
-						disableRagdollEffects(Ent);
-						*reinterpret_cast<bool*>(Ent + 0xC99) = true;
-					}
-					if (Vars::Visuals::RagdollEffect.m_Var == 5) {
-						disableRagdollEffects(Ent);
-						*reinterpret_cast<bool*>(Ent + 0xCA0) = true;
-					}
-					if (Vars::Visuals::RagdollEffect.m_Var == 6) {
-						disableRagdollEffects(Ent);
-						*reinterpret_cast<bool*>(Ent + 0xCA1) = true;
-					}
-					/*switch (Vars::Visuals::RagdollEffect.m_Var) {
-					case 1:
-						// Gib
-						*reinterpret_cast<bool*>(Ent + 0xC91) = true;
-					case 2:
-						// Burning
-						*reinterpret_cast<bool*>(Ent + 0xC92) = true;
-					case 3:
-						// Electrocuted
-						*reinterpret_cast<bool*>(Ent + 0xC93) = true;
-					case 4:
-						// Feign Death???
-						*reinterpret_cast<bool*>(Ent + 0xC96) = true;
-					case 5:
-						// Become ash
-						*reinterpret_cast<bool*>(Ent + 0xC99) = true;
-					case 6:
-						// Become gold
-						*reinterpret_cast<bool*>(Ent + 0xCA0) = true;
-					case 7:
-						// Become ice
-						*reinterpret_cast<bool*>(Ent + 0xCA1) = true;
-					}
-					
-					//*reinterpret_cast<bool*>(Ent + 0xC93) = true;*/
 				}
 			}
 			break;
@@ -148,6 +147,7 @@ void __stdcall ClientHook::FrameStageNotify::Hook(EClientFrameStage FrameStage)
 	case EClientFrameStage::FRAME_NET_UPDATE_END:
 	{
 		g_EntityCache.Fill();
+		g_Playerlist.GetPlayers();
 
 		g_GlobalInfo.m_bLocalSpectated = false;
 
@@ -274,109 +274,75 @@ bool __stdcall ClientHook::DispatchUserMessage::Hook(int type, bf_read& buf)
 
 
 
-//bool __stdcall ClientHook::DispatchUserMessage::Hook(int msg_type, bf_read& msg_data)
-//{
-//	/*bf_read msg_copy = msg_data;
-//	msg_copy.Seek(0);
-//	switch (msg_type) {
-//	case 3:
-//	case 4:
-//		{
-//			char msg_name[50], playerName[128] params1 , msg[127] params2 ;
+//using WriteUserCmd_t = void(__fastcall*)(void*, CUserCmd*, CUserCmd*);
 //
+//const int MAX_USERCMD_LOSS = 10;
+//const int MAX_USERCMDS_SEND = 62;
 //
-//			int ent_idx = msg_copy.ReadByte();
-//			BOOL chat = msg_copy.ReadShort();
-//			msg_copy.ReadString(msg_name, 50);
-//			msg_copy.ReadString(playerName, 128);
-//			msg_copy.ReadString(msg, 127);
-//			BOOL textallchat = msg_copy.ReadShort();
+//uintptr_t WriteUserCmd_offset = g_Pattern.Find(L"client.dll", L"55 8B EC 83 E4 F8 51 53 56 8B D9 8B 0D");
 //
-//			//std::cout << "msg_name: " << msg_name << std::endl;
-//			//std::cout << "player_name: " << playerName << std::endl;
-//			//std::cout << "message: " << msg << std::endl;
-//			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("msg_type: %d\n"), msg_type);
-//			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("msg_type: %d\n"), ent_idx);
-//			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("msg_type: %d\n"), chat);
-//			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("msg_name: %s\n"), msg_name);
-//			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("playerName: %s\n"), playerName);
-//			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("msg: %s\n"), msg);
-//			g_Interfaces.CVars->ConsoleColorPrintf({ 0, 255, 12, 255 }, _("textallchat: %d\n"), textallchat);
-//			break;
-//		}
-//	}*/
-//	return Table.Original<fn>(index)(g_Interfaces.Client, msg_type, msg_data);
+//void WriteUserCmd(bf_write* buffer, CUserCmd* to, CUserCmd* from) {
+//	static auto WriteUserCmdFn = reinterpret_cast<WriteUserCmd_t>(WriteUserCmd_offset);
+//	__asm
+//	{
+//		mov ecx, buffer;
+//		mov edx, to;
+//		push from;
+//		call WriteUserCmdFn;
+//		add esp, 4h;
+//	}
 //}
-
-using WriteUserCmd_t = void(__fastcall*)(void*, CUserCmd*, CUserCmd*);
-
-const int MAX_USERCMD_LOSS = 10;
-const int MAX_USERCMDS_SEND = 62;
-
-uintptr_t WriteUserCmd_offset = g_Pattern.Find(L"client.dll", L"55 8B EC 83 E4 F8 51 53 56 8B D9 8B 0D");
-
-void WriteUserCmd(bf_write* buffer, CUserCmd* to, CUserCmd* from) {
-	static auto WriteUserCmdFn = reinterpret_cast<WriteUserCmd_t>(WriteUserCmd_offset);
-	__asm
-	{
-		mov ecx, buffer;
-		mov edx, to;
-		push from;
-		call WriteUserCmdFn;
-		add esp, 4h;
-	}
-}
-bool __stdcall ClientHook::WriteUserCmdDeltaToBuffer::Hook(bf_write* buffer, int from, int to, bool isNewCmd) {
-	/*std::cout << from << std::endl;
-	std::cout << buffer << std::endl;
-	std::cout << to << std::endl;
-	std::cout << isNewCmd << std::endl;
-	static auto oWriteUserCmdDeltaToBuffer = Table.Original<fn>(index);
-	if (g_GlobalInfo.m_nShifted >= 0) {
-		return oWriteUserCmdDeltaToBuffer(g_Interfaces.Client, buffer, from, to, isNewCmd);
-	}
-
-	if (from != -1) {
-		return true;
-	}
-
-	int tickbase = g_GlobalInfo.m_nShifted;
-
-	g_GlobalInfo.m_nShifted = 0;
-	//auto state = g_Interfaces.ClientState;
-	int* pNewCmds			= (int*)((uintptr_t)buffer - 0x2C);
-	int* pBackupCmds		= (int*)((uintptr_t)buffer - 0x30);
-	auto newCmds			= pNewCmds;
-
-	*pBackupCmds = 0;
-
-	int iNewCmds			= *pNewCmds;
-	int iNextCmds			= g_Interfaces.ClientState->chokedcommands + g_Interfaces.ClientState->lastoutgoingcommand + 1;
-	int iTotalNewCmds =		std::min(iNewCmds + abs(tickbase), 22);
-
-	*pNewCmds = iTotalNewCmds;
-	for (to = iNextCmds - iNewCmds + 1; to <= iNextCmds; to++)
-	{
-		if (!oWriteUserCmdDeltaToBuffer(g_Interfaces.Client, buffer, from, to, true)) {
-			return false;
-		}
-		from = to;
-	}
-	CUserCmd* pCmd = g_Interfaces.Input->GetUserCmd(from);
-	if (!pCmd) {
-		return true;
-	}
-	CUserCmd toCmd = *pCmd, fromCmd = *pCmd;
-	toCmd.command_number++;
-	toCmd.tick_count += 3 * g_Interfaces.GlobalVars->tickcount;
-	for (int i = 0; i <= abs(tickbase); i++) {
-		WriteUserCmd(buffer, &toCmd, &fromCmd);
-		fromCmd = toCmd;
-		toCmd.command_number++;
-		toCmd.tick_count++;
-	}
-
-	return true;*/
-	return Table.Original<fn>(index)(g_Interfaces.Client, buffer, from, to, isNewCmd);
-}
+//bool __stdcall ClientHook::WriteUserCmdDeltaToBuffer::Hook(bf_write* buffer, int from, int to, bool isNewCmd) {
+//	/*std::cout << from << std::endl;
+//	std::cout << buffer << std::endl;
+//	std::cout << to << std::endl;
+//	std::cout << isNewCmd << std::endl;
+//	static auto oWriteUserCmdDeltaToBuffer = Table.Original<fn>(index);
+//	if (g_GlobalInfo.m_nShifted >= 0) {
+//		return oWriteUserCmdDeltaToBuffer(g_Interfaces.Client, buffer, from, to, isNewCmd);
+//	}
+//
+//	if (from != -1) {
+//		return true;
+//	}
+//
+//	int tickbase = g_GlobalInfo.m_nShifted;
+//
+//	g_GlobalInfo.m_nShifted = 0;
+//	//auto state = g_Interfaces.ClientState;
+//	int* pNewCmds			= (int*)((uintptr_t)buffer - 0x2C);
+//	int* pBackupCmds		= (int*)((uintptr_t)buffer - 0x30);
+//	auto newCmds			= pNewCmds;
+//
+//	*pBackupCmds = 0;
+//
+//	int iNewCmds			= *pNewCmds;
+//	int iNextCmds			= g_Interfaces.ClientState->chokedcommands + g_Interfaces.ClientState->lastoutgoingcommand + 1;
+//	int iTotalNewCmds =		std::min(iNewCmds + abs(tickbase), 22);
+//
+//	*pNewCmds = iTotalNewCmds;
+//	for (to = iNextCmds - iNewCmds + 1; to <= iNextCmds; to++)
+//	{
+//		if (!oWriteUserCmdDeltaToBuffer(g_Interfaces.Client, buffer, from, to, true)) {
+//			return false;
+//		}
+//		from = to;
+//	}
+//	CUserCmd* pCmd = g_Interfaces.Input->GetUserCmd(from);
+//	if (!pCmd) {
+//		return true;
+//	}
+//	CUserCmd toCmd = *pCmd, fromCmd = *pCmd;
+//	toCmd.command_number++;
+//	toCmd.tick_count += 3 * g_Interfaces.GlobalVars->tickcount;
+//	for (int i = 0; i <= abs(tickbase); i++) {
+//		WriteUserCmd(buffer, &toCmd, &fromCmd);
+//		fromCmd = toCmd;
+//		toCmd.command_number++;
+//		toCmd.tick_count++;
+//	}
+//
+//	return true;*/
+//	return Table.Original<fn>(index)(g_Interfaces.Client, buffer, from, to, isNewCmd);
+//}
 

@@ -7,6 +7,9 @@ namespace source
 	{
 		bool SteamRichPresence::Update()
 		{
+			if (!Vars::Misc::SteamRPC.m_Var) {
+				return false;
+			}
 			if (!g_SteamInterfaces.Friends015)
 				return false;
 			

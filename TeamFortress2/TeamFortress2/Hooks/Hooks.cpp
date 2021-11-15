@@ -29,7 +29,7 @@ void CHooks::Init()
 		Table.Hook(PostEntity::index, &PostEntity::Hook);
 		Table.Hook(ShutDown::index, &ShutDown::Hook);
 		Table.Hook(FrameStageNotify::index, &FrameStageNotify::Hook);
-		Table.Hook(DispatchUserMessage::index, &DispatchUserMessage::Hook);
+		//Table.Hook(DispatchUserMessage::index, &DispatchUserMessage::Hook);
 	}
 
 	if (g_Interfaces.ViewRender)

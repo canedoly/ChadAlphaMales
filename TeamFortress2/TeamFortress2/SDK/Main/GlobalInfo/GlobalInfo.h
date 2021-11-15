@@ -34,6 +34,7 @@ struct GlobalInfo_t
 	EWeaponType m_WeaponType			= {};
 	std::vector<int> storedmis			{ 0 };
 	CUserCmd* shiftedCmd{};
+	int lastChlTick = 0;
 };
 
 #define DT_WAIT_CALLS 26
