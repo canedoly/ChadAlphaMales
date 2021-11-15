@@ -563,6 +563,17 @@ namespace Math
 		MatrixSetColumn(origin, 3, matrix);
 	}
 
+	inline Vec3 UTIL_YawToVector(float yaw)
+	{
+		Vec3 ret;
+
+		ret.z = 0;
+		float angle = DEG2RAD(yaw);
+		SinCos(angle, &ret.y, &ret.x);
+
+		return ret;
+	}
+
 	inline Vec3 VelocityToAngles(const Vec3 &direction)
 	{
 		auto Magnitude = [&](const Vec3 &v) -> float {

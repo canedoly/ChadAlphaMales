@@ -13,7 +13,7 @@ class ITexture;
 class IMaterial;
 class CMaterial;
 class MaterialPropertyTypes_t;
-class VertexFormat_t;
+typedef uint64 VertexFormat_t;
 
 class VMatrix {
 private:

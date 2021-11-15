@@ -121,6 +121,16 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 
 			g_Misc.BypassPure();
 
+			/*static std::array<Vec2, 3>points{
+				Vec2(500, 500),
+				Vec2(600, 600),
+				Vec2(700, 500)
+			};
+			we can draw triangles now :)
+			g_Draw.DrawFilledTriangle(points, { 255,0,0,255 });*/
+			//g_Draw.GradientRect(200, 200, 250, 200, { 255, 0, 0, 255 }, { 255, 0, 0, 255 }, false);
+			//g_Draw.GradientRect(250, 150, 300, 200, { 255, 0, 0, 255 }, { 255, 0, 0, 255 }, false);
+
 			if (!(g_Interfaces.EngineVGui->IsGameUIVisible() || (Vars::Misc::CleanScreenshot.m_Var && g_Interfaces.Engine->IsTakingScreenshot()))) {
 				OtherDraws();
 
