@@ -1,3 +1,4 @@
+#pragma once
 #include "../../SDK/SDK.h"
 
 struct backtracking_record {
@@ -24,10 +25,13 @@ struct tick_record {
 	matrix3x4 bone_matrix[128];
 };
 
-namespace CBacktrack {
-	extern std::vector<tick_record> ticks[64];
-	extern bool GoodTick(int tick);
-	extern void Start(CUserCmd* pCmd);
-	extern void Calculate(CUserCmd* pCmd);
-	extern void DoBacktrack(CUserCmd* pCmd);
+class CBacktrack {
+public:
+	std::vector<tick_record> ticks[64];
+	bool GoodTick(int tick);
+	void Start(CUserCmd* pCmd);
+	void Calculate(CUserCmd* pCmd);
+	void DoBacktrack(CUserCmd* pCmd);
 };
+
+inline CBacktrack g_Backtrack;

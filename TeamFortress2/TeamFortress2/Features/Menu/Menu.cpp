@@ -400,6 +400,8 @@ void AimbotTab() {
 
             static const char* projectileAimHitbox[]{ "Body", "Feet", "Auto" };
             ImGui::Combo(_("Aim position###projectileAimPosition"), &Vars::Aimbot::Projectile::AimPosition.m_Var, projectileAimHitbox, IM_ARRAYSIZE(projectileAimHitbox));
+
+            ImGui::Checkbox(_("R8 Method"), &Vars::Aimbot::Projectile::R8Method.m_Var);
         }
         ImGui::EndChild();
         ImGui::EndGroup();
@@ -1730,104 +1732,289 @@ void CMenu::Render(IDirect3DDevice9* pDevice) {
             }
 
             ImGui::SetCursorPosY(32);
-            if (ImGui::BeginTable(_("PlayerList"), 4, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg)) {
-                static const char* Team[4] = { "None", "Spec", "Red", "Blue" };
-                PlayerInfo_t pi{};
-                // Please fix this for me, I failed hard :(
-                /*if (ImGui::BeginPopup(_("Popup")))
-                {
+            if (g_Interfaces.Engine->IsInGame() && !g_Playerlist.players.empty()) {
+                if (ImGui::BeginTable(_("Playerlist"), 3, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg)) {
+                //PlayerInfo_t playerInfo{};
 
-                    if (ImGui::Button(_("Kick"))) {
-                        static char buff[256];
-                        snprintf(buff, sizeof(buff), _("callvote kick %d"), (int)pi.userID);
+                    ImGui::TableSetupColumn(_("PlayerName"));
+                    //ImGui::TableSetupColumn(_("ProfileButton"));
+                    ImGui::TableSetupColumn(_("KickButton"));
+                    ImGui::TableSetupColumn(_("IgnoreToggle"));
 
-                        g_Interfaces.Engine->ClientCmd_Unrestricted(buff);
-                    }
+                    for (const auto& Player : g_Playerlist.players)
+                    {
+                        if (!Player.info.userID) {
+                            continue;
+                        }
 
-                    if (ImGui::Button(_("Open profile"))) {
-                        g_SteamInterfaces.Friends015->ActivateGameOverlayToUser(_("steamid"), CSteamID((UINT64)(0x0110000100000000ULL + pi.friendsID)));
-                    }
+                        bool bIgnored = g_Playerlist.IsIgnored(Player.info.friendsID);
 
-                    ImGui::EndPopup();
-                }*/
-                ImGui::TableSetupColumn(_("Index"));
-                ImGui::TableSetupColumn(_("Name"));
-                ImGui::TableSetupColumn(_("Team"));
-                ImGui::TableSetupColumn(_("Uhhhhhh"));
-                //ImGui::TableHeadersRow();
-                if (g_Interfaces.Engine->IsInGame()) {
-                    for (int playerIndex = 1; playerIndex < g_Interfaces.GlobalVars->maxclients; playerIndex++) {
-                        if (g_Interfaces.Engine->GetPlayerInfo(playerIndex, &pi))
+                        ImGui::TableNextRow();
+
+                        for (int column = 0; column < 3; column++)
                         {
-
-                            auto pEntity = g_Interfaces.EntityList->GetClientEntity(playerIndex);
-                            if (!pEntity)
-                                continue;
-
-                            int teamNum = pEntity->GetTeamNum();
-
-                            //static int selected = 0;
-                            //static bool row_selected[64] = {};
-                            ImGui::PushID(pi.friendsID);
-                            ImGui::TableNextRow();
-                            ImGui::PopID();
-
-                            static int hovered_column = -1;
-
-                            ImGui::TableSetColumnIndex(0);
-                            static char pName[64];
-
-                            ImGui::PushID(pi.name);
-                            auto name = g_SteamInterfaces.Friends002->GetFriendPersonaName(CSteamID((UINT64)(0x0110000100000000ULL + pi.friendsID)));
-
-                            if (pi.name != name) { // Do it yourself m-fed
-                                snprintf(pName, sizeof(pName), _("%s [%s]"), pi.name, name);
-                            }
-                            else {
-                                snprintf(pName, sizeof(pName), _("%s"), pi.name);
-                            }
-
-                            //ImGui::Selectable2(buffWAAAAA, row_selected[playerIndex], ImGuiSelectableFlags_SpanAllColumns, ImVec2(0.f, 0.f)); // I don't want to mess with this bullshit anymore tbh...
-                            ImGui::Text(_("%d"), playerIndex);
-                            ImGui::TableSetColumnIndex(1);
-                            ImGui::Text(_("%s"), pName);
-                            ImGui::TableSetColumnIndex(2);
-                            ImGui::Text(_("%s"), Team[pEntity->GetTeamNum()]);
-                            ImGui::TableSetColumnIndex(3);
+                            ImGui::TableSetColumnIndex(column);
+                            /*if (column == 0)
+                            {
+                                Color_t playerColor = Utils::GetTeamColor(Player.teamNum);
+                                ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(playerColor.r, playerColor.g, playerColor.b, playerColor.a));
+                                ImGui::Text(_("%s"), Player.info.name);
+                                ImGui::PopStyleColor();
+                            }*/
                             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
                             ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
-                            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
-                            if (ImGui::Button(_("Kick"))) {
-                                static char buff[256];
-                                snprintf(buff, sizeof(buff), _("callvote kick %d"), (int)pi.userID);
-
-                                g_Interfaces.Engine->ClientCmd_Unrestricted(buff);
-                            }
-                            ImGui::SameLine();
-                            if (ImGui::Button(_("Profile"))) {
-                                g_SteamInterfaces.Friends015->ActivateGameOverlayToUser(_("steamid"), CSteamID((UINT64)(0x0110000100000000ULL + pi.friendsID)));
-                            }
-                            ImGui::SameLine();
-                            ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(1.0f, 0.5f));
-                            if (g_Playerlist.IsIgnored(pi.friendsID)) { // There's definitely a better way to do this...
-                                if (ImGui::Button(_("Unignore"), ImVec2(60, 0))) {
-                                    g_Playerlist.RemoveIgnore(pi.friendsID);
+                            ImGui::PushID(Player.info.userID);
+                            {
+                                if (column == 0)
+                                {
+                                    Color_t playerColor = Utils::GetTeamColor(Player.teamNum);
+                                    ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(playerColor.r, playerColor.g, playerColor.b, playerColor.a));
+                                    if (ImGui::Button(_(Player.info.name))) {
+                                        g_SteamInterfaces.Friends015->ActivateGameOverlayToUser(_("steamid"), CSteamID((UINT64)(0x0110000100000000ULL + Player.info.friendsID)));
+                                    }
+                                    ImGui::PopStyleColor();
+                                }
+                                if (column == 1)
+                                {
+                                    if (ImGui::Button(_("Kick"))) {
+                                        static char buff[256];
+                                        snprintf(buff, sizeof(buff), _("callvote kick %d"), (int)Player.info.userID);
+                                        g_Interfaces.Engine->ClientCmd_Unrestricted(buff);
+                                    }
+                                }
+                                if (column == 2)
+                                {
+                                    if (ImGui::Checkbox(_("Ignore"), &bIgnored)) {
+                                        if (!g_Playerlist.IsIgnored(Player.info.friendsID)) {
+                                            g_Playerlist.AddIgnore(Player.info.friendsID);
+                                        }
+                                        else if (g_Playerlist.IsIgnored(Player.info.friendsID)) {
+                                            g_Playerlist.RemoveIgnore(Player.info.friendsID);
+                                        }
+                                    }
+                                    ImGui::SameLine();
+                                    ImGui::Dummy(ImVec2(12, 0));
                                 }
                             }
-                            else {
-                                if (ImGui::Button(_("Ignore"), ImVec2(60, 0))) {
-                                    g_Playerlist.AddIgnore(pi.friendsID);
-                                }
-                            }
-                            ImGui::PopStyleColor(2);
-                            ImGui::PopStyleVar(2);
-
                             ImGui::PopID();
+                            ImGui::PopStyleColor(2);
+                            //ImGui::PopStyleVar();
                         }
                     }
+                    ImGui::EndTable();
                 }
-                ImGui::EndTable();
             }
+            //if (ImGui::BeginTable(_("PlayerList"), 4, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg)) {
+            //    static const char* Team[4] = { "None", "Spec", "Red", "Blue" };
+            //    PlayerInfo_t pi{};
+            //    ImGui::TableSetupColumn(_("Index"));
+            //    ImGui::TableSetupColumn(_("Name"));
+            //    ImGui::TableSetupColumn(_("Team"));
+            //    ImGui::TableSetupColumn(_("Uhhhhhh"));
+            //    //ImGui::TableHeadersRow();
+            //    if (g_Interfaces.Engine->IsInGame()) {
+            //        /*for (int playerIndex = 1; playerIndex < g_Interfaces.GlobalVars->maxclients; playerIndex++) {
+            //            if (g_Interfaces.Engine->GetPlayerInfo(playerIndex, &pi))
+            //            {
+
+            //                auto pEntity = g_Interfaces.EntityList->GetClientEntity(playerIndex);
+            //                if (!pEntity)
+            //                    continue;
+
+            //                int teamNum = pEntity->GetTeamNum();
+
+            //                //static int selected = 0;
+            //                //static bool row_selected[64] = {};
+            //                ImGui::PushID(pi.friendsID);
+            //                ImGui::TableNextRow();
+            //                ImGui::PopID();
+
+            //                static int hovered_column = -1;
+
+            //                ImGui::TableSetColumnIndex(0);
+            //                static char pName[64];
+
+            //                ImGui::PushID(pi.name);
+            //                auto name = g_SteamInterfaces.Friends002->GetFriendPersonaName(CSteamID((UINT64)(0x0110000100000000ULL + pi.friendsID)));
+
+            //                if (pi.name != name) { // Do it yourself m-fed
+            //                    snprintf(pName, sizeof(pName), _("%s [%s]"), pi.name, name);
+            //                }
+            //                else {
+            //                    snprintf(pName, sizeof(pName), _("%s"), pi.name);
+            //                }
+
+            //                //ImGui::Selectable2(buffWAAAAA, row_selected[playerIndex], ImGuiSelectableFlags_SpanAllColumns, ImVec2(0.f, 0.f)); // I don't want to mess with this bullshit anymore tbh...
+            //                ImGui::Text(_("%d"), playerIndex);
+            //                ImGui::TableSetColumnIndex(1);
+            //                ImGui::Text(_("%s"), pName);
+            //                ImGui::TableSetColumnIndex(2);
+            //                ImGui::Text(_("%s"), Team[pEntity->GetTeamNum()]);
+            //                ImGui::TableSetColumnIndex(3);
+            //                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+            //                ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
+            //                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+            //                if (ImGui::Button(_("Kick"))) {
+            //                    static char buff[256];
+            //                    snprintf(buff, sizeof(buff), _("callvote kick %d"), (int)pi.userID);
+
+            //                    g_Interfaces.Engine->ClientCmd_Unrestricted(buff);
+            //                }
+            //                ImGui::SameLine();
+            //                if (ImGui::Button(_("Profile"))) {
+            //                    g_SteamInterfaces.Friends015->ActivateGameOverlayToUser(_("steamid"), CSteamID((UINT64)(0x0110000100000000ULL + pi.friendsID)));
+            //                }
+            //                ImGui::SameLine();
+            //                ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(1.0f, 0.5f));
+            //                if (g_Playerlist.IsIgnored(pi.friendsID)) { // There's definitely a better way to do this...
+            //                    if (ImGui::Button(_("Unignore"), ImVec2(60, 0))) {
+            //                        g_Playerlist.RemoveIgnore(pi.friendsID);
+            //                    }
+            //                }
+            //                else {
+            //                    if (ImGui::Button(_("Ignore"), ImVec2(60, 0))) {
+            //                        g_Playerlist.AddIgnore(pi.friendsID);
+            //                    }
+            //                }
+            //                ImGui::PopStyleColor(2);
+            //                ImGui::PopStyleVar(2);
+
+            //                ImGui::PopID();
+            //            }
+            //        }*/
+            //        for (auto& EnemyPlayer : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES)) {
+            //            // Do enemy
+            //            if (g_Interfaces.Engine->GetPlayerInfo(EnemyPlayer->GetIndex(), &pi))
+            //            {
+            //                int teamNum = EnemyPlayer->GetTeamNum();
+
+            //                //static int selected = 0;
+            //                //static bool row_selected[64] = {};
+            //                ImGui::PushID(pi.friendsID);
+            //                ImGui::TableNextRow();
+            //                ImGui::PopID();
+
+            //                static int hovered_column = -1;
+
+            //                ImGui::TableSetColumnIndex(0);
+            //                static char pName[64];
+
+            //                ImGui::PushID(pi.name);
+            //                auto name = g_SteamInterfaces.Friends002->GetFriendPersonaName(CSteamID((UINT64)(0x0110000100000000ULL + pi.friendsID)));
+
+            //                if (pi.name != name) { // Do it yourself m-fed
+            //                    snprintf(pName, sizeof(pName), _("%s [%s]"), pi.name, name);
+            //                }
+            //                else {
+            //                    snprintf(pName, sizeof(pName), _("%s"), pi.name);
+            //                }
+
+            //                //ImGui::Selectable2(buffWAAAAA, row_selected[playerIndex], ImGuiSelectableFlags_SpanAllColumns, ImVec2(0.f, 0.f)); // I don't want to mess with this bullshit anymore tbh...
+            //                ImGui::Text(_("%d"), EnemyPlayer->GetIndex());
+            //                ImGui::TableSetColumnIndex(1);
+            //                ImGui::Text(_("%s"), pName);
+            //                ImGui::TableSetColumnIndex(2);
+            //                ImGui::Text(_("%s"), Team[EnemyPlayer->GetTeamNum()]);
+            //                ImGui::TableSetColumnIndex(3);
+            //                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+            //                ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
+            //                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+            //                if (ImGui::Button(_("Kick"))) {
+            //                    static char buff[256];
+            //                    snprintf(buff, sizeof(buff), _("callvote kick %d"), (int)pi.userID);
+
+            //                    g_Interfaces.Engine->ClientCmd_Unrestricted(buff);
+            //                }
+            //                ImGui::SameLine();
+            //                if (ImGui::Button(_("Profile"))) {
+            //                    g_SteamInterfaces.Friends015->ActivateGameOverlayToUser(_("steamid"), CSteamID((UINT64)(0x0110000100000000ULL + pi.friendsID)));
+            //                }
+            //                ImGui::SameLine();
+            //                ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(1.0f, 0.5f));
+            //                if (g_Playerlist.IsIgnored(pi.friendsID)) { // There's definitely a better way to do this...
+            //                    if (ImGui::Button(_("Unignore"), ImVec2(60, 0))) {
+            //                        g_Playerlist.RemoveIgnore(pi.friendsID);
+            //                    }
+            //                }
+            //                else {
+            //                    if (ImGui::Button(_("Ignore"), ImVec2(60, 0))) {
+            //                        g_Playerlist.AddIgnore(pi.friendsID);
+            //                    }
+            //                }
+            //                ImGui::PopStyleColor(2);
+            //                ImGui::PopStyleVar(2);
+
+            //                ImGui::PopID();
+            //            }
+            //        }
+            //        for (auto& AllyPlayer : g_EntityCache.GetGroup(EGroupType::PLAYERS_TEAMMATES)) {
+            //            // Do ya mom
+            //            if (g_Interfaces.Engine->GetPlayerInfo(AllyPlayer->GetIndex(), &pi))
+            //            {
+            //                int teamNum = AllyPlayer->GetTeamNum();
+
+            //                //static int selected = 0;
+            //                //static bool row_selected[64] = {};
+            //                ImGui::PushID(pi.friendsID);
+            //                ImGui::TableNextRow();
+            //                ImGui::PopID();
+
+            //                static int hovered_column = -1;
+
+            //                ImGui::TableSetColumnIndex(0);
+            //                static char pName[64];
+
+            //                ImGui::PushID(pi.name);
+            //                auto name = g_SteamInterfaces.Friends002->GetFriendPersonaName(CSteamID((UINT64)(0x0110000100000000ULL + pi.friendsID)));
+
+            //                if (pi.name != name) { // Do it yourself m-fed
+            //                    snprintf(pName, sizeof(pName), _("%s [%s]"), pi.name, name);
+            //                }
+            //                else {
+            //                    snprintf(pName, sizeof(pName), _("%s"), pi.name);
+            //                }
+
+            //                //ImGui::Selectable2(buffWAAAAA, row_selected[playerIndex], ImGuiSelectableFlags_SpanAllColumns, ImVec2(0.f, 0.f)); // I don't want to mess with this bullshit anymore tbh...
+            //                ImGui::Text(_("%d"), AllyPlayer->GetIndex());
+            //                ImGui::TableSetColumnIndex(1);
+            //                ImGui::Text(_("%s"), pName);
+            //                ImGui::TableSetColumnIndex(2);
+            //                ImGui::Text(_("%s"), Team[AllyPlayer->GetTeamNum()]);
+            //                ImGui::TableSetColumnIndex(3);
+            //                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+            //                ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(0, 0, 0, 0));
+            //                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+            //                if (ImGui::Button(_("Kick"))) {
+            //                    static char buff[256];
+            //                    snprintf(buff, sizeof(buff), _("callvote kick %d"), (int)pi.userID);
+
+            //                    g_Interfaces.Engine->ClientCmd_Unrestricted(buff);
+            //                }
+            //                ImGui::SameLine();
+            //                if (ImGui::Button(_("Profile"))) {
+            //                    g_SteamInterfaces.Friends015->ActivateGameOverlayToUser(_("steamid"), CSteamID((UINT64)(0x0110000100000000ULL + pi.friendsID)));
+            //                }
+            //                ImGui::SameLine();
+            //                ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(1.0f, 0.5f));
+            //                if (g_Playerlist.IsIgnored(pi.friendsID)) { // There's definitely a better way to do this...
+            //                    if (ImGui::Button(_("Unignore"), ImVec2(60, 0))) {
+            //                        g_Playerlist.RemoveIgnore(pi.friendsID);
+            //                    }
+            //                }
+            //                else {
+            //                    if (ImGui::Button(_("Ignore"), ImVec2(60, 0))) {
+            //                        g_Playerlist.AddIgnore(pi.friendsID);
+            //                    }
+            //                }
+            //                ImGui::PopStyleColor(2);
+            //                ImGui::PopStyleVar(2);
+
+            //                ImGui::PopID();
+            //            }
+            //        }
+            //    }
+            //    ImGui::EndTable();
+            //}
             ImGui::End();
         }
         ImGui::PopStyleColor();

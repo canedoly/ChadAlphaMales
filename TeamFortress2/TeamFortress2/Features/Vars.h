@@ -75,6 +75,7 @@ namespace Vars
 			inline CVar<bool> AutoShoot				{ true, L"Auto Shoot" };
 			inline CVar<bool> AimPlayers			{ true, L"Aim Players" };
 			inline CVar<bool> AimBuildings			{ true, L"Aim Buildings" };
+			inline CVar<bool> AimStickies			{ true, L"Aim Buildings" };
 			inline CVar<bool> IgnoreInvlunerable	{ true, L"Ignore Invulnerable" };
 			inline CVar<bool> IgnoreCloaked			{ false, L"Ignore Cloaked" };
 			inline CVar<bool> IgnoreFriends			{ true, L"Ignore Friends" };
@@ -105,6 +106,7 @@ namespace Vars
 		namespace Projectile
 		{
 			inline CVar<bool> Active			{ true, L"Active" };
+			inline CVar<bool> R8Method			{ true, L"sparkly cheat paste go brrr" };
 			inline CVar<bool> PerformanceMode	{ true, L"Performance Mode" };
 			inline CVar<int> SortMethod			{ 0, L"Sort Method" };	//0 - FOV,		1 - Distance
 			inline CVar<int> AimMethod			{ 1, L"Aim Method" };	//0 - Normal,	1 - Silent

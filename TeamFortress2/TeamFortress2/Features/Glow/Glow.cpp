@@ -159,6 +159,15 @@ void CGlowEffect::Render()
 
 					else DrawColor = Utils::GetHealthColor(Player->GetHealth(), Player->GetMaxHealth());
 
+					PlayerInfo_t pi{};
+
+					if (g_Interfaces.Engine->GetPlayerInfo(Player->GetIndex(), &pi))
+					{
+						if (g_Playerlist.IsIgnored(pi.friendsID)) {
+							DrawColor = Colors::IgnoredTarget;
+						}
+					}
+
 					m_vecGlowEntities.push_back({ Player, DrawColor, Vars::Glow::Players::Alpha.m_Var });
 
 					if (!g_Chams.HasDrawn(Player))

@@ -4,6 +4,7 @@
 #include "../Visuals/Visuals.h"
 #include "../Backtrack/Backtrack.h"
 #include "../Chams/Chams.h"
+#include "../Cache/Cache.h"
 bool CESP::ShouldRun()
 {
 	if (g_Interfaces.EngineVGui->IsGameUIVisible() || Vars::Misc::CleanScreenshot.m_Var && g_Interfaces.Engine->IsTakingScreenshot())
@@ -142,6 +143,263 @@ bool CESP::GetDrawBounds(CBaseEntity *pEntity, Vec3* vTrans, int &x, int &y, int
 	return false;
 }
 
+Vec3 predPosAt(float flTime, CBaseEntity* target)
+{
+	/*if (!flTime)
+		return target->GetAbsOrigin();*/
+
+	static ConVar* sv_gravity = g_Interfaces.CVars->FindVar("sv_gravity");
+
+	Vector startPos = target->GetAbsOrigin(), velocity = target->GetVelocity();
+	float zdrop;
+	if (target->GetFlags() & FL_ONGROUND) {
+		zdrop = velocity.z * flTime;
+	}
+	else {
+		zdrop = 0.5 * -sv_gravity->GetInt() * pow(flTime, 2) + velocity.z * flTime;
+	}
+
+	Vector result(
+		startPos.x + (velocity.x * flTime),
+		startPos.y + (velocity.y * flTime),
+		startPos.z + zdrop);
+
+	float endZ = result.z;
+
+	float angleY = 0;
+	PlayerCache* cache = g_Cache.FindPlayer(target);
+	if (cache && cache->Full()) // Determine player strafe by averaging cache data
+	{
+		// A = Last, B = Mid, C = Current (startPos)
+		int last = (MAX_CACHE - 1) / 3, mid = (MAX_CACHE - 1) / 6;
+		Vector vLast, vMid;
+		if (HitboxData* data = cache->FindTick(g_Interfaces.GlobalVars->tickcount - last))
+		{
+			vLast = data->vCenter;
+			if (data = cache->FindTick(g_Interfaces.GlobalVars->tickcount - mid))
+				vMid = data->vCenter;
+		}
+		// Approximate angle
+		Vector forward, strafe;
+		Math::VectorAngles(vMid - vLast, forward);
+		Math::VectorAngles(startPos - vMid, strafe);
+		// Divide our angle to measure by distance
+		angleY = (strafe.y - forward.y) / ((vMid - vLast).Lenght2D() + (startPos - vMid).Lenght2D());
+	}
+	Math::RotateVec2(*(Vec2*)&result, *(Vec2*)&startPos, DEG2RAD(angleY * (result - startPos).Lenght2D()));
+
+	result.z = endZ;
+
+	return result;
+}
+
+bool AssumeVis(CBaseEntity* you, Vector vStart, Vector vEnd, CGameTrace* result)
+{
+	CGameTrace Trace;
+	Ray_t Ray;
+	CTraceFilterHitscan Filter;
+	Filter.pSkip = you;
+
+	Ray.Init(*(Vector*)&vStart, *(Vector*)&vEnd);
+	g_Interfaces.EngineTrace->TraceRay(Ray, MASK_SHOT, &Filter, &Trace);
+
+	if (result)
+		*result = Trace;
+
+	return !Trace.DidHit();
+}
+
+class SColor
+{
+public:
+	byte rgba[4];
+
+	inline byte& operator[](int i)
+	{
+		return rgba[i];
+	}
+	inline bool operator==(SColor& other)
+	{
+		return *(size_t*)&rgba == *(size_t*)&other.rgba;
+	}
+	inline bool operator!=(SColor& other)
+	{
+		return *(size_t*)&rgba != *(size_t*)&other.rgba;
+	}
+
+	SColor(byte red, byte green, byte blue, byte alpha = 255)
+	{
+		rgba[0] = red, rgba[1] = green, rgba[2] = blue, rgba[3] = alpha;
+	}
+	SColor(byte bright, byte alpha = 255)
+	{
+		rgba[0] = bright, rgba[1] = bright, rgba[2] = bright, rgba[3] = alpha;
+	}
+	SColor() {}
+};
+void ClampFl(float& fl)
+{
+	if (fl > 1)
+		fl = 1;
+	else if (fl < 0)
+		fl = 0;
+}
+SColor hsv2rgb(float hue, float saturation, float brightness, int alpha = 255) {
+	while (hue >= 1)
+		hue -= 1;
+	while (hue <= 0)
+		hue += 1;
+
+	ClampFl(saturation);
+	ClampFl(brightness);
+
+	float h = hue == 1.0f ? 0 : hue * 6.0f;
+	float f = h - (int)h;
+	float p = brightness * (1.0f - saturation);
+	float q = brightness * (1.0f - saturation * f);
+	float t = brightness * (1.0f - (saturation * (1.0f - f)));
+
+	if (h < 1)
+	{
+		return SColor(
+			(unsigned char)(brightness * 255),
+			(unsigned char)(t * 255),
+			(unsigned char)(p * 255),
+			alpha
+		);
+	}
+	else if (h < 2)
+	{
+		return SColor(
+			(unsigned char)(q * 255),
+			(unsigned char)(brightness * 255),
+			(unsigned char)(p * 255),
+			alpha
+		);
+	}
+	else if (h < 3)
+	{
+		return SColor(
+			(unsigned char)(p * 255),
+			(unsigned char)(brightness * 255),
+			(unsigned char)(t * 255),
+			alpha
+		);
+	}
+	else if (h < 4)
+	{
+		return SColor(
+			(unsigned char)(p * 255),
+			(unsigned char)(q * 255),
+			(unsigned char)(brightness * 255),
+			alpha
+		);
+	}
+	else if (h < 5)
+	{
+		return SColor(
+			(unsigned char)(t * 255),
+			(unsigned char)(p * 255),
+			(unsigned char)(brightness * 255),
+			alpha
+		);
+	}
+	else
+	{
+		return SColor(
+			(unsigned char)(brightness * 255),
+			(unsigned char)(p * 255),
+			(unsigned char)(q * 255),
+			alpha
+		);
+	}
+}
+
+void CESP::DrawPaths()
+{
+	/*for (auto& Player : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
+	{
+		if (!(Player->GetIndex() == g_GlobalInfo.m_nCurrentTargetIdx)) {
+			return;
+		}*/
+
+	if (!Vars::Aimbot::Projectile::R8Method.m_Var)
+		return;
+
+	if (g_GlobalInfo.m_nCurrentTargetIdx) {
+		CBaseEntity* aimTarget = g_Interfaces.EntityList->GetClientEntity(g_GlobalInfo.m_nCurrentTargetIdx);
+		if (!aimTarget) {
+			return;
+		}
+		Vector velocity = aimTarget->GetVelocity() / 10, predPos[101];
+		int flags = aimTarget->GetFlags();
+
+		int max = (flags & FL_ONGROUND) ? 21 : 101;
+		for (int i = 0; i < max; i++)
+			predPos[i] = predPosAt(i * 0.05, aimTarget);
+
+		SColor lineColor;
+		for (int i = 0; i < max - 1; i++)
+		{
+			CGameTrace result; // Check to see if we're about to hit a surface
+			if (!AssumeVis(aimTarget, predPos[i], predPos[i + 1], &result))
+			{
+				// Draw a circle to show our landing position/angle
+				if (!(flags & FL_ONGROUND))
+				{
+					const Vector relSquare[] = { Vector(30, 30, 0), Vector(30, -30, 0), Vector(-30, -30, 0), Vector(-30, 30, 0) };
+					Vector scrPos[4];
+					bool visible = true;
+					for (size_t j = 0; j < sizeof(relSquare) / sizeof(Vector); j++)
+					{
+						if (!Utils::W2S(relSquare[j] + result.vEndPos, scrPos[j]))
+						{
+							visible = false;
+							break;
+						}
+					}
+					if (visible)
+					{
+						Vector start, end;
+						if (Utils::W2S(result.vEndPos, start) && Utils::W2S(result.vEndPos + result.Plane.normal * 30, end)) {
+							SColor color(255);
+							g_Draw.Line(start.x, start.y, end.x, end.y, { color.rgba[0], color.rgba[1], color.rgba[2], color.rgba[3] });
+						}
+						for (size_t j = 0; j < sizeof(scrPos) / sizeof(Vector); j++)
+						{
+							int last = j - 1;
+							if (j == 0)
+								last = 3;
+							SColor color(255);
+							g_Draw.Line(scrPos[j].x, scrPos[j].y, scrPos[last].x, scrPos[last].y, { color.rgba[0], color.rgba[1], color.rgba[2], color.rgba[3] });
+						}
+					}
+				}
+				break;
+			}
+
+			if (i < 21) // Make a gradiant from green to red
+				lineColor = hsv2rgb((100.f - (i * 5)) / 255, 1, 1, 255);
+
+			Vector screenPos[3];
+			if (!Utils::W2S(predPos[i], screenPos[0]))
+				continue;
+			if (!Utils::W2S(predPos[i + 1], screenPos[1]))
+				continue;
+
+			g_Draw.Line(screenPos[0].x, screenPos[0].y, screenPos[1].x, screenPos[1].y, { lineColor.rgba[0], lineColor.rgba[1], lineColor.rgba[2], lineColor.rgba[3] });
+
+			Vec2 extraLine = Vec2(predPos[i + 1].x, predPos[i + 1].y);
+			extraLine += Math::VectorAngles(Math::ToAngle(Vec2(velocity.x, velocity.y)), 10);
+			extraLine = Math::RotateVec2(extraLine, Vec2(predPos[i + 1].x, predPos[i + 1].y), DEG2RAD(90));
+			if (!Utils::W2S(Vec3(extraLine.x, extraLine.y, predPos[i + 1].z), screenPos[2]))
+				continue;
+
+			g_Draw.Line(screenPos[1].x, screenPos[1].y, screenPos[2].x, screenPos[2].y, { lineColor.rgba[0], lineColor.rgba[1], lineColor.rgba[2], lineColor.rgba[3] });
+		}
+	}
+}
+
 void CESP::HandleDormancy(CBaseEntity* pEntity, int index)
 {
 	if (pEntity->GetDormant() && m_flEntityAlpha[index] > 0)
@@ -182,6 +440,8 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 		int nIndex = Player->GetIndex();
 		bool bIsLocal = nIndex == g_Interfaces.Engine->GetLocalPlayer();
 		
+		DrawPaths();
+
 		HandleDormancy(Player, nIndex);
 		if (m_flEntityAlpha[nIndex] <= 0.0f)
 			continue;
@@ -210,6 +470,15 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 		}
 
 		Color_t DrawColor = Utils::GetEntityDrawColor(Player);
+
+		PlayerInfo_t pi{};
+
+		if (g_Interfaces.Engine->GetPlayerInfo(Player->GetIndex(), &pi))
+		{
+			if (g_Playerlist.IsIgnored(pi.friendsID)) {
+				DrawColor = Colors::IgnoredTarget;
+			}
+		}
 
 		if (Vars::ESP::Players::Dlights.m_Var)
 			CreateDLight(nIndex, DrawColor, Player->GetAbsOrigin(), Vars::ESP::Players::DlightRadius.m_Var);

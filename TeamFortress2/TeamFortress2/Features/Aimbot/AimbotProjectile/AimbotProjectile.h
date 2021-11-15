@@ -19,6 +19,7 @@ private:
 		Vec3 m_vAcceleration = {};
 
 		Vec3 Extrapolate(float time);
+		Vec3 Extrapolate2(float flTime);
 	};
 
 	struct Solution_t
