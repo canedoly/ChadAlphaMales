@@ -228,6 +228,12 @@ namespace Vars
 			inline CVar<bool> Dlights			{ false, L"Dlights" };
 			inline CVar<float> DlightRadius		{ 200.0f, L"DLight Radius" };
 			inline CVar<float> Alpha			{ 1.0f, L"Alpha" };
+
+			namespace Arrows {
+				inline CVar<bool> Active{ true, L"arrow" };
+				inline CVar<float> DistFromCenter { 150.f , L"arrow" };
+				inline CVar<float> ArrowSize { 20.f, L"arrow" };
+			}
 		}
 
 		namespace Buildings

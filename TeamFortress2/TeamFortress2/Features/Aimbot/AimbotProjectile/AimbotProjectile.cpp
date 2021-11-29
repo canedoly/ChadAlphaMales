@@ -326,6 +326,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	
 	Vec3 vLocalPos = pLocal->GetEyePosition();
 
+	float fInterp = g_ConVars.cl_interp->GetFloat();
 	float fLatency = pNetChannel->GetLatency(FLOW_OUTGOING) + pNetChannel->GetLatency(FLOW_INCOMING);
 
 	float MAX_TIME = ProjInfo.m_flMaxTime;
@@ -333,7 +334,7 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 
 	for (float fPredTime = 0.0f; fPredTime < MAX_TIME; fPredTime += TIME_STEP)
 	{
-		float fCorrectTime = (fPredTime + fLatency);
+		float fCorrectTime = (fPredTime + (Vars::Aimbot::Projectile::R8Method.m_Var ? fInterp : 0) + fLatency);
 		Vec3 vPredictedPos{};
 		vPredictedPos = Vars::Aimbot::Projectile::R8Method.m_Var ? Predictor.Extrapolate2(fCorrectTime) : Predictor.Extrapolate(fCorrectTime);
 		/*if (Predictor.m_vVelocity.IsZero() ||
@@ -486,8 +487,10 @@ Vec3 CAimbotProjectile::GetAimPos(CBaseEntity* pLocal, CBaseEntity* pEntity)
 			Vec3 vToEnt = pEntity->GetAbsOrigin() - pLocal->GetAbsOrigin();
 			vToEnt.NormalizeInPlace();
 
-			//if (vToEnt.Dot(vEntForward) > 0.1071f) 
-			pEntity->IsOnGround() ? vPos.z += 6.0f : vPos.z += 4.f;
+			if (vToEnt.Dot(vEntForward) > 0.1071f) {
+				vPos.z += 5.f;
+			}
+			//pEntity->IsOnGround() ? vPos.z += 6.0f : vPos.z += 4.f;
 			
 			return vPos;
 		}

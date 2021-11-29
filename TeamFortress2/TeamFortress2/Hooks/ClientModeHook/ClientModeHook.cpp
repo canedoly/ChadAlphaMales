@@ -9,6 +9,7 @@
 #include "../../Features/KatzeB0t/AntiCat.h"
 #include "../../SDK/Timer.h"
 #include "../../Features/Cache/Cache.h"
+#include "../../Features/ESP/ESP.h"
 
 //#include "../../Features/KatzeB0t/AntiCat.h"
 
@@ -73,6 +74,33 @@ static void updateAntiAfk(CUserCmd* pCmd)
 }
 
 int badcode = 0;
+void QuickStop(CBaseEntity* pEntity, CUserCmd* pCmd) {
+	// convert velocity to angular momentum.
+	Vec3 angle;
+	Math::VectorAngles(pEntity->GetVecVelocity(), angle);
+
+	// get our current speed of travel.
+	float speed = pEntity->GetVecVelocity().Lenght2D();
+
+	// fix direction by factoring in where we are looking.
+	angle.y = pEntity->GetEyeAngles().y - angle.y;
+
+	// convert corrected angle back to a direction.
+	Vec3 direction;
+	Math::AngleVectors(angle, &direction);
+
+	Vec3 stop = direction * -speed;
+
+	if (pEntity->GetVelocity().Lenght2D() > 13.f) {
+		pCmd->forwardmove = stop.x;
+		pCmd->sidemove = stop.y;
+	}
+	else {
+		pCmd->forwardmove = pCmd->sidemove = 0.f;
+	}
+}
+
+
 bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CUserCmd* pCmd)
 {
 	g_GlobalInfo.m_bSilentTime = false;
@@ -91,6 +119,21 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			dt.barAlpha -= 3;
 		}
 	}
+
+	if (g_PlayerArrows.upAlpha) {
+		g_PlayerArrows.alpha = std::min(255, (g_PlayerArrows.alpha + 5));
+		if (g_PlayerArrows.alpha == 255) {
+			g_PlayerArrows.upAlpha = false;
+		}
+	}
+
+	if (!g_PlayerArrows.upAlpha) {
+		g_PlayerArrows.alpha = std::max(0, (g_PlayerArrows.alpha - 5));
+		if (g_PlayerArrows.alpha == 0) {
+			g_PlayerArrows.upAlpha = true;
+		}
+	}
+
 
 	uintptr_t _bp; __asm mov _bp, ebp;
 	bool* pSendPacket = (bool*)(***(uintptr_t***)_bp - 0x1);
@@ -138,15 +181,18 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		}
 	};
 
-	if (dt.FastStop) {
+	/*if (dt.FastStop) {
 		AntiWarp(pCmd);
-	}
+	}*/
 
 	g_Visuals.FreecamCM(pCmd);
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
-    Ray_t trace;
+		if (dt.Shifting) {
+			QuickStop(pLocal, pCmd);
+		}
+		Ray_t trace;
 		g_GlobalInfo.m_Latency = g_Interfaces.ClientState->m_NetChannel->GetLatency(0);
 		nOldFlags = pLocal->GetFlags();
 

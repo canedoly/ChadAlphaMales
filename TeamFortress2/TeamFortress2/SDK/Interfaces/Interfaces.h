@@ -33,7 +33,7 @@
 
 class CClockDriftMgr
 {
-private:
+public:
 	enum
 	{
 		// This controls how much it smoothes out the samples from the server.

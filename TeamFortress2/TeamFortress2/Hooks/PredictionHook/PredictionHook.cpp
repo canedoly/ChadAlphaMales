@@ -12,7 +12,8 @@ void __stdcall PredictionHook::RunCommand::Hook(CBaseEntity* pEntity, CUserCmd* 
 int CalculateTick(int simTicks, CBaseEntity* player)
 {
 	int clockcorrect = TIME_TO_TICKS(0.06f); //sv_clockcorrectmsecs
-	int nIdealFinalTick = g_Interfaces.GlobalVars->tickcount + TIME_TO_TICKS(g_Interfaces.Engine->GetNetChannelInfo()->GetLatency(0)) + clockcorrect;
+	//int nIdealFinalTick = g_Interfaces.GlobalVars->tickcount + TIME_TO_TICKS(g_Interfaces.Engine->GetNetChannelInfo()->GetLatency(0)) + clockcorrect;
+	int nIdealFinalTick = g_Interfaces.GlobalVars->tickcount + g_Interfaces.ClientState->m_ClockDriftMgr.m_nServerTick + clockcorrect;
 	int EstimatedFinal = player->GetTickBase() + simTicks;
 	int fast = nIdealFinalTick + clockcorrect;
 	int slow = nIdealFinalTick - clockcorrect;
@@ -20,10 +21,11 @@ int CalculateTick(int simTicks, CBaseEntity* player)
 		return nIdealFinalTick - simTicks;
 }
 
+
 void __stdcall PredictionHook::RunCommand2::Hook(CBaseEntity* pEntity, CUserCmd* pCmd, CMoveHelper* pMoveHelper)
 {
 	if (pMoveHelper && !g_Interfaces.MoveHelper)
-		g_Interfaces.MoveHelper = pMoveHelper;
+		g_Interfaces.MoveHelper = pMoveHelper;\
 
 	if (!Vars::Misc::CL_Move::Doubletap.m_Var || !dt.Shifting) {
 		return Table.Original<fn>(index)(g_Interfaces.Prediction, pEntity, pCmd, pMoveHelper);

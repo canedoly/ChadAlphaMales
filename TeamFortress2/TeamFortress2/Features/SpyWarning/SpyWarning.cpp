@@ -62,14 +62,19 @@ void CSpyWarning::DrawArrowTo(const Vec3 &vecFromPos, const Vec3 &vecToPos)
 	float cx = static_cast<float>(g_ScreenSize.w / 2);
 	float cy = static_cast<float>((g_ScreenSize.h / 2) - 100);
 
-	g_Draw.Line(cx + x2, cy + y2, cx + left.x, cy + left.y, { 255, 255, 255, 255 });
-	g_Draw.Line(cx + x2, cy + y2, cx + right.x, cy + right.y, { 255, 255, 255, 255 });
+	//g_Draw.Line(cx + x2, cy + y2, cx + left.x, cy + left.y, { 255, 255, 255, 255 });
+	//g_Draw.Line(cx + x2, cy + y2, cx + right.x, cy + right.y, { 255, 255, 255, 255 });
 
 	float fMap = std::clamp(MapFloat(vecFromPos.DistTo(vecToPos), 400.0f, 200.0f, 0.0f, 1.0f), 0.0f, 1.0f);
 	Color_t HeatColor = { 255, 0, 0, static_cast<byte>(fMap * 255.0f) };
 
-	g_Draw.Line(cx + x2, cy + y2, cx + left.x, cy + left.y, HeatColor);
-	g_Draw.Line(cx + x2, cy + y2, cx + right.x, cy + right.y, HeatColor);
+	g_Draw.DrawFilledTriangle(std::array<Vec2, 3>{
+		Vec2(cx + left.x, cy + left.y),
+			Vec2(cx + right.x, cy + right.y),
+			Vec2(cx + x2, cy + y2)
+	}, HeatColor);
+	//g_Draw.Line(cx + x2, cy + y2, cx + left.x, cy + left.y, HeatColor);
+	//g_Draw.Line(cx + x2, cy + y2, cx + right.x, cy + right.y, HeatColor);
 }
 
 void CSpyWarning::Run()
@@ -137,7 +142,7 @@ void CSpyWarning::Run()
 				return;
 
 			static const int size = 40;
-			g_Draw.Texture(((g_ScreenSize.w / 2) - (size / 2)), (((g_ScreenSize.h / 2) - 100) - (size / 2)), size, size, Colors::White, 8);
+			g_Draw.Texture(((g_ScreenSize.w / 2) - (size / 2)), (((g_ScreenSize.h / 2) - 100) - (size / 2)), size, size, { 255, 255, 255, 127 }, 8);
 
 			for (const auto &Spy : m_vecSpies)
 				DrawArrowTo(vLocalPos, Spy);

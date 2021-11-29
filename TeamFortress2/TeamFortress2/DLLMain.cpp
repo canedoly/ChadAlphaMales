@@ -190,7 +190,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 
 	while (!GetAsyncKeyState(VK_F11)) {
 		source::features::steamrichpresence.Update();
-		std::this_thread::sleep_for(5000ms);
+		std::this_thread::sleep_for(1500ms);
 	}
 
 	/*

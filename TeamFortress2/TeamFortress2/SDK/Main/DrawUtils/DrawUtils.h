@@ -46,6 +46,7 @@ struct Draw_t
 	void String(const size_t& font_idx, int x, int y, const Color_t& clr, const EStringAlign& align, const wchar_t* str, ...);
 	void Line(int x, int y, int x1, int y1, const Color_t& clr);
 	void Rect(int x, int y, int w, int h, const Color_t& clr);
+	void DrawTexturedPolygon(int count, Vertex_fart* vertices, const Color_t& clr);
 	void DrawTexturedPolygon(int count, Vertex_t* vertices, const Color_t& clr);
 	void DrawFilledTriangle(std::array<Vec2, 3> points, const Color_t& clr);
 	void OutlinedRect(int x, int y, int w, int h, const Color_t& clr);

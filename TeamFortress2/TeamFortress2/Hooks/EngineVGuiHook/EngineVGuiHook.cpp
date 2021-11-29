@@ -121,6 +121,30 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 
 			g_Misc.BypassPure();
 
+			//static Vec2 p1{ 0,0 };
+			//static Vec2 p2{ 0,0 };
+			//static Vec2 p3{ 0,0 };
+
+			//if (GetAsyncKeyState(VK_1)) {
+			//	int mx, my;
+			//	g_Interfaces.Surface->GetCursorPos(mx, my);
+			//	p1 = Vec2(mx, my);
+			//}
+
+			//if (GetAsyncKeyState(VK_2)) {
+			//	int mx, my;
+			//	g_Interfaces.Surface->GetCursorPos(mx, my);
+			//	p2 = Vec2(mx, my);
+			//}
+
+			//if (GetAsyncKeyState(VK_3)) {
+			//	int mx, my;
+			//	g_Interfaces.Surface->GetCursorPos(mx, my);
+			//	p3 = Vec2(mx, my);
+			//}
+
+			//g_Draw.DrawFilledTriangle(std::array<Vec2, 3>{p1, p2, p3}, { 255, 0, 0, 127 });
+
 			/*static std::array<Vec2, 3>points{
 				Vec2(500, 500),
 				Vec2(600, 600),
@@ -138,6 +162,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 				g_SpyWarning.Run();
 				g_SpectatorList.Run();
 				g_Radar.Run();
+				g_PlayerArrows.Run();
 
 				int width = g_ScreenSize.w;
 				int	height = g_ScreenSize.h;
@@ -156,7 +181,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 				int ms = std::max(0, (int)std::round(g_GlobalInfo.m_Latency * 1000.f));
 				// Change admin to something else if you really need to, it was for the protection thing
 				//_snprintf(buff, sizeof(buff), _("CAM [v1.5] | fps: %i | delay: %ims") ,fps, ms);
-				std::string waterMark = tfm::format(_("CAM [v1.5] | fps: %d | delay: %ims"), fps, ms);
+				std::string waterMark = tfm::format(_("CAM [v1.6] | fps: %d | delay: %ims"), fps, ms);
 				std::wstring waterMarkW(waterMark.begin(), waterMark.end());
 
 				g_Interfaces.Surface->GetTextSize(g_Draw.m_vecFonts[FONT_MENU].dwFont, waterMarkW.c_str(), label_w, label_h);

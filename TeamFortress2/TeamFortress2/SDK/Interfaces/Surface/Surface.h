@@ -179,6 +179,12 @@ public:
 		return 	GetVFunc<OriginalFn>(this, 102)(this, n, vertices, bClipVertices);
 	}
 
+	void DrawTexturedPoly(int n, Vertex_fart* vertices, bool bClipVertices = true)
+	{
+		typedef void(__thiscall* OriginalFn)(PVOID, int, Vertex_fart*, bool);
+		return 	GetVFunc<OriginalFn>(this, 102)(this, n, vertices, bClipVertices);
+	}
+
 	void DrawTexturedRect(int x, int y, int w, int h) {
 		typedef void(__thiscall* FN)(PVOID, int, int, int, int);
 		return GetVFunc<FN>(this, 34)(this, x, y, x + w, y + h);

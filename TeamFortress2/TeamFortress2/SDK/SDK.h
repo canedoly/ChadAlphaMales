@@ -206,6 +206,31 @@ namespace Utils
 		return pVals;
 	}
 
+	__inline bool W2Svec2(const Vec3& vOrigin, vec2_t& vScreen)
+	{
+		float w;
+
+		const matrix3x4& matrix = g_GlobalInfo.m_WorldToProjection.As3x4();
+
+		// check if it's in view first.
+		// note - dex; w is below 0 when world position is around -90 / +90 from the player's camera on the y axis.
+		w = matrix[3][0] * vOrigin.x + matrix[3][1] * vOrigin.y + matrix[3][2] * vOrigin.z + matrix[3][3];
+		if (w < 0.001f)
+			return false;
+
+		// calculate x and y.
+		vScreen.x = matrix[0][0] * vOrigin.x + matrix[0][1] * vOrigin.y + matrix[0][2] * vOrigin.z + matrix[0][3];
+		vScreen.y = matrix[1][0] * vOrigin.x + matrix[1][1] * vOrigin.y + matrix[1][2] * vOrigin.z + matrix[1][3];
+
+		vScreen /= w;
+
+		// calculate screen position.
+		vScreen.x = (g_ScreenSize.w / 2) + (vScreen.x * g_ScreenSize.w) / 2;
+		vScreen.y = (g_ScreenSize.h / 2) - (vScreen.y * g_ScreenSize.h) / 2;
+
+		return true;
+	}
+
 	__inline bool W2S(const Vec3& vOrigin, Vec3& m_vScreen)
 	{
 		const matrix3x4& worldToScreen = g_GlobalInfo.m_WorldToProjection.As3x4();

@@ -346,6 +346,13 @@ public:
 		return fl_lenght;
 	}
 
+	Vec3 Normalized()
+	{
+		auto vec = *this;
+		vec.Normalize();
+		return vec;
+	}
+
 	void Rotate2D(const float& flYaw)
 	{
 		float s, c, r = DEG2RAD(flYaw);
@@ -410,6 +417,186 @@ public:
 
 public:
 	float x, y, z;
+};
+
+class vec2_t {
+public:
+	float x, y;
+
+public:
+	// ctors
+	__forceinline vec2_t(void) {}
+	__forceinline vec2_t(float x, float y) : x{ x }, y{ y } {}
+	__forceinline vec2_t(int x, int y) : x{ (float)x }, y{ float(y) } {}
+
+	// at-accesors.
+	__forceinline float& at(const size_t index) {
+		return ((float*)this)[index];
+	}
+	__forceinline float& at(const size_t index) const {
+		return ((float*)this)[index];
+	}
+
+	// index operators.
+	__forceinline float& operator()(const size_t index) {
+		return at(index);
+	}
+	__forceinline const float& operator()(const size_t index) const {
+		return at(index);
+	}
+	__forceinline float& operator[](const size_t index) {
+		return at(index);
+	}
+	__forceinline const float& operator[](const size_t index) const {
+		return at(index);
+	}
+
+	// equality operators.
+	__forceinline bool operator==(const vec2_t& v) const {
+		return v.x == x && v.y == y;
+	}
+	__forceinline bool operator!=(const vec2_t& v) const {
+		return v.x != x || v.y != y;
+	}
+
+	// copy assignment.
+	__forceinline vec2_t& operator=(const vec2_t& v) {
+		x = v.x;
+		y = v.y;
+		return *this;
+	}
+
+	// negation-operator.
+	__forceinline vec2_t operator-() const {
+		return vec2_t(-x, -y);
+	}
+
+	// arithmetic operators.
+	__forceinline vec2_t operator+(const vec2_t& v) const {
+		return {
+			x + v.x,
+			y + v.y
+		};
+	}
+	__forceinline vec2_t operator-(const vec2_t& v) const {
+		return {
+			x - v.x,
+			y - v.y
+		};
+	}
+	__forceinline vec2_t operator*(const vec2_t& v) const {
+		return {
+			x * v.x,
+			y * v.y
+		};
+	}
+	__forceinline vec2_t operator/(const vec2_t& v) const {
+		return {
+			x / v.x,
+			y / v.y
+		};
+	}
+
+	// compound assignment operators.
+	__forceinline vec2_t& operator+=(const vec2_t& v) {
+		x += v.x;
+		y += v.y;
+		return *this;
+	}
+	__forceinline vec2_t& operator-=(const vec2_t& v) {
+		x -= v.x;
+		y -= v.y;
+		return *this;
+	}
+	__forceinline vec2_t& operator*=(const vec2_t& v) {
+		x *= v.x;
+		y *= v.y;
+		return *this;
+	}
+	__forceinline vec2_t& operator/=(const vec2_t& v) {
+		x /= v.x;
+		y /= v.y;
+		return *this;
+	}
+
+	// arithmetic operators w/ float
+	__forceinline vec2_t operator+(float f) const {
+		return {
+			x + f,
+			y + f
+		};
+	}
+	__forceinline vec2_t operator-(float f) const {
+		return {
+			x - f,
+			y - f
+		};
+	}
+	__forceinline vec2_t operator*(float f) const {
+		return {
+			x * f,
+			y * f
+		};
+	}
+	__forceinline vec2_t operator/(float f) const {
+		return {
+			x / f,
+			y / f
+		};
+	}
+
+	// compound assignment operators w/ float
+	__forceinline vec2_t& operator+=(float f) {
+		x += f;
+		y += f;
+		return *this;
+	}
+	__forceinline vec2_t& operator-=(float f) {
+		x -= f;
+		y -= f;
+		return *this;
+	}
+	__forceinline vec2_t& operator*=(float f) {
+		x *= f;
+		y *= f;
+		return *this;
+	}
+	__forceinline vec2_t& operator/=(float f) {
+		x /= f;
+		y /= f;
+		return *this;
+	}
+
+	// methods.
+	__forceinline float length_sqr() const {
+		return (x * x + y * y);
+	}
+
+	__forceinline float length() const {
+		return std::sqrt(length_sqr());
+	}
+
+	__forceinline void clear() {
+		x = y = 0.f;
+	}
+};
+
+class Vertex_fart {
+public:
+	vec2_t m_pos;
+	vec2_t m_coord;
+
+public:
+	__forceinline Vertex_fart() {}
+
+	__forceinline Vertex_fart(float x, float y) : m_pos{ x, y }, m_coord{ 0.f, 0.f } {}
+	__forceinline Vertex_fart(const vec2_t& pos) : m_pos{ pos }, m_coord{ 0.f, 0.f } {}
+	__forceinline Vertex_fart(const vec2_t& pos, const vec2_t& coord) : m_pos{ pos }, m_coord{ coord } {}
+
+	__forceinline void init(const vec2_t& pos, const vec2_t& coord = { 0, 0 }) {
+		m_pos = pos;
+		m_coord = coord;
+	}
 };
 
 class __declspec(align(16))VectorAligned : public Vec3
@@ -572,6 +759,17 @@ namespace Math
 		SinCos(angle, &ret.y, &ret.x);
 
 		return ret;
+	}
+
+	__inline Vertex_fart RotateVertex(const vec2_t& p, const Vertex_fart& v, float angle) {
+		// convert theta angle to sine and cosine representations.
+		float c = std::cos(DEG2RAD(angle));
+		float s = std::sin(DEG2RAD(angle));
+
+		return Vertex_fart{
+			p.x + (v.m_pos.x - p.x) * c - (v.m_pos.y - p.y) * s,
+			p.y + (v.m_pos.x - p.x) * s + (v.m_pos.y - p.y) * c
+		};
 	}
 
 	inline Vec3 VelocityToAngles(const Vec3 &direction)

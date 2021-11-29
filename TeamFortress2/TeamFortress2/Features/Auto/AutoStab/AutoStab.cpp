@@ -105,9 +105,15 @@ void CAutoStab::RunRage(CBaseEntity *pLocal, CBaseCombatWeapon *pWeapon, CUserCm
 {
 	for (const auto &pEnemy : g_EntityCache.GetGroup(EGroupType::PLAYERS_ENEMIES))
 	{
-		if (Vars::Triggerbot::Stab::IgnRazor.m_Var && pEnemy->GetClassNum() == ETFClass::CLASS_SNIPER &&
-			pEnemy->GetWeaponFromSlot(EWeaponSlots::SLOT_SECONDARY)->GetItemDefIndex() == Sniper_s_TheRazorback)
-			continue;
+		if (Vars::Triggerbot::Stab::IgnRazor.m_Var) {
+			if (pEnemy->GetClassNum() == ETFClass::CLASS_SNIPER) {
+				if (const auto &Razorback = pEnemy->GetWeaponFromSlot(EWeaponSlots::SLOT_SECONDARY)) {
+					if (Razorback->GetItemDefIndex() == Sniper_s_TheRazorback) {
+						continue;
+					}
+				}
+			}
+		}
 
 		CBaseEntity *pTraceEnemy = nullptr;
 

@@ -286,6 +286,12 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::ESP::Players::Bones);
 				SAVE_VAR(Vars::ESP::Players::Dlights);
 				SAVE_VAR(Vars::ESP::Players::DlightRadius);
+				//Arrows
+				{
+					SAVE_VAR(Vars::ESP::Players::Arrows::Active);
+					SAVE_VAR(Vars::ESP::Players::Arrows::DistFromCenter);
+					SAVE_VAR(Vars::ESP::Players::Arrows::ArrowSize);
+				}
 			}
 
 			//Buildings
@@ -754,6 +760,12 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::ESP::Players::Bones);
 				LOAD_VAR(Vars::ESP::Players::Dlights);
 				LOAD_VAR(Vars::ESP::Players::DlightRadius);
+				//Arrows
+				{
+					LOAD_VAR(Vars::ESP::Players::Arrows::Active);
+					LOAD_VAR(Vars::ESP::Players::Arrows::DistFromCenter);
+					LOAD_VAR(Vars::ESP::Players::Arrows::ArrowSize);
+				}
 			}
 
 			//Buildings

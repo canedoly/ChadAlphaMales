@@ -155,6 +155,16 @@ void Draw_t::Rect(int x, int y, int w, int h, const Color_t& clr)
 	g_Interfaces.Surface->DrawFilledRect(x, y, x + w, y + h);
 }
 
+void Draw_t::DrawTexturedPolygon(int count, Vertex_fart* vertices, const Color_t& clr)
+{
+	static int iTexture = g_Interfaces.Surface->CreateNewTextureID(true);
+
+	g_Interfaces.Surface->SetDrawColor(clr.r, clr.g, clr.b, clr.a);
+	g_Interfaces.Surface->DrawSetTexture(iTexture);
+
+	g_Interfaces.Surface->DrawTexturedPoly(count, vertices);
+}
+
 void Draw_t::DrawTexturedPolygon(int count, Vertex_t* vertices, const Color_t& clr)
 {
 	static int iTexture = g_Interfaces.Surface->CreateNewTextureID(true);
@@ -230,8 +240,10 @@ void Draw_t::Texture(int x, int y, int w, int h, const Color_t& clr, int nIndex)
 	}
 
 	g_Interfaces.Surface->SetDrawColor(clr.r, clr.g, clr.b, clr.a);
+	g_Interfaces.Surface->DrawSetAlphaMultiplier(clr.a / 255.f);
 	g_Interfaces.Surface->DrawSetTexture(nTexture);
 	g_Interfaces.Surface->DrawTexturedRect(x, y, w, h);
+	g_Interfaces.Surface->DrawSetAlphaMultiplier(1);
 }
 
 void Draw_t::Avatar(const int x, const int y, const int w, const int h, const uint32 nFriendID)

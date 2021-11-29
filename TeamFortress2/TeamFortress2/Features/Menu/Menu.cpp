@@ -328,7 +328,7 @@ void AimbotTab() {
         ImGui::SetCursorPosY(302);
         ImGui::BeginGroup();
         ImGui::SetCursorPosX(7);
-        ImGui::MenuChild(_("Crithack"), ImVec2(250, 205), false, ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::MenuChild(_("Crithack"), ImVec2(250, 210), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             static bool lefunny = false;
             static bool lefunny2 = false;
@@ -356,7 +356,7 @@ void AimbotTab() {
         ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
         ImGui::SetCursorPosX(262);
-        ImGui::MenuChild(_("Hitscan"), ImVec2(250, 465), false, ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::MenuChild(_("Hitscan"), ImVec2(250, 470), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Active###Hit scan"), &Vars::Aimbot::Hitscan::Active.m_Var);
             static const char* hitscanSortMethod[]{ "FOV", "Distance" };
@@ -410,7 +410,7 @@ void AimbotTab() {
         ImGui::SetCursorPosY(227);
         ImGui::BeginGroup();
         ImGui::SetCursorPosX(517);
-        ImGui::MenuChild(_("Melee"), ImVec2(260, 280), false, ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::MenuChild(_("Melee"), ImVec2(260, 285), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Active###Melee"), &Vars::Aimbot::Melee::Active.m_Var);
             static const char* meleeSortMethod[]{ "FoV", "Distance" };
@@ -558,7 +558,7 @@ void ESPTab() {
         ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
         ImGui::SetCursorPosX(7);
-        ImGui::MenuChild(_("Player"), ImVec2(253, 446), false, ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::MenuChild(_("Player"), ImVec2(250, 446), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 5,5 });
             ImGui::SetNextWindowSize(ImVec2(160, 0));
@@ -622,8 +622,8 @@ void ESPTab() {
     {//left upper
         ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(265);
-        ImGui::MenuChild(_("Buildings"), ImVec2(253, 446), false, ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::SetCursorPosX(262);
+        ImGui::MenuChild(_("Buildings"), ImVec2(250, 446), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 5,5 });
             ImGui::SetNextWindowSize(ImVec2(160, 0));
@@ -671,8 +671,8 @@ void ESPTab() {
     {//left upper
         ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(524);
-        ImGui::MenuChild(_("World"), ImVec2(253, 446), false, ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::SetCursorPosX(517);
+        ImGui::MenuChild(_("World"), ImVec2(260, 446), false, ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar);
         {
             const char* skyNames[] = {
                 "Custom",
@@ -1047,7 +1047,7 @@ void VisualsTab() {
         ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
         ImGui::SetCursorPosX(7);
-        ImGui::MenuChild(_("Local"), ImVec2(253, 465), false, ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::MenuChild(_("Local"), ImVec2(250, 470), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
 
             FixSlider;
@@ -1102,8 +1102,8 @@ void VisualsTab() {
     {//left upper
         ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(265);
-        ImGui::MenuChild(_("Spywarning"), ImVec2(253, 195), false, ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::SetCursorPosX(262);
+        ImGui::MenuChild(_("Spywarning"), ImVec2(250, 195), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Active###spywarn"), &Vars::Visuals::SpyWarning.m_Var);
             ImGui::Checkbox(_("Voice command###spywarn1"), &Vars::Visuals::SpyWarningAnnounce.m_Var);
@@ -1119,8 +1119,8 @@ void VisualsTab() {
     {//left upper
         ImGui::SetCursorPosY(237);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(265);
-        ImGui::MenuChild(_("Thirdperson"), ImVec2(253, 270), false, ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::SetCursorPosX(262);
+        ImGui::MenuChild(_("Thirdperson"), ImVec2(250, 275), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Thirdperson"), &Vars::Visuals::ThirdPerson.m_Var);
             AlignToRight(50);
@@ -1146,8 +1146,8 @@ void VisualsTab() {
     {//left upper
         ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
-        ImGui::SetCursorPosX(524);
-        ImGui::MenuChild(_("Radar"), ImVec2(253, 465), false, ImGuiWindowFlags_NoScrollWithMouse);
+        ImGui::SetCursorPosX(517);
+        ImGui::MenuChild(_("Radar"), ImVec2(260, 470), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             ImGui::Checkbox(_("Active###radar"), &Vars::Radar::Main::Active.m_Var);
             ImGui::Checkbox(_("Players###radarp"), &Vars::Radar::Players::Active.m_Var);
@@ -1165,8 +1165,13 @@ void VisualsTab() {
             ImGui::Combo(_("Icon###radari"), &Vars::Radar::Players::IconType.m_Var, iconPlayersRadar, IM_ARRAYSIZE(iconPlayersRadar));
             static const char* ignoreTeammatespRadar[]{ "Off", "All", "Keep friends" };
             ImGui::Combo(_("Ignore teammates###radarplayersteam"), &Vars::Radar::Players::IgnoreTeam.m_Var, ignoreTeammatespRadar, IM_ARRAYSIZE(ignoreTeammatespRadar));
-            ImGui::Checkbox(_("Ignore team building###radarbuildingsb"), &Vars::Radar::Buildings::IgnoreTeam.m_Var);
-
+            ImGui::Checkbox(_("Ignore team building###radarbuildingsb"), &Vars::Radar::Buildings::IgnoreTeam.m_Var); //This feature is dumb anyway
+            //ImGui::TextUnformatted(_(""));
+            ImGui::Checkbox(_("Out of FoV arrows###arrows"), &Vars::ESP::Players::Arrows::Active.m_Var);
+            FixSlider;
+            ImGui::SliderFloat(_("Distance from center"), &Vars::ESP::Players::Arrows::DistFromCenter.m_Var, 20.f, 200.f, _("%.2f"), ImGuiSliderFlags_AlwaysClamp);
+            FixSlider;
+            ImGui::SliderFloat(_("Arrow size"), &Vars::ESP::Players::Arrows::ArrowSize.m_Var, 5, 30, _("%.0fpx"), ImGuiSliderFlags_AlwaysClamp);
         }
         ImGui::EndChild();
         ImGui::EndGroup();

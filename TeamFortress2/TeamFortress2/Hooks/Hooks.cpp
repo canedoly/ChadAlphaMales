@@ -66,7 +66,7 @@ void CHooks::Init()
 		using namespace PredictionHook;
 
 		Table.Init(g_Interfaces.Prediction);
-		Table.Hook(RunCommand::index, &RunCommand::Hook);
+		Table.Hook(RunCommand::index, &RunCommand2::Hook);
 	}
 
 	if (g_Interfaces.Surface)
