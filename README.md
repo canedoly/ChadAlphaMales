@@ -1,4 +1,17 @@
-# ChadAlphaMales
+# ChadAlphaMales (fixed)
+
+The version is 1.6 (2-4 months before the cheat got its last update)
+
+Some stuff like dt and antiwarp are poo
+
+Just don't use this, until the latest version has been "self-leaked"
+
+until then, hf using a broken version of this cheat (might aswell be worse than the leaked version)
+
+
+
+
+# old readme
 Feel free to add me on discord zphr#0365 or make a new issue if you have any questions
 
 The source code is utterly shit compared to my new project (private atm, might release it some day to public but not open-source)
