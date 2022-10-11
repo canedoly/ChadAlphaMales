@@ -2,14 +2,19 @@
 
 The version is 1.6 (2-4 months before the cheat got its last update)
 
-Some stuff like dt and antiwarp are poo
-
 Just don't use this, until the latest version has been "self-leaked"
 
 until then, hf using a broken version of this cheat (might aswell be worse than the leaked version)
 
+# Issues with this version of CAM
 
+DT is bad, feels like 15-17 ticks and it barely works on heavy (just use fedoraware)
 
+Anti warp is really bad, a scuffed old version pasted from fedoraware
+
+Melee has "infinite" range, i'll look into it since its an issue with offsets
+
+If this changes in any form (If i find more issues or some get fixed), this will get updated to match.
 
 # old readme
 Feel free to add me on discord zphr#0365 or make a new issue if you have any questions
