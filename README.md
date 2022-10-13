@@ -12,8 +12,6 @@ DT is bad, feels like 15-17 ticks and it barely works on heavy (just use fedoraw
 
 Anti warp is really bad, a scuffed old version pasted from fedoraware
 
-Melee has "infinite" range, i'll look into it since its an issue with offsets
-
 If this changes in any form (If i find more issues or some get fixed), this will get updated to match.
 
 # old readme
