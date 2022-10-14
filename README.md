@@ -4,7 +4,7 @@ The version is 1.6 (2-4 months before the cheat got its last update)
 
 Just don't use this, until the latest version has been "self-leaked"
 
-until then, hf using a broken version of this cheat (might aswell be worse than the leaked version)
+until then, hf using a broken version of this cheat (might aswell be worse than the leaked 1.2b version)
 
 # Issues with this version of CAM
 
@@ -12,7 +12,7 @@ DT is bad, feels like 15-17 ticks and it barely works on heavy (just use fedoraw
 
 Anti warp is really bad, a scuffed old version pasted from fedoraware
 
-If this changes in any form (If i find more issues or some get fixed), this will get updated to match.
+If this changes in any form (If i find more issues or some get fixed), this will get updated.
 
 # old readme
 Feel free to add me on discord zphr#0365 or make a new issue if you have any questions
