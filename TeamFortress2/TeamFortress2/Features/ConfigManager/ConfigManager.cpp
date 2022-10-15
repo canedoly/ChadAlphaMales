@@ -377,6 +377,7 @@ void CConfigManager::Save(const wchar_t *name)
 			//Main
 			{
 				//SAVE_VAR(Vars::Glow::Main::Active);
+				SAVE_VAR(Vars::Glow::Main::Wireframe);
 				SAVE_VAR(Vars::Glow::Main::Scale);
 			}
 
@@ -852,6 +853,7 @@ void CConfigManager::Load(const wchar_t *name)
 			//Main
 			{
 				//LOAD_VAR(Vars::Glow::Main::Active);
+				LOAD_VAR(Vars::Glow::Main::Wireframe);
 				LOAD_VAR(Vars::Glow::Main::Scale);
 			}
 

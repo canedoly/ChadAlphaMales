@@ -979,6 +979,7 @@ void ESPTab3() {
         ImGui::MenuChild(_("Player Glow"), ImVec2(253, 446), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             FixSlider;
+            ImGui::Checkbox(_("Wireframe glow"), &Vars::Glow::Main::Wireframe.m_Var);
             ImGui::SliderInt("Global glow scale", &Vars::Glow::Main::Scale.m_Var, 1, 10, "%d", ImGuiSliderFlags_Logarithmic | ImGuiSliderFlags_AlwaysClamp);
             ImGui::Checkbox(_("Player glow"), &Vars::Glow::Players::Active.m_Var);
             static const char* ignoreTeammatesGlow[]{ "Off", "All", "Keep friends" };
@@ -1849,8 +1850,8 @@ void CNMenu::Render(IDirect3DDevice9* pDevice) {
                 draw->AddRectFilled(ImVec2(p.x, p.y + 40), ImVec2(p.x + s.x, p.y + s.y), ImColor(18, 20, 21, 200), 5, ImDrawCornerFlags_Bot); // Background
 
                 ImGui::PushFont(name);
-                draw->AddText(ImVec2(p.x + 36 / 2, p.y + 29 / 2), ImColor(255, 255, 255, 255), _("ChadAlphaMales"));
-                draw->AddText(ImVec2(p.x + 36 / 2 + ImGui::CalcTextSize(_("ChadAlphaMales")).x, p.y + 29 / 2), ImColor(MenuCol.x, MenuCol.y, MenuCol.z, 255.f), _(".club"));
+                draw->AddText(ImVec2(p.x + 36 / 2, p.y + 29 / 2), ImColor(255, 255, 255, 255), _("ChadAlphaMales Fixed"));
+                draw->AddText(ImVec2(p.x + 36 / 2 + ImGui::CalcTextSize(_("ChadAlphaMales Fixed")).x, p.y + 29 / 2), ImColor(MenuCol.x, MenuCol.y, MenuCol.z, 255.f), _(".club"));
                 ImGui::PopFont();
             }
             {

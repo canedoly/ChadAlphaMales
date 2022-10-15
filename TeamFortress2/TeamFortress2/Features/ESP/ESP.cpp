@@ -19,7 +19,7 @@ void CESP::AAIndicator() {
 		// TODO: color pickers
 		static const auto real_color = Color_t(255, 0, 0, 255);
 		static const auto fake_color = Color_t(0, 0, 255, 255);
-		static const auto lby_color = Color_t(0, 255, 0, 255);
+		static const auto lby_color = Color_t(0, 255, 0, 255);	// lby in tf2!?!? NO WAY
 
 		// TODO: slider
 		constexpr auto distance = 50.f;
@@ -599,8 +599,11 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 
 				if (Vars::ESP::Players::Name.m_Var)
 				{
+					// different method of making color picker name esp
+					// int nameColor = Vars::ESP::Players::NameCustom.Value ? Vars::ESP::Players::NameColor : DrawColor;
+
 					int offset = (g_Draw.m_vecFonts[FONT_NAME].nTall + (g_Draw.m_vecFonts[FONT_NAME].nTall / 4));
-					g_Draw.String(FONT_NAME, (x + (w / 2)), (y - offset), DrawColor, ALIGN_CENTERHORIZONTAL, Utils::ConvertUtf8ToWide(pi.name).data());
+					g_Draw.String(FONT_NAME, (x + (w / 2)), (y - offset), nameColor, ALIGN_CENTERHORIZONTAL, Utils::ConvertUtf8ToWide(pi.name).data());
 				}
 				if (Vars::ESP::Players::GUID.m_Var)
 				{
