@@ -603,7 +603,7 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 					// int nameColor = Vars::ESP::Players::NameCustom.Value ? Vars::ESP::Players::NameColor : DrawColor;
 
 					int offset = (g_Draw.m_vecFonts[FONT_NAME].nTall + (g_Draw.m_vecFonts[FONT_NAME].nTall / 4));
-					g_Draw.String(FONT_NAME, (x + (w / 2)), (y - offset), nameColor, ALIGN_CENTERHORIZONTAL, Utils::ConvertUtf8ToWide(pi.name).data());
+					g_Draw.String(FONT_NAME, (x + (w / 2)), (y - offset), DrawColor, ALIGN_CENTERHORIZONTAL, Utils::ConvertUtf8ToWide(pi.name).data());
 				}
 				if (Vars::ESP::Players::GUID.m_Var)
 				{
