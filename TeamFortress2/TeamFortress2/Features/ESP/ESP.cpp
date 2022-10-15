@@ -600,7 +600,7 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 				if (Vars::ESP::Players::Name.m_Var)
 				{
 					// different method of making color picker name esp
-					Color_t NameColor = Vars::ESP::Players::NameCustom.Value ? Colors::NameColor : DrawColor;
+					Color_t NameColor = Vars::ESP::Players::NameCustom.m_Var ? Colors::NameColor : DrawColor;
 
 					int offset = (g_Draw.m_vecFonts[FONT_NAME].nTall + (g_Draw.m_vecFonts[FONT_NAME].nTall / 4));
 					g_Draw.String(FONT_NAME, (x + (w / 2)), (y - offset), NameColor, ALIGN_CENTERHORIZONTAL, Utils::ConvertUtf8ToWide(pi.name).data());
@@ -813,7 +813,7 @@ void CESP::DrawBuildings(CBaseEntity *pLocal)
 					}
 				}
 
-				Color_t BNameColor = Vars::ESP::Buildings::NameCustom.Value ? Colors::BuildingsNameColor : DrawColor;
+				Color_t BNameColor = Vars::ESP::Buildings::NameCustom.m_Var ? Colors::BNameColor : DrawColor;
 
 				nTextTopOffset += (g_Draw.m_vecFonts[FONT_NAME].nTall + (g_Draw.m_vecFonts[FONT_NAME].nTall / 4));
 				g_Draw.String(FONT, (x + (w / 2)), (y - nTextTopOffset), BNameColor, ALIGN_CENTERHORIZONTAL, szName);
