@@ -87,7 +87,7 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							g_Draw.String(FONT_MENU, 0, nY + 99, { 255,255,255,255 }, ALIGN_DEFAULT, std::string("Wait ticks: " + std::to_string(dt.ToWait)).c_str());*/
 							int ticks = dt.Charged;
 							int tickWidth = 5;
-							int barWidth = (tickWidth * dt.ToShift) + 2;
+							int barWidth = (tickWidth * Vars::Misc::CL_Move::DTTicks.m_Var) + 2;
 
 
 							g_Draw.Rect(g_ScreenSize.c - (barWidth / 2), nY + 50, barWidth, 6, { 40,40,40,dt.barAlpha });
