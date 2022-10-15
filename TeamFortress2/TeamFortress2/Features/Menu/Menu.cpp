@@ -595,6 +595,9 @@ void ESPTab() {
                 ImGui::OpenPopup(_("PlayerHealthBar"));
             }
             ImGui::Checkbox(_("Player name"), &Vars::ESP::Players::Name.m_Var);
+            ImGui::Checkbox(_("Custom name color"), &Vars::ESP::Players::NameCustom.m_Var);
+            AlignToRight(23);
+            ColorPicker(_("Custom name color"), Colors::NameColor, true);
             ImGui::Checkbox(_("Player Dlights"), &Vars::ESP::Players::Dlights.m_Var);
 
             static const char* ignoreTeammatesEsp[]{ "Off", "All", "Keep friends" };
@@ -642,6 +645,9 @@ void ESPTab() {
             ImGui::Checkbox(_("Enabled"), &Vars::ESP::Buildings::Active.m_Var);
             ImGui::Checkbox(_("Ignore team buildings###ESPbuildingsteam"), &Vars::ESP::Buildings::IgnoreTeammates.m_Var);
             ImGui::Checkbox(_("Building name"), &Vars::ESP::Buildings::Name.m_Var);
+            ImGui::Checkbox(_("Custom name color"), &Vars::ESP::Buildings::NameCustom.m_Var);
+            AlignToRight(23);
+            ColorPicker(_("Custom name color"), Colors::BNameColor, true);
             ImGui::Checkbox(_("Building health"), &Vars::ESP::Buildings::Health.m_Var);
             ImGui::Checkbox(_("Building conditions"), &Vars::ESP::Buildings::Cond.m_Var);
             AlignToRight(23);
@@ -981,7 +987,11 @@ void ESPTab3() {
         ImGui::MenuChild(_("Player Glow"), ImVec2(253, 446), false, ImGuiWindowFlags_NoScrollWithMouse);
         {
             FixSlider;
-            ImGui::SliderInt("Global glow scale", &Vars::Glow::Main::Scale.m_Var, 1, 10, "%d", ImGuiSliderFlags_Logarithmic | ImGuiSliderFlags_AlwaysClamp);
+            ImGui::Checkbox(_("Wireframe glow"), &Vars::Glow::Main::Wireframe.m_Var);
+            if (!Vars::Glow::Main::Wireframe.m_Var)
+            {
+                ImGui::SliderInt("Global glow scale", &Vars::Glow::Main::Scale.m_Var, 1, 10, "%d", ImGuiSliderFlags_Logarithmic | ImGuiSliderFlags_AlwaysClamp);
+            }
             ImGui::Checkbox(_("Player glow"), &Vars::Glow::Players::Active.m_Var);
             static const char* ignoreTeammatesGlow[]{ "Off", "All", "Keep friends" };
             ImGui::Combo(_("Ignore teammates###glowteam"), &Vars::Glow::Players::IgnoreTeammates.m_Var, ignoreTeammatesGlow, IM_ARRAYSIZE(ignoreTeammatesGlow));

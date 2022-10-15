@@ -64,9 +64,10 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <Optimization>Disabled</Optimization>
+      <Optimization>Enabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

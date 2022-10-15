@@ -274,6 +274,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::ESP::Players::IgnoreTeammates);
 				SAVE_VAR(Vars::ESP::Players::IgnoreCloaked);
 				SAVE_VAR(Vars::ESP::Players::Name);
+				SAVE_VAR(Vars::ESP::Players::NameCustom);
 				SAVE_VAR(Vars::ESP::Players::Uber);
 				SAVE_VAR(Vars::ESP::Players::Class);
 				//SAVE_VAR(Vars::ESP::Players::Health);
@@ -299,6 +300,7 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::ESP::Buildings::Active);
 				SAVE_VAR(Vars::ESP::Buildings::IgnoreTeammates);
 				SAVE_VAR(Vars::ESP::Buildings::Name);
+				SAVE_VAR(Vars::ESP::Buildings::NameCustom);
 				SAVE_VAR(Vars::ESP::Buildings::Health);
 				SAVE_VAR(Vars::ESP::Buildings::Owner);
 				SAVE_VAR(Vars::ESP::Buildings::Level);
@@ -569,6 +571,8 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::Invuln);
 			SAVE_OTHER(Colors::Cloak);
 			SAVE_OTHER(Colors::Friend);
+			SAVE_OTHER(Colors::NameColor);
+			SAVE_OTHER(Colors::BNameColor);
 			SAVE_OTHER(Colors::Overheal);
 			SAVE_OTHER(Colors::Health);
 			SAVE_OTHER(Colors::Ammo);
@@ -749,6 +753,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::ESP::Players::IgnoreTeammates);
 				LOAD_VAR(Vars::ESP::Players::IgnoreCloaked);
 				LOAD_VAR(Vars::ESP::Players::Name);
+				LOAD_VAR(Vars::ESP::Players::NameCustom);
 				LOAD_VAR(Vars::ESP::Players::Uber);
 				LOAD_VAR(Vars::ESP::Players::Class);
 				//LOAD_VAR(Vars::ESP::Players::Health);
@@ -774,6 +779,7 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::ESP::Buildings::Active);
 				LOAD_VAR(Vars::ESP::Buildings::IgnoreTeammates);
 				LOAD_VAR(Vars::ESP::Buildings::Name);
+				LOAD_VAR(Vars::ESP::Buildings::NameCustom);
 				LOAD_VAR(Vars::ESP::Buildings::Health);
 				LOAD_VAR(Vars::ESP::Buildings::Owner);
 				LOAD_VAR(Vars::ESP::Buildings::Level);
@@ -1046,6 +1052,8 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::Invuln);
 			LOAD_OTHER(Colors::Cloak);
 			LOAD_OTHER(Colors::Friend);
+			LOAD_OTHER(Colors::NameColor);
+			LOAD_OTHER(Colors::BNameColor);
 			LOAD_OTHER(Colors::Overheal);
 			LOAD_OTHER(Colors::Health);
 			LOAD_OTHER(Colors::Ammo);

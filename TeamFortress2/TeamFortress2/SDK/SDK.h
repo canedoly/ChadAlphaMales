@@ -139,6 +139,8 @@ namespace Colors
 	inline Color_t Target = { 240, 147, 43, 255 };
 	inline Color_t Invuln = { 120, 111, 166, 255 };
 	inline Color_t Cloak = { 165, 177, 194, 255 };
+	inline Color_t NameColor = { 255, 255, 255, 255};
+	inline Color_t BNameColor = { 255, 255, 255, 255};
 	inline Color_t Friend = { 32, 191, 107, 255 };
 	inline Color_t Overheal = { 84, 160, 255, 255 };
 	inline Color_t Health = { 0, 230, 64, 255 };
