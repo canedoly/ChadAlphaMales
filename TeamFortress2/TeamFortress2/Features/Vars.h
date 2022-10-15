@@ -500,7 +500,7 @@ inline CVar<int> TracerEffect{ 0, L"Tracer style" };
 		inline std::string SteamRPCText	= "ChadAlphaMales.club";
 		namespace CL_Move
 		{
-			inline CVar<int> DTTicks{ 20, L"DT Ticks"}
+			inline CVar<int> DTTicks{ 20, L"DT Ticks"};
 			inline CVar<bool> Doubletap{ true, L"Doubletap" };
 			inline CVar<bool> NotInAir{ true, L"Dont DT in air" };
 			//inline CVar<int> TeleportKey{ 0x46, L"Teleport Key" }; //F
