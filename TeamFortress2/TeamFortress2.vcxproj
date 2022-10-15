@@ -67,7 +67,6 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
-      <Optimization>true</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
