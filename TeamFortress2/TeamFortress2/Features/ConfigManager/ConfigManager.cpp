@@ -508,6 +508,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_VAR(Vars::Misc::InstantRespawn);
 			SAVE_VAR(Vars::Misc::TauntSlide);
 			SAVE_VAR(Vars::Misc::TauntControl);
+			SAVE_VAR(Vars::Misc::TauntControlMouse);
 			SAVE_VAR(Vars::Misc::Freecam);
 			SAVE_VAR(Vars::Misc::FreecamKey);
 			SAVE_VAR(Vars::Misc::FreecamSpeed);
@@ -989,6 +990,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_VAR(Vars::Misc::InstantRespawn);
 			LOAD_VAR(Vars::Misc::TauntSlide);
 			LOAD_VAR(Vars::Misc::TauntControl);
+			LOAD_VAR(Vars::Misc::TauntControlMouse);
 			LOAD_VAR(Vars::Misc::Freecam);
 			LOAD_VAR(Vars::Misc::FreecamKey);
 			LOAD_VAR(Vars::Misc::FreecamSpeed);

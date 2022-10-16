@@ -273,8 +273,19 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			if (pLocal->IsTaunting())
 			{
 				if (Vars::Misc::TauntControl.m_Var)
-					pCmd->viewangles.x = (pCmd->buttons & IN_BACK) ? 91.0f : (pCmd->buttons & IN_FORWARD) ? 0.0f : 90.0f;
+				{
+					if (Vars::Misc::TauntControlMouse.m_Var)
+					{
+						Vec3 vAngle = g_Interfaces.Engine->GetViewAngles();
+						pCmd->viewnagles.y = vAngle.y;
 
+						return false;
+					}
+					else
+					{
+						pCmd->viewangles.x = (pCmd->buttons & IN_BACK) ? 91.0f : (pCmd->buttons & IN_FORWARD) ? 0.0f : 90.0f;
+					}
+				}
 				return false;
 			}
 		}

@@ -479,6 +479,7 @@ inline CVar<int> TracerEffect{ 0, L"Tracer style" };
 		inline CVar<bool> AutoStrafe			{ true, L"Auto Strafe" };
 		inline CVar<bool> TauntSlide			{ false, L"Taunt Slide" };
 		inline CVar<bool> TauntControl			{ false, L"Taunt Control" };
+		inline CVar<bool> TauntControlMouse		{ false, L"Taunt control mouse"};
 		inline CVar<bool> Freecam				{ false, L"freecam" };
 		inline CVar<int>  FreecamKey			{ 0x48, L"freecam key" };
 		inline CVar<float> FreecamSpeed			{ 3.f, L"freecam speed" };
