@@ -812,6 +812,7 @@ void CESP::DrawBuildings(CBaseEntity *pLocal)
 						break;
 					}
 				}
+				// the names are pixelated for buildings, idk why
 
 				Color_t BNameColor = Vars::ESP::Buildings::NameCustom.m_Var ? Colors::BNameColor : DrawColor;
 

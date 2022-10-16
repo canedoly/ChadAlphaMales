@@ -993,6 +993,7 @@ void ESPTab3() {
                 ImGui::SliderInt("Global glow scale", &Vars::Glow::Main::Scale.m_Var, 1, 10, "%d", ImGuiSliderFlags_Logarithmic | ImGuiSliderFlags_AlwaysClamp);
             }
             ImGui::Checkbox(_("Player glow"), &Vars::Glow::Players::Active.m_Var);
+            ImGui::Checkbox(_("Show local"), &Vars::Glow::Players::ShowLocal.m_Var);
             static const char* ignoreTeammatesGlow[]{ "Off", "All", "Keep friends" };
             ImGui::Combo(_("Ignore teammates###glowteam"), &Vars::Glow::Players::IgnoreTeammates.m_Var, ignoreTeammatesGlow, IM_ARRAYSIZE(ignoreTeammatesGlow));
             ImGui::Checkbox(_("Glow on cosmetics"), &Vars::Glow::Players::Wearables.m_Var);
@@ -1153,7 +1154,7 @@ void VisualsTab() {
         ImGui::EndGroup();
     }
 
-    {//left upper
+    {//right upper
         ImGui::SetCursorPosY(42);
         ImGui::BeginGroup();
         ImGui::SetCursorPosX(517);
@@ -1176,7 +1177,7 @@ void VisualsTab() {
             static const char* ignoreTeammatespRadar[]{ "Off", "All", "Keep friends" };
             ImGui::Combo(_("Ignore teammates###radarplayersteam"), &Vars::Radar::Players::IgnoreTeam.m_Var, ignoreTeammatespRadar, IM_ARRAYSIZE(ignoreTeammatespRadar));
             ImGui::Checkbox(_("Ignore team building###radarbuildingsb"), &Vars::Radar::Buildings::IgnoreTeam.m_Var); //This feature is dumb anyway
-            //ImGui::TextUnformatted(_(""));
+            ImGui::TextUnformatted(_(""));
             ImGui::Checkbox(_("Out of FoV arrows###arrows"), &Vars::ESP::Players::Arrows::Active.m_Var);
             FixSlider;
             ImGui::SliderFloat(_("Distance from center"), &Vars::ESP::Players::Arrows::DistFromCenter.m_Var, 20.f, 200.f, _("%.2f"), ImGuiSliderFlags_AlwaysClamp);

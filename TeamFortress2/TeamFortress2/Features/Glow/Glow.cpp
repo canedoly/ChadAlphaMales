@@ -165,7 +165,7 @@ void CGlowEffect::Render()
 					else
 					{
 						if (!Vars::Glow::Players::ShowLocal.m_Var)
-							continue;
+						{ continue; }
 					}
 
 					if (!Utils::IsOnScreen(pLocal, Player))
