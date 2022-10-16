@@ -327,14 +327,15 @@ bool CAimbotProjectile::SolveProjectile(CBaseEntity* pLocal, CBaseCombatWeapon* 
 	Vec3 vLocalPos = pLocal->GetEyePosition();
 
 	float fInterp = g_ConVars.cl_interp->GetFloat();
-	float fLatency = pNetChannel->GetLatency(FLOW_OUTGOING) + pNetChannel->GetLatency(FLOW_INCOMING);
+	// interp doesn't actually impact the projectile
+	float fLatency = pNetChannel->GetLatency(MAX_FLOWS);
 
 	float MAX_TIME = ProjInfo.m_flMaxTime;
 	float TIME_STEP = (MAX_TIME / 128.0f);
 
 	for (float fPredTime = 0.0f; fPredTime < MAX_TIME; fPredTime += TIME_STEP)
 	{
-		float fCorrectTime = (fPredTime + (Vars::Aimbot::Projectile::R8Method.m_Var ? fInterp : 0) + fLatency);
+		float fCorrectTime = (fPredTime + fLatency);
 		Vec3 vPredictedPos{};
 		vPredictedPos = Vars::Aimbot::Projectile::R8Method.m_Var ? Predictor.Extrapolate2(fCorrectTime) : Predictor.Extrapolate(fCorrectTime);
 		/*if (Predictor.m_vVelocity.IsZero() ||
