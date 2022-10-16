@@ -277,7 +277,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 					if (Vars::Misc::TauntControlMouse.m_Var)
 					{
 						Vec3 vAngle = g_Interfaces.Engine->GetViewAngles();
-						pCmd->viewnagles.y = vAngle.y;
+						pCmd->viewnangles.y = vAngle.y;
 
 						return false;
 					}
