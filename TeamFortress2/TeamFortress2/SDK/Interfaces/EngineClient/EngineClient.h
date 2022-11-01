@@ -120,6 +120,13 @@ public:
 		return GetVFunc<FN>(this, 85)(this);
 	}
 
+	void FireEvents()
+	{
+		typedef void(__thiscall* FN)(PVOID);
+		GetVFunc<FN>(this, 56)(this);
+	} // this triggers @https://github.com/lua9520/source-engine-2018-hl2_src/blob/3bf9df6b2785fa6d951086978a3e66f49427166a/engine/cl_parse_event.cpp#L75
+	// TODO: find a way to bypass the "Delayed Event!" check, so we send all events instantly...
+
 	bool IsHLTV()
 	{
 		typedef bool(__thiscall *FN)(PVOID);

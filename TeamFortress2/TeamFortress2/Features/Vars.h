@@ -504,13 +504,17 @@ inline CVar<int> TracerEffect{ 0, L"Tracer style" };
 			inline CVar<int> DTTicks{ 20, L"DT Ticks"};
 			inline CVar<bool> Doubletap{ true, L"Doubletap" };
 			inline CVar<bool> NotInAir{ true, L"Dont DT in air" };
-			//inline CVar<int> TeleportKey{ 0x46, L"Teleport Key" }; //F
+			inline CVar<int> TeleportKey{ 0x46, L"Teleport Key" }; //F
+			inline CVar<int> DTMode { 0, L"DT Mode"};
+			inline CVar<int> WarpMode { 0, L"Warp Mode"};
+			inline CVar<int> AntiWarpMode { 0, L"Anti warp mode"};
 			inline CVar<int> RechargeKey{ 0x52, L"Recharge Key" }; //R
 			inline CVar<int> DoubletapKey{ 0x46, L"Doubletap Key" }; //V
 
 			inline CVar<bool> WaitForDT{ true, L"Wait for DT" };
 
 			inline CVar<bool> Fakelag{ true, L"Fakelag" };
+			inline CVar<bool> VisualizeFL{ true, L"Show Fakelag"};
 			inline CVar<bool> FakelagOnKey{ true, L"Fakelag On Key" };
 			inline CVar<int> FakelagKey{ 0x54, L"Fakelag Key" }; //T
 			inline CVar<int> FakelagValue{ 1, L"Fakelag value" };

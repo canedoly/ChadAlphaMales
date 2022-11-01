@@ -1,4 +1,37 @@
 #include "bitbuf.h"
+#include "../../Utils/Utils.h"
+
+void bf_write::StartWriting(void* pData, int nBytes, int iStartBit, int nBits)
+{
+	//using fn = int(__thiscall *)(bf_write *, void *, int, int, int);
+	//static fn FN = reinterpret_cast<fn>(g_Pattern.Find(_(L"engine.dll"), _(L"55 8B EC 8B 45 08 8B 55 0C 83 E2 FC 89 01 8B 45 14")));
+	//return FN(this, pData, nBytes, iStartBit, nBits);
+	if (!(nBytes % 4 == 0))
+		return;
+
+	if (!(((unsigned long)pData & 3) == 0))
+		return;
+
+	nBytes &= ~3;
+
+	m_pData = (unsigned long*)pData;
+	m_nDataBytes = nBytes;
+
+	if (nBits == -1)
+	{
+		m_nDataBits = nBytes << 3;
+	}
+	else {
+		if (nBits <= nBytes * 8) {
+			m_nDataBits = nBits;
+		}
+	}
+
+	m_iCurBit = iStartBit;
+	m_bOverflow = false;
+}
+
+#include "bitbuf.h"
 #include <stdint.h>
 
 //========= Copyright Valve Corporation, All rights reserved. ============//
@@ -142,31 +175,6 @@ bf_write::bf_write(void* pData, int nBytes, int nBits)
 	StartWriting(pData, nBytes, 0, nBits);
 }
 
-void bf_write::StartWriting(void* pData, int nBytes, int iStartBit, int nBits)
-{
-	// Make sure it's dword aligned and padded.
-	Assert((nBytes % 4) == 0);
-	Assert(((unsigned long)pData & 3) == 0);
-
-	// The writing code will overrun the end of the buffer if it isn't dword aligned, so truncate to force alignment
-	nBytes &= ~3;
-
-	m_pData = (unsigned long*)pData;
-	m_nDataBytes = nBytes;
-
-	if (nBits == -1)
-	{
-		m_nDataBits = nBytes << 3;
-	}
-	else
-	{
-		Assert(nBits <= nBytes * 8);
-		m_nDataBits = nBits;
-	}
-
-	m_iCurBit = iStartBit;
-	m_bOverflow = false;
-}
 
 void bf_write::Reset()
 {
@@ -209,7 +217,7 @@ void bf_write::WriteSBitLong(int data, int numbits)
 	nValue &= nPreserveBits;
 	nValue |= nSignExtension;
 
-	Assert(nValue == data, "WriteSBitLong: 0x%08x does not fit in %d bits", data, numbits);
+	nullAssert(nValue == data, "WriteSBitLong: 0x%08x does not fit in %d bits", data, numbits);
 
 	WriteUBitLong(nValue, numbits, false);
 }
@@ -363,7 +371,7 @@ void bf_write::WriteVarInt64(uint64_t data)
 			}
 		}
 
-		Assert(false, "Can't get here.");
+		nullAssert(false, "Can't get here.");
 
 	size10: target[9] = static_cast<uint8_t>((part2 >> 7) | 0x80);
 	size9: target[8] = static_cast<uint8_t>((part2) | 0x80);
@@ -822,9 +830,9 @@ bf_read::bf_read(const char* pDebugName, const void* pData, int nBytes, int nBit
 void bf_read::StartReading(const void* pData, int nBytes, int iStartBit, int nBits)
 {
 	// Make sure we're dword aligned.
-	Assert(((size_t)pData & 3) == 0);
+	nullAssert(((size_t)pData & 3) == 0);
 
-	m_pData = (unsigned char*)pData;
+	m_pData = (unsigned long*)pData;
 	m_nDataBytes = nBytes;
 
 	if (nBits == -1)
@@ -833,7 +841,7 @@ void bf_read::StartReading(const void* pData, int nBytes, int iStartBit, int nBi
 	}
 	else
 	{
-		Assert(nBits <= nBytes * 8);
+		nullAssert(nBits <= nBytes * 8);
 		m_nDataBits = nBits;
 	}
 
@@ -861,7 +869,7 @@ void bf_read::SetOverflowFlag()
 {
 	if (m_bAssertOnOverflow)
 	{
-		Assert(false);
+		nullAssert(false);
 	}
 	m_bOverflow = true;
 }
@@ -933,7 +941,7 @@ int bf_read::ReadBitsClamped_ptr(void* pOutData, size_t outSizeBytes, size_t nBi
 	{
 		// Should we print a message when we clamp the data being read? Only
 		// in debug builds I think.
-		Assert(0, "Oversized network packet received, and clamped.");
+		nullAssert(0, "Oversized network packet received, and clamped.");
 		readSizeBits = outSizeBits;
 		skippedBits = (int)(nBits - outSizeBits);
 		// What should we do in this case, which should only happen if nBits
@@ -1362,7 +1370,7 @@ int64_t bf_read::ReadLongLong()
 float bf_read::ReadFloat()
 {
 	float ret;
-	Assert(sizeof(ret) == 4);
+	nullAssert(sizeof(ret) == 4);
 	ReadBits(&ret, 32);
 
 	// Swap the float, since ReadBits reads raw data
@@ -1378,7 +1386,7 @@ bool bf_read::ReadBytes(void* pOut, int nBytes)
 
 bool bf_read::ReadString(char* pStr, int maxLen, bool bLine, int* pOutNumChars)
 {
-	Assert(maxLen != 0);
+	nullAssert(maxLen != 0);
 
 	bool bTooSmall = false;
 	int iChar = 0;
@@ -1402,7 +1410,7 @@ bool bf_read::ReadString(char* pStr, int maxLen, bool bLine, int* pOutNumChars)
 	}
 
 	// Make sure it's null-terminated.
-	Assert(iChar < maxLen);
+	nullAssert(iChar < maxLen);
 	pStr[iChar] = 0;
 
 	if (pOutNumChars)
@@ -1490,5 +1498,5 @@ int bf_read::CompareBitsAt(int offset, bf_read* RESTRICT other, int otherOffset,
 	x ^= LoadLittleDWord((unsigned long*)pData1End, 0) << (32 - iStartBit1);
 	x ^= LoadLittleDWord((unsigned long*)pData2, 0) >> iStartBit2;
 	x ^= LoadLittleDWord((unsigned long*)pData2End, 0) << (32 - iStartBit2);
-	return x & g_ExtraMasks[numbits];
+	return (x & g_ExtraMasks[numbits]);
 }

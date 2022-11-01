@@ -27,7 +27,7 @@ void __stdcall PredictionHook::RunCommand2::Hook(CBaseEntity* pEntity, CUserCmd*
 	if (pMoveHelper && !g_Interfaces.MoveHelper)
 		g_Interfaces.MoveHelper = pMoveHelper;\
 
-	if (!Vars::Misc::CL_Move::Doubletap.m_Var || !dt.Shifting) {
+	if (!Vars::Misc::CL_Move::Doubletap.m_Var || !DT.isShifting) {
 		return Table.Original<fn>(index)(g_Interfaces.Prediction, pEntity, pCmd, pMoveHelper);
 	}
 
@@ -44,16 +44,22 @@ void __stdcall PredictionHook::RunCommand2::Hook(CBaseEntity* pEntity, CUserCmd*
 	int BackupTick = pEntity->GetTickBase();
 	float CurtimeBackup = g_Interfaces.GlobalVars->curtime;
 
-	if (pCmd->command_number == g_GlobalInfo.shiftedCmd->command_number)
+	if (Vars::Misc::CL_Move::Doubletap.m_Var && DT.isShifting)
 	{
-		pEntity->SetTickBase(CalculateTick(g_Interfaces.ClientState->chokedcommands + dt.Charged + 1, pEntity));
-		g_Interfaces.GlobalVars->curtime = TICKS_TO_TIME(pEntity->GetTickBase());
+		if (pCmd->command_number == g_GlobalInfo.shiftedCmd->command_number)
+		{
+			pEntity->SetTickBase(CalculateTick(g_Interfaces.ClientState->chokedcommands + DT.currentTicks + 1, pEntity));
+			g_Interfaces.GlobalVars->curtime = TICKS_TO_TIME(pEntity->GetTickBase());
+		}
 	}
 
 	Table.Original<fn>(index)(g_Interfaces.Prediction, pEntity, pCmd, pMoveHelper);
 
-	if (pCmd->command_number == g_GlobalInfo.shiftedCmd->command_number) {
-		pEntity->SetTickBase(BackupTick);
-		g_Interfaces.GlobalVars->curtime = CurtimeBackup;
+	if (Vars::Misc::CL_Move::Doubletap.m_Var && DT.isShifting)
+	{
+		if (pCmd->command_number == g_GlobalInfo.shiftedCmd->command_number) {
+			pEntity->SetTickBase(BackupTick);
+			g_Interfaces.GlobalVars->curtime = CurtimeBackup;
+		}
 	}
 }

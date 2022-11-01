@@ -164,6 +164,7 @@ namespace Colors
 	inline Color_t HealthBarbTopColor = { 0,255,0,255 };
 	inline Color_t HealthBarbBottomColor = { 255,0,0,255 };
 	inline Color_t hitboxColor{ 255, 0, 0, 50 };
+	inline Color_t bonecolor = { 231, 95, 255, 10 };
 }
 
 namespace Utils

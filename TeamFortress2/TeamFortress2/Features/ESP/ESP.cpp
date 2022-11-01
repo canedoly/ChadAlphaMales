@@ -331,71 +331,74 @@ void CESP::DrawPaths()
 		if (!aimTarget) {
 			return;
 		}
-		Vector velocity = aimTarget->GetVelocity() / 10, predPos[101];
-		int flags = aimTarget->GetFlags();
-
-		int max = (flags & FL_ONGROUND) ? 21 : 101;
-		for (int i = 0; i < max; i++)
-			predPos[i] = predPosAt(i * 0.05, aimTarget);
-
-		SColor lineColor;
-		for (int i = 0; i < max - 1; i++)
+		if (EWeaponType::PROJECTILE)
 		{
-			CGameTrace result; // Check to see if we're about to hit a surface
-			if (!AssumeVis(aimTarget, predPos[i], predPos[i + 1], &result))
+			Vector velocity = aimTarget->GetVelocity() / 10, predPos[101];
+			int flags = aimTarget->GetFlags();
+
+			int max = (flags & FL_ONGROUND) ? 21 : 101;
+			for (int i = 0; i < max; i++)
+				predPos[i] = predPosAt(i * 0.05, aimTarget);
+
+			SColor lineColor;
+			for (int i = 0; i < max - 1; i++)
 			{
-				// Draw a circle to show our landing position/angle
-				if (!(flags & FL_ONGROUND))
+				CGameTrace result; // Check to see if we're about to hit a surface
+				if (!AssumeVis(aimTarget, predPos[i], predPos[i + 1], &result))
 				{
-					const Vector relSquare[] = { Vector(30, 30, 0), Vector(30, -30, 0), Vector(-30, -30, 0), Vector(-30, 30, 0) };
-					Vector scrPos[4];
-					bool visible = true;
-					for (size_t j = 0; j < sizeof(relSquare) / sizeof(Vector); j++)
+					// Draw a circle to show our landing position/angle
+					if (!(flags & FL_ONGROUND))
 					{
-						if (!Utils::W2S(relSquare[j] + result.vEndPos, scrPos[j]))
+						const Vector relSquare[] = { Vector(30, 30, 0), Vector(30, -30, 0), Vector(-30, -30, 0), Vector(-30, 30, 0) };
+						Vector scrPos[4];
+						bool visible = true;
+						for (size_t j = 0; j < sizeof(relSquare) / sizeof(Vector); j++)
 						{
-							visible = false;
-							break;
+							if (!Utils::W2S(relSquare[j] + result.vEndPos, scrPos[j]))
+							{
+								visible = false;
+								break;
+							}
+						}
+						if (visible)
+						{
+							Vector start, end;
+							if (Utils::W2S(result.vEndPos, start) && Utils::W2S(result.vEndPos + result.Plane.normal * 30, end)) {
+								SColor color(255);
+								g_Draw.Line(start.x, start.y, end.x, end.y, { color.rgba[0], color.rgba[1], color.rgba[2], color.rgba[3] });
+							}
+							for (size_t j = 0; j < sizeof(scrPos) / sizeof(Vector); j++)
+							{
+								int last = j - 1;
+								if (j == 0)
+									last = 3;
+								SColor color(255);
+								g_Draw.Line(scrPos[j].x, scrPos[j].y, scrPos[last].x, scrPos[last].y, { color.rgba[0], color.rgba[1], color.rgba[2], color.rgba[3] });
+							}
 						}
 					}
-					if (visible)
-					{
-						Vector start, end;
-						if (Utils::W2S(result.vEndPos, start) && Utils::W2S(result.vEndPos + result.Plane.normal * 30, end)) {
-							SColor color(255);
-							g_Draw.Line(start.x, start.y, end.x, end.y, { color.rgba[0], color.rgba[1], color.rgba[2], color.rgba[3] });
-						}
-						for (size_t j = 0; j < sizeof(scrPos) / sizeof(Vector); j++)
-						{
-							int last = j - 1;
-							if (j == 0)
-								last = 3;
-							SColor color(255);
-							g_Draw.Line(scrPos[j].x, scrPos[j].y, scrPos[last].x, scrPos[last].y, { color.rgba[0], color.rgba[1], color.rgba[2], color.rgba[3] });
-						}
-					}
+					break;
 				}
-				break;
+
+				if (i < 21) // Make a gradiant from green to red
+					lineColor = hsv2rgb((100.f - (i * 5)) / 255, 1, 1, 255);
+
+				Vector screenPos[3];
+				if (!Utils::W2S(predPos[i], screenPos[0]))
+					continue;
+				if (!Utils::W2S(predPos[i + 1], screenPos[1]))
+					continue;
+
+				g_Draw.Line(screenPos[0].x, screenPos[0].y, screenPos[1].x, screenPos[1].y, { lineColor.rgba[0], lineColor.rgba[1], lineColor.rgba[2], lineColor.rgba[3] });
+
+				Vec2 extraLine = Vec2(predPos[i + 1].x, predPos[i + 1].y);
+				extraLine += Math::VectorAngles(Math::ToAngle(Vec2(velocity.x, velocity.y)), 10);
+				extraLine = Math::RotateVec2(extraLine, Vec2(predPos[i + 1].x, predPos[i + 1].y), DEG2RAD(90));
+				if (!Utils::W2S(Vec3(extraLine.x, extraLine.y, predPos[i + 1].z), screenPos[2]))
+					continue;
+
+				g_Draw.Line(screenPos[1].x, screenPos[1].y, screenPos[2].x, screenPos[2].y, { lineColor.rgba[0], lineColor.rgba[1], lineColor.rgba[2], lineColor.rgba[3] });
 			}
-
-			if (i < 21) // Make a gradiant from green to red
-				lineColor = hsv2rgb((100.f - (i * 5)) / 255, 1, 1, 255);
-
-			Vector screenPos[3];
-			if (!Utils::W2S(predPos[i], screenPos[0]))
-				continue;
-			if (!Utils::W2S(predPos[i + 1], screenPos[1]))
-				continue;
-
-			g_Draw.Line(screenPos[0].x, screenPos[0].y, screenPos[1].x, screenPos[1].y, { lineColor.rgba[0], lineColor.rgba[1], lineColor.rgba[2], lineColor.rgba[3] });
-
-			Vec2 extraLine = Vec2(predPos[i + 1].x, predPos[i + 1].y);
-			extraLine += Math::VectorAngles(Math::ToAngle(Vec2(velocity.x, velocity.y)), 10);
-			extraLine = Math::RotateVec2(extraLine, Vec2(predPos[i + 1].x, predPos[i + 1].y), DEG2RAD(90));
-			if (!Utils::W2S(Vec3(extraLine.x, extraLine.y, predPos[i + 1].z), screenPos[2]))
-				continue;
-
-			g_Draw.Line(screenPos[1].x, screenPos[1].y, screenPos[2].x, screenPos[2].y, { lineColor.rgba[0], lineColor.rgba[1], lineColor.rgba[2], lineColor.rgba[3] });
 		}
 	}
 }

@@ -31,28 +31,14 @@ void CVisuals::FreecamCM(CUserCmd* pCmd) {
 }
 
 void CVisuals::DrawHitboxMatrix(CBaseEntity* pEntity, Color_t colour, float time) {
-	g_Interfaces.DebugOverlay->ClearAllOverlays();
-	const model_t* model;
-	studiohdr_t* hdr;
-	mstudiohitboxset_t* set;
-	mstudiobbox_t* bbox;
-	Vec3 mins{}, maxs{}, origin{};
-	Vec3 angle;
+	//I::DebugOverlay->ClearAllOverlays();
 
-	model = pEntity->GetModel();
-	/*if (!model)
-		return;*/
-
-	hdr = g_Interfaces.ModelInfo->GetStudioModel(model);
-	/*if (!hdr)
-		return;*/
-
-	set = hdr->GetHitboxSet(pEntity->GetHitboxSet());
-	/*if (!set)
-		return;*/
+	const model_t* model = pEntity->GetModel();
+	studiohdr_t* hdr = g_Interfaces.ModelInfo->GetStudioModel(model);
+	mstudiohitboxset_t* set = hdr->GetHitboxSet(pEntity->GetHitboxSet());
 
 	for (int i{}; i < set->numhitboxes; ++i) {
-		bbox = set->hitbox(i);
+		mstudiobbox_t* bbox = set->hitbox(i);
 		if (!bbox)
 			continue;
 

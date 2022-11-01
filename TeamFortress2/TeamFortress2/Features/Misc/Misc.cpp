@@ -100,31 +100,42 @@ void CMisc::EdgeJump(CUserCmd* pCmd, const int nOldFlags)
 	}
 }
 
-void CMisc::AutoJump(CUserCmd* pCmd)
+void CMisc::AutoJump(CUserCmd* pCmd, CBaseEntity* pLocal)
 {
-	if (const auto& pLocal = g_EntityCache.m_pLocal)
+	if (!Vars::Misc::AutoJump.Value
+		|| !pLocal->IsAlive()
+		|| pLocal->IsSwimming()
+		|| pLocal->IsInBumperKart()
+		|| pLocal->IsAGhost())
 	{
-		if (!Vars::Misc::AutoJump.m_Var
-			|| !pLocal->IsAlive()
-			|| pLocal->IsSwimming()
-			|| pLocal->IsInBumperKart()
-			|| pLocal->IsAGhost())
-			return;
-
-		static bool bJumpState = false;
-
-		if (pCmd->buttons & IN_JUMP)
-		{
-			if (!bJumpState && !pLocal->IsOnGround())
-				pCmd->buttons &= ~IN_JUMP;
-
-			else if (bJumpState)
-				bJumpState = false;
-		}
-
-		else if (!bJumpState)
-			bJumpState = true;
+		return;
 	}
+
+	if (pLocal->GetMoveType() == MOVETYPE_NOCLIP
+		|| pLocal->GetMoveType() == MOVETYPE_LADDER
+		|| pLocal->GetMoveType() == MOVETYPE_OBSERVER)
+	{
+		return;
+	}
+
+	const bool bJumpHeld = pCmd->buttons & IN_JUMP;
+	const bool bCurHop = bJumpHeld && pLocal->OnSolid();
+	static bool bHopping = bCurHop;
+
+	if (bCurHop) {	//	this is our initial jump
+		bHopping = true; return;
+	}
+	else if (bHopping && !pLocal->OnSolid() && bJumpHeld) {	//	 we are not on the ground and the key is in the same hold cycle
+		pCmd->buttons &= ~IN_JUMP; return;
+	}
+	else if (bHopping && !bJumpHeld) {	//	we are no longer in the jump key cycle
+		bHopping = false; return;
+	}
+	else if (!bHopping && bJumpHeld) {	//	we exited the cycle but now we want back in, don't mess with keys for doublejump, enter us back into the cycle for next tick
+		bHopping = true; return;
+	}
+	
+	return;
 }
 bool AutoStrafeFlip = false;
 

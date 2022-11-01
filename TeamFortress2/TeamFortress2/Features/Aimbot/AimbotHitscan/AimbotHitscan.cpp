@@ -587,7 +587,7 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 		}
 
 		if (Vars::Misc::CL_Move::WaitForDT.m_Var) {
-			if (dt.ToWait > 0 && (dt.Charged > 0) && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) //if dt not ready and "ticks" = 0 and key is held, dont aimbot
+			if (DT.WaitTicks > 0 && (DT.currentTicks > 0) && GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) //if dt not ready and "ticks" = 0 and key is held, dont aimbot
 				return;
 		}
 
@@ -614,10 +614,10 @@ void CAimbotHitscan::Run(CBaseEntity* pLocal, CBaseCombatWeapon* pWeapon, CUserC
 
 			pCmd->buttons |= IN_ATTACK;
 
-			if (Vars::Misc::CL_Move::Doubletap.m_Var && (pCmd->buttons & IN_ATTACK) && (dt.Charged > 0) && (dt.ToWait == 0))
+			if (Vars::Misc::CL_Move::Doubletap.m_Var && (pCmd->buttons & IN_ATTACK) && (DT.currentTicks > 0) && (DT.WaitTicks == 0))
 			{
 				if (GetAsyncKeyState(Vars::Misc::CL_Move::DoubletapKey.m_Var)) {
-					dt.Shifting = true;
+					DT.isShifting = true;
 				}
 			}
 

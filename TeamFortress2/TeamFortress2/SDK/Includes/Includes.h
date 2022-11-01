@@ -8,6 +8,9 @@
 #include "Typedef.h"
 #include <deque>
 
+using Vector = Vec3;
+using QAngle = Vec3;
+
 class IRefCounted
 {
 public:

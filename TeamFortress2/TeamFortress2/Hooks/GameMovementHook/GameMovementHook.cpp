@@ -4,7 +4,7 @@ void __stdcall GameMovement::ProcessMovement::Hook(CBaseEntity* pPlayer, CMoveDa
 {
 	fn OriginalFn = Table.Original<fn>(index);
 
-	if (pPlayer == g_EntityCache.m_pLocal && dt.Shifting) {
+	if (pPlayer == g_EntityCache.m_pLocal && DT.isShifting) {
 		return;
 	}
 	else {

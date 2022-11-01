@@ -74,29 +74,66 @@ static void updateAntiAfk(CUserCmd* pCmd)
 }
 
 int badcode = 0;
-void QuickStop(CBaseEntity* pEntity, CUserCmd* pCmd) {
-	// convert velocity to angular momentum.
-	Vec3 angle;
-	Math::VectorAngles(pEntity->GetVecVelocity(), angle);
+inline Vector ComputeMove(CUserCmd* pCmd, CBaseEntity* pLocal, Vec3& a, Vec3& b)
+{
+	Vec3 diff = (b - a);
+	if (diff.Lenght() == 0.0f)
+		return Vec3(0.0f, 0.0f, 0.0f);
+	const float x = diff.x;
+	const float y = diff.y;
+	Vec3 vsilent(x, y, 0);
+	Vec3 ang;
+	Math::VectorAngles(vsilent, ang);
+	float yaw = DEG2RAD(ang.y - pCmd->viewangles.y);
+	float pitch = DEG2RAD(ang.x - pCmd->viewangles.x);
+	Vec3 move = { cos(yaw) * 450.0f, -sin(yaw) * 450.0f, -cos(pitch) * 450.0f };
 
-	// get our current speed of travel.
-	float speed = pEntity->GetVecVelocity().Lenght2D();
+	// Only apply upmove in water
+	if (!(g_Interfaces.EngineTrace->GetPointContents(pLocal->GetEyePosition()) & CONTENTS_WATER))
+		move.z = pCmd->upmove;
+	return move;
+}
 
-	// fix direction by factoring in where we are looking.
-	angle.y = pEntity->GetEyeAngles().y - angle.y;
+// Function for when you want to goto a vector
+inline void WalkTo(CUserCmd* pCmd, CBaseEntity* pLocal, Vec3& a, Vec3& b, float scale)
+{
+	// Calculate how to get to a vector
+	auto result = ComputeMove(pCmd, pLocal, a, b);
+	// Push our move to usercmd
+	pCmd->forwardmove = result.x * scale;
+	pCmd->sidemove = result.y * scale;
+	pCmd->upmove = result.z * scale;
+}
 
-	// convert corrected angle back to a direction.
-	Vec3 direction;
-	Math::AngleVectors(angle, &direction);
+void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal) {
+	static Vec3 vStartOrigin = {};
+	static Vec3 vStartVel = {};
+	static int nShiftTick = 0;
+	if (pLocal && pLocal->IsAlive()) {
+		if (g_GlobalInfo.m_bShouldShift)
+		{
+			if (vStartOrigin.IsZero()) {
+				vStartOrigin = pLocal->GetVecOrigin();
+			}
 
-	Vec3 stop = direction * -speed;
+			if (vStartVel.IsZero()) {
+				vStartVel = pLocal->GetVecVelocity();
+			}
 
-	if (pEntity->GetVelocity().Lenght2D() > 13.f) {
-		pCmd->forwardmove = stop.x;
-		pCmd->sidemove = stop.y;
-	}
-	else {
-		pCmd->forwardmove = pCmd->sidemove = 0.f;
+			Vec3 vPredicted = vStartOrigin + (vStartVel * TICKS_TO_TIME(24 - nShiftTick));
+			Vec3 vPredictedMax = vStartOrigin + (vStartVel * TICKS_TO_TIME(24));
+
+			float flScale = Math::RemapValClamped(vPredicted.DistTo(vStartOrigin), 0.0f, vPredictedMax.DistTo(vStartOrigin) * 1.27f, 1.0f, 0.0f);
+			float flScaleScale = Math::RemapValClamped(vStartVel.Lenght2D(), 0.0f, 520.f, 0.f, 1.f);
+			WalkTo(pCmd, pLocal, vPredictedMax, vStartOrigin, flScale * flScaleScale);
+
+			nShiftTick++;
+		}
+		else {
+			vStartOrigin = Vec3(0,0,0);
+			vStartVel = Vec3(0,0,0);
+			nShiftTick = 0;
+		}
 	}
 }
 
@@ -114,11 +151,17 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	if (OriginalFn(g_Interfaces.ClientMode, input_sample_frametime, pCmd))
 		g_Interfaces.Prediction->SetLocalViewAngles(pCmd->viewangles);
 
-	if (dt.Charged == 0 && dt.barAlpha > 0) {
-		if (!dt.barAlpha - 3 < 0) {
-			dt.barAlpha -= 3;
+	if (DT.currentTicks == 0 && DT.barAlpha > 0) {
+		if (!DT.barAlpha - 3 < 0) {
+			DT.barAlpha -= 3;
 		}
 	}
+
+	if (g_GlobalInfo.ForceSendPacket)
+	{
+		*pSendPacket = true;
+		g_GlobalInfo.ForceSendPacket = false;
+	} // if we are trying to force update do this lol
 
 	if (g_PlayerArrows.upAlpha) {
 		g_PlayerArrows.alpha = std::min(255, (g_PlayerArrows.alpha + 5));
@@ -157,40 +200,55 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	float fOldSide = pCmd->sidemove;
 	float fOldForward = pCmd->forwardmove;
 
-	auto AntiWarp = [](CUserCmd* cmd) -> void
-	{
-		int shiftcheck = dt.ChargedReverse;
-		auto pLocal = GLOCAL;
+	// todo:
+	// - "recode" dt (95% done, some fail safes)
+	
 
-		if (shiftcheck < 19)
-		{
-			if (shiftcheck < 6)
-			{
-				// should be -1 btw
-				cmd->forwardmove *= -1;
-				cmd->sidemove *= -1;
-			}
-			else
-			{
-				cmd->forwardmove = 0;
-				cmd->sidemove = 0;
-			}
-		}
-		else {
-			dt.FastStop = false;
-		}
-	};
+	// completed
+	// - add improved auto bunnyhop (done)
+	// - add ability to teleport (done)
+	// - add 2 methods of warp - plain/boost (done)
 
-	/*if (dt.FastStop) {
-		AntiWarp(pCmd);
-	}*/
+	// planned
+	// - add glow thickness (not yet)
+	// - clean up the code (no yet)
+	// - add keyhelper from fedoraware (not yet)
+	// - add 2 methods of antiwarp - fed/cam (everything except antiwarp)
+
+
+
+
+	// unused code
+	// auto AntiWarp = [](CUserCmd* cmd) -> void
+	// {
+	// 	int shiftcheck = DT.currentTicks;
+	// 	auto pLocal = GLOCAL;
+
+	// 	if (shiftcheck < 19)
+	// 	{
+	// 		if (shiftcheck < 6)
+	// 		{
+	// 			// should be -1 btw
+	// 			cmd->forwardmove *= -1;
+	// 			cmd->sidemove *= -1;
+	// 		}
+	// 		else
+	// 		{
+	// 			cmd->forwardmove = 0;
+	// 			cmd->sidemove = 0;
+	// 		}
+	// 	}
+	// 	else {
+	// 		DT.shouldStop = false;
+	// 	}
+	// };
 
 	g_Visuals.FreecamCM(pCmd);
 
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
-		if (dt.Shifting) {
-			QuickStop(pLocal, pCmd);
+		if (DT.isShifting && DT.shouldStop) {
+			FastStop(pLocal, pCmd);
 		}
 		Ray_t trace;
 		g_GlobalInfo.m_Latency = g_Interfaces.ClientState->m_NetChannel->GetLatency(0);
@@ -201,7 +259,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 			const int nItemDefIndex = pWeapon->GetItemDefIndex();
 
 			if (g_GlobalInfo.m_nCurItemDefIndex != nItemDefIndex || !pWeapon->GetClip1())
-				dt.ToWait = DT_WAIT_CALLS;
+				DT.WaitTicks = DT_WAIT_CALLS;
 
 			g_GlobalInfo.m_nCurItemDefIndex = nItemDefIndex;
 			g_GlobalInfo.m_bWeaponCanHeadShot = pWeapon->CanWeaponHeadShot();
@@ -250,21 +308,42 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	g_Misc.CheatsBypass();
 	g_GlobalInfo.m_vViewAngles = pCmd->viewangles;
 
-	if (const auto& pLocal = g_EntityCache.m_pLocal) {
-		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) {
-			if (g_Interfaces.Engine->GetNetChannelInfo()->m_nChokedPackets < Vars::Misc::CL_Move::FakelagValue.m_Var) {
-				if (Vars::Misc::CL_Move::Fakelag.m_Var) {
-					if (Vars::Misc::CL_Move::FakelagOnKey.m_Var && GetAsyncKeyState(Vars::Misc::CL_Move::FakelagKey.m_Var)) {
-						*pSendPacket = false;
+	if ((Vars::Misc::CL_Move::Fakelag.m_Var && !Vars::Misc::CL_Move::FakelagOnKey.m_Var) || (Vars::Misc::CL_Move::Fakelag.m_Var && GetAsyncKeyState(Vars::Misc::CL_Move::FakelagKey.m_Var))) {
+		if (const auto& pLocal = g_EntityCache.m_pLocal) {
+			if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) {
+				if (!g_GlobalInfo.m_bAttacking &&
+					!DT.ShouldShift &&
+					pLocal->IsAlive()) {
+					*pSendPacket = (g_GlobalInfo.fakelagTicks >= Vars::Misc::CL_Move::FakelagValue.m_Var);
+					if (*pSendPacket) {
+						g_Visuals.DrawHitboxMatrix(pLocal, Colors::bonecolor, TICKS_TO_TIME(Vars::Misc::CL_Move::FakelagValue.m_Var + 1));
 					}
-					else {
-						*pSendPacket = false;
+					g_GlobalInfo.fakelagTicks++;
+					DT.currentTicks = std::max(DT.currentTicks - g_GlobalInfo.fakelagTicks, 0);
+					if (g_GlobalInfo.fakelagTicks > Vars::Misc::CL_Move::FakelagValue.m_Var) {
+						g_GlobalInfo.fakelagTicks = 0;
 					}
 				}
-				*pSendPacket = true;
 			}
 		}
 	}
+	// static int chockedPackets = 0;
+	// if ((Vars::Misc::CL_Move::Fakelag.m_Var && !Vars::Misc::CL_Move::FakelagOnKey.m_Var) || (Vars::Misc::CL_Move::Fakelag.m_Var && GetAsyncKeyState(Vars::Misc::CL_Move::FakelagKey.m_Var))) {
+	// 	if (const auto& pLocal = g_EntityCache.m_pLocal) {
+	// 		if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) {
+	// 			if (!g_GlobalInfo.m_bAttacking &&
+	// 				!DT.ShouldShift &&
+	// 				pLocal->IsAlive()) {
+	// 				*pSendPacket = (chockedPackets >= Vars::Misc::CL_Move::FakelagValue.m_Var);
+	// 				chockedPackets++;
+	// 				DT.currentTicks = std::max(DT.currentTicks - chockedPackets, 0);
+	// 				if (chockedPackets > Vars::Misc::CL_Move::FakelagValue.m_Var) {
+	// 					chockedPackets = 0;
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// }
 
 	if (Vars::Misc::TauntSlide.m_Var)
 	{

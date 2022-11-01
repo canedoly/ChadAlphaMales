@@ -441,6 +441,10 @@ public: //Everything else, lol.
         }
     }
 
+    __inline bool OnSolid() {
+		return m_hGroundEntity() >= 0 || IsOnGround();
+	}
+
     __inline const char* GetModelName() {
         return g_Interfaces.ModelInfo->GetModelName(GetModel());
     }

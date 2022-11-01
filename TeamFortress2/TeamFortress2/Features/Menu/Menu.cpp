@@ -1242,7 +1242,10 @@ void MiscTab() {
                 ImGui::SetCursorPosX(2);
                 ImGui::PushItemWidth(200);
                 FixSlider;
-                ImGui::SliderInt(_("Fakelag value"), &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 14, _("%d"), ImGuiSliderFlags_AlwaysClamp);
+                ImGui::SliderInt(_("Fakelag value"), &Vars::Misc::CL_Move::FakelagValue.m_Var, 1, 22, _("%d"), ImGuiSliderFlags_AlwaysClamp);
+                ImGui::Checkbox(_("Visualize Fakelag"), &Vars::Misc::CL_Move::VisualizeFL.m_Var);
+                AlignToRight(23);
+                ColorPicker(_("Fakelag visual color"), Colors::bonecolor, true);
                 ImGui::Checkbox(_("Fakelag on key"), &Vars::Misc::CL_Move::FakelagOnKey.m_Var);
                 ImGui::EndPopup();
             }
@@ -1293,9 +1296,24 @@ void MiscTab() {
                 ImGui::SetCursorPosX(2);
                 ImGui::SliderInt(_("Ticks to shift"), &Vars::Misc::CL_Move::DTTicks.m_Var, 10, 24, _("%d"), ImGuiSliderFlags_ClampOnInput);
                 ImGui::SetCursorPosX(2);
+                const char* DTModes[]{ "On key", "Always" };
+                ImGui::Combo(_("DT mode"), &Vars::Misc::CL_Move::DTMode.m_Var, DTModes, IM_ARRAYSIZE(DTModes));
+                ImGui::SetCursorPosX(2);
                 ImGui::Checkbox(_("Wait for DT"), &Vars::Misc::CL_Move::WaitForDT.m_Var);
                 ImGui::SetCursorPosX(2);
                 ImGui::Checkbox(_("Don't DT in air"), &Vars::Misc::CL_Move::NotInAir.m_Var);
+                ImGui::SetCursorPosX(2);    // don't actually know if this is needed
+                const char* warpModes[]{ "Plain", "Boost", "Boost 2" };
+                ImGui::Combo(_("Warp mode"), &Vars::Misc::CL_Move::WarpMode.m_Var, warpModes, IM_ARRAYSIZE(warpModes));
+                ImGui::SetCursorPosX(8);
+                ImGui::Text(_("Teleport Key"));
+                AlignToRight(45);
+                InputKeybind(_("Teleport Key"), Vars::Misc::CL_Move::TeleportKey);
+
+                // ImGui::SetCursorPosX(2);
+                // const char* antiwarpModes[]{ "FED", "CAM" };
+                // ImGui::Combo(_("Antiwarp style"), &Vars::Misc::CL_Move::AntiWarpMode.m_Var, antiwarpModes, IM_ARRAYSIZE(WarpModes));
+
                 ImGui::SetCursorPosX(8);
                 ImGui::Text(_("Recharge Key"));
                 AlignToRight(45);

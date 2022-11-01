@@ -148,6 +148,10 @@ void CHooks::Init()
 
 		//CL_SendMove
 		{
+			using namespace CL_SendMove;
+
+			fn CLSendMove = reinterpret_cast<fn>(g_Pattern.Find(L"engine.dll", L"55 8B EC 81 EC ? ? ? ? A1 ? ? ? ? 8D"));
+			Func.Hook(CLSendMove, Hook);
 
 		}
 	}

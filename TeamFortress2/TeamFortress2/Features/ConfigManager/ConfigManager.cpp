@@ -531,7 +531,11 @@ void CConfigManager::Save(const wchar_t *name)
 				SAVE_VAR(Vars::Misc::CL_Move::NotInAir);// { true, L"Doubletap" };
 				SAVE_VAR(Vars::Misc::CL_Move::DoubletapKey);// { true, L"Doubletap" };
 				SAVE_VAR(Vars::Misc::CL_Move::RechargeKey);// { 0x52, L"Recharge Key" }; //R
-				SAVE_VAR(Vars::Misc::CL_Move::DoubletapKey);// { 0x52, L"Recharge Key" }; //R
+				SAVE_VAR(Vars::Misc::CL_Move::TeleportKey);
+				SAVE_VAR(Vars::Misc::CL_Move::WarpMode);
+				SAVE_VAR(Vars::Misc::CL_Move::DTMode);
+				SAVE_VAR(Vars::Misc::CL_Move::AntiWarpMode);
+				//SAVE_VAR(Vars::Misc::CL_Move::DoubletapKey);// { 0x52, L"Recharge Key" }; //R
 				SAVE_VAR(Vars::Misc::CL_Move::DTTicks);
 			}
 		}
@@ -550,6 +554,7 @@ void CConfigManager::Save(const wchar_t *name)
 			//Fakelag
 			{
 				SAVE_VAR(Vars::Misc::CL_Move::Fakelag);
+				SAVE_VAR(Vars::Misc::CL_Move::VisualizeFL);
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagKey);
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagOnKey);
 				SAVE_VAR(Vars::Misc::CL_Move::FakelagValue);
@@ -593,6 +598,7 @@ void CConfigManager::Save(const wchar_t *name)
 			SAVE_OTHER(Colors::HealthBarBottomColor);
 			SAVE_OTHER(Colors::HealthBarbTopColor);
 			SAVE_OTHER(Colors::HealthBarbBottomColor);
+			SAVE_OTHER(Colors::bonecolor);
 			SAVE_OTHER(Colors::hitboxColor);
 
 
@@ -1014,7 +1020,11 @@ void CConfigManager::Load(const wchar_t *name)
 				LOAD_VAR(Vars::Misc::CL_Move::NotInAir);// { true, L"Doubletap" };
 				LOAD_VAR(Vars::Misc::CL_Move::DoubletapKey);// { true, L"Doubletap" };
 				LOAD_VAR(Vars::Misc::CL_Move::RechargeKey);// { 0x52, L"Recharge Key" }; //R
-				LOAD_VAR(Vars::Misc::CL_Move::DoubletapKey);// { 0x52, L"Recharge Key" }; //R
+				LOAD_VAR(Vars::Misc::CL_Move::TeleportKey);
+				LOAD_VAR(Vars::Misc::CL_Move::WarpMode);
+				LOAD_VAR(Vars::Misc::CL_Move::DTMode);
+				LOAD_VAR(Vars::Misc::CL_Move::AntiWarpMode);
+				//LOAD_VAR(Vars::Misc::CL_Move::DoubletapKey);// { 0x52, L"Recharge Key" }; //R
 				LOAD_VAR(Vars::Misc::CL_Move::DTTicks);
 			}
 		}
@@ -1033,6 +1043,7 @@ void CConfigManager::Load(const wchar_t *name)
 			//Fakelag
 			{
 				LOAD_VAR(Vars::Misc::CL_Move::Fakelag);
+				LOAD_VAR(Vars::Misc::CL_Move::VisualizeFL);
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagKey);
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagOnKey);
 				LOAD_VAR(Vars::Misc::CL_Move::FakelagValue);
@@ -1076,6 +1087,7 @@ void CConfigManager::Load(const wchar_t *name)
 			LOAD_OTHER(Colors::HealthBarBottomColor);
 			LOAD_OTHER(Colors::HealthBarbTopColor);
 			LOAD_OTHER(Colors::HealthBarbBottomColor);
+			LOAD_OTHER(Colors::bonecolor);
 			LOAD_OTHER(Colors::hitboxColor);
 
 			LOAD_OTHER(g_Radar.m_nRadarX);

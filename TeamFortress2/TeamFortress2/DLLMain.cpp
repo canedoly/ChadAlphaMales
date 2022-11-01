@@ -85,7 +85,7 @@ DWORD WINAPI MainThread(LPVOID lpParam)
 	}
 
 	g_Interfaces.Init();
-	g_Interfaces.Engine->ClientCmd_Unrestricted(_("unbind f7"));
+	//g_Interfaces.Engine->ClientCmd_Unrestricted(_("unbind f7"));	// but why
 	g_Interfaces.Engine->ClientCmd_Unrestricted(_("cl_vote_ui_active_after_voting 1"));
 	g_Interfaces.Engine->ClientCmd_Unrestricted(_("cl_timeout 99999"));
 	g_Interfaces.Engine->ClientCmd_Unrestricted(_("clear"));

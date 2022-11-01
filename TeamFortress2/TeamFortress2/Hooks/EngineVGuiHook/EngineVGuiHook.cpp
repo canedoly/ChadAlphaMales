@@ -77,22 +77,36 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 							auto speed = vel.Lenght2D();
 							auto speed2 = vel.Lenght();
 							g_Draw.String(FONT_MENU, g_ScreenSize.c, g_ScreenSize.h / 2, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, std::string("Length2D: " + std::to_string(speed)).c_str());
-							g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 20, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, std::string("Length: " + std::to_string(speed2)).c_str());
+							g_Draw.String(FONT_MENU, g_ScreenSize.c, (g_ScreenSize.h / 2) + 20, { 255,255,255,255 }, ALIGN_CENTERHORIZONTAL, std::string("Length: " + std::to_string(speed2)).c_str()); */
+							// information
+							int textOffset = nY;
 
-							g_Draw.String(FONT_MENU, 0, nY + 00, { 255,255,255,255 }, ALIGN_DEFAULT, std::string("Charged: " + std::to_string(dt.Charged)).c_str());
-							g_Draw.String(FONT_MENU, 0, nY + 20, { 255,255,255,255 }, ALIGN_DEFAULT, std::string("Fast stop: " + std::to_string(dt.FastStop)).c_str());
-							g_Draw.String(FONT_MENU, 0, nY + 40, { 255,255,255,255 }, ALIGN_DEFAULT, std::string("Recharging: " + std::to_string(dt.Recharging)).c_str());
-							g_Draw.String(FONT_MENU, 0, nY + 60, { 255,255,255,255 }, ALIGN_DEFAULT, std::string("Shifting: " + std::to_string(dt.Shifting)).c_str());
-							g_Draw.String(FONT_MENU, 0, nY + 80, { 255,255,255,255 }, ALIGN_DEFAULT, std::string("Ticks to shift: " + std::to_string(dt.ToShift)).c_str());
-							g_Draw.String(FONT_MENU, 0, nY + 99, { 255,255,255,255 }, ALIGN_DEFAULT, std::string("Wait ticks: " + std::to_string(dt.ToWait)).c_str());*/
-							int ticks = dt.Charged;
+							INetChannelInfo* pNetChannel = reinterpret_cast<INetChannelInfo*>(g_Interfaces.Engine->GetNetChannelInfo());
+
+							float fLatencyMax = pNetChannel->GetLatency(MAX_FLOWS);
+							float fLatencyIn = pNetChannel->GetLatency(FLOW_INCOMING);
+							float fLatencyOut = pNetChannel->GetLatency(FLOW_OUTGOING);
+							float outgoing_ticks = TIME_TO_TICKS(fLatencyOut);
+							float incoming_ticks = TIME_TO_TICKS(fLatencyIn);
+							float max_ticks = TIME_TO_TICKS(fLatencyMax);
+
+							g_Draw.String(FONT_MENU, 0, textOffset += 20, {255,255,255,255}, ALIGN_DEFAULT, std::string("Current Ticks: " + std::to_string(DT.currentTicks)).c_str());
+							g_Draw.String(FONT_MENU, 0, textOffset += 20, {255,255,255,255}, ALIGN_DEFAULT, std::string("Wait Ticks: " + std::to_string(DT.WaitTicks)).c_str());
+							g_Draw.String(FONT_MENU, 0, textOffset += 20, {255,255,255,255}, ALIGN_DEFAULT, std::string("Bar alpha: " + std::to_string(DT.barAlpha)).c_str());
+							g_Draw.String(FONT_MENU, 0, textOffset += 20, {255,255,255,255}, ALIGN_DEFAULT, std::string("Max Latency ticks: " + std::to_string(max_ticks)).c_str());
+							g_Draw.String(FONT_MENU, 0, textOffset += 20, {255,255,255,255}, ALIGN_DEFAULT, std::string("Out Latency ticks: " + std::to_string(outgoing_ticks)).c_str());
+							g_Draw.String(FONT_MENU, 0, textOffset += 20, {255,255,255,255}, ALIGN_DEFAULT, std::string("In Latency ticks: " + std::to_string(incoming_ticks)).c_str());
+							g_Draw.String(FONT_MENU, 0, textOffset += 20, {255,255,255,255}, ALIGN_DEFAULT, std::string("Max Latency: " + std::to_string(fLatencyMax)).c_str());
+							g_Draw.String(FONT_MENU, 0, textOffset += 20, {255,255,255,255}, ALIGN_DEFAULT, std::string("Out Latency: " + std::to_string(fLatencyOut)).c_str());
+							g_Draw.String(FONT_MENU, 0, textOffset += 20, {255,255,255,255}, ALIGN_DEFAULT, std::string("In Latency: " + std::to_string(fLatencyIn)).c_str());
+							int ticks = DT.currentTicks;
 							int tickWidth = 5;
 							int barWidth = (tickWidth * Vars::Misc::CL_Move::DTTicks.m_Var) + 2;
 
 
-							g_Draw.Rect(g_ScreenSize.c - (barWidth / 2), nY + 50, barWidth, 6, { 40,40,40,dt.barAlpha });
-							g_Draw.OutlinedRect(g_ScreenSize.c - (barWidth / 2), nY + 50, barWidth, 6, { 0, 0, 0, dt.barAlpha });
-							g_Draw.GradientRect(g_ScreenSize.c - (barWidth / 2) + 1, nY + 51, (g_ScreenSize.c - (barWidth / 2) + 1) + tickWidth * dt.Charged, nY + 51 + 4, { 0,0,0,255 },
+							g_Draw.Rect(g_ScreenSize.c - (barWidth / 2), nY + 50, barWidth, 6, { 40,40,40,DT.barAlpha });
+							g_Draw.OutlinedRect(g_ScreenSize.c - (barWidth / 2), nY + 50, barWidth, 6, { 0, 0, 0, DT.barAlpha });
+							g_Draw.GradientRect(g_ScreenSize.c - (barWidth / 2) + 1, nY + 51, (g_ScreenSize.c - (barWidth / 2) + 1) + tickWidth * DT.currentTicks, nY + 51 + 4, { 0,0,0,255 },
 								{
 									Vars::Menu::Colors::WidgetActive.r,
 									Vars::Menu::Colors::WidgetActive.g,
@@ -179,8 +193,6 @@ void __stdcall EngineVGuiHook::Paint::Hook(int mode)
 				}
 
 				int ms = std::max(0, (int)std::round(g_GlobalInfo.m_Latency * 1000.f));
-				// Change admin to something else if you really need to, it was for the protection thing
-				//_snprintf(buff, sizeof(buff), _("CAM [v1.5] | fps: %i | delay: %ims") ,fps, ms);
 				std::string waterMark = tfm::format(_("CAM [v1.6] | fps: %d | delay: %ims"), fps, ms);
 				std::wstring waterMarkW(waterMark.begin(), waterMark.end());
 
