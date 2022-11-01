@@ -49,7 +49,7 @@ public: //Netvars & conditions
         M_DYNVARGET(Ammo, int, (this + 0x4), _("DT_BasePlayer"), _("localdata"), _("m_iAmmo"))
         M_DYNVARGET(HitboxSet, int, this, _("DT_BaseAnimating"), _("m_nHitboxSet"))
         M_DYNVARGET(TickBase, int, this, _("DT_BasePlayer"), _("localdata"), _("m_nTickBase"))
-        M_DYNVARGET(m_hGroundEntity, int, _("CBasePlayer"), _("m_hGroundEntity"))
+        // M_DYNVARGET(m_hGroundEntity, int, _("CBasePlayer"), _("m_hGroundEntity"))
         M_DYNVARGET(SimulationTime, float, this, _("DT_BaseEntity"), _("m_flSimulationTime"))
         M_DYNVARGET(hOwner, int, this, _("DT_BaseEntity"), _("m_hOwnerEntity"))
         M_DYNVARGET(Health, int, this, _("DT_BasePlayer"), _("m_iHealth"))
@@ -443,9 +443,9 @@ public: //Everything else, lol.
         }
     }
 
-    __inline bool OnSolid() {
-		return m_hGroundEntity() >= 0 || IsOnGround();
-	}
+    // __inline bool OnSolid() {
+	// 	return m_hGroundEntity() >= 0 || IsOnGround();
+	// }
 
     __inline const char* GetModelName() {
         return g_Interfaces.ModelInfo->GetModelName(GetModel());
