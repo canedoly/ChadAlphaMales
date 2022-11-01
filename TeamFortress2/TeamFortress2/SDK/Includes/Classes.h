@@ -6,15 +6,13 @@
 
 #include "dt_common.h"
 #include "dt_recv.h"
-#include "../Interfaces/Steam/SteamTypes.h"
 
 typedef unsigned short MaterialVarSym_t;
 class ITexture;
 class IMaterial;
-class CMaterial;
-class MaterialPropertyTypes_t;
-typedef uint64 VertexFormat_t;
 
+class MaterialPropertyTypes_t;
+class VertexFormat_t;
 using CBaseHandle = unsigned long;
 
 class IHandleEntity
@@ -25,13 +23,30 @@ public:
 	virtual const CBaseHandle& GetRefEHandle() const = 0;
 };
 
+struct Vertex_t
+{
+	Vec2	m_Position;
+	Vec2	m_TexCoord;
+	Vertex_t() {}
+	Vertex_t(const Vec2& pos, const Vec2& coord = Vec2(0, 0))
+	{
+		m_Position = pos;
+		m_TexCoord = coord;
+	}
+	void Init(const Vec2& pos, const Vec2& coord = Vec2(0, 0))
+	{
+		m_Position = pos;
+		m_TexCoord = coord;
+	}
+};
+
 class VMatrix {
 private:
 	Vec3 m[4][4];
 
 public:
-	const matrix3x4& As3x4() const {
-		return *((const matrix3x4*)this);
+	const matrix3x4 &As3x4() const {
+		return *((const matrix3x4 *)this);
 	}
 };
 
@@ -234,9 +249,9 @@ class CClientClass
 {
 public:
 	BYTE Pad[8];
-	char* szNetworkName;
-	RecvTable* pRecvTable;
-	CClientClass* pNextClass;
+	char *szNetworkName;
+	RecvTable *pRecvTable;
+	CClientClass *pNextClass;
 	int iClassID;
 };
 
@@ -245,13 +260,8 @@ class CBaseEntity; //forward declare
 class CTraceFilter
 {
 public:
-	virtual bool ShouldHitEntity(void* entity, int contents_mask) = 0;
-	//virtual ETraceType GetTraceType() const = 0;
-public:
-	virtual ETraceType GetTraceType() const
-	{
-		return TRACE_EVERYTHING;
-	}
+	virtual bool ShouldHitEntity(void *entity, int contents_mask) = 0;
+	virtual ETraceType GetTraceType() const = 0;
 };
 
 class CBaseTrace
@@ -279,7 +289,7 @@ public:
 	}
 
 private:
-	CBaseTrace(const CBaseTrace& othr);
+	CBaseTrace(const CBaseTrace &othr);
 };
 
 class CGameTrace : public CBaseTrace
@@ -298,24 +308,69 @@ public:
 	csurface_t		surface;
 	int				hit_group;
 	short			physics_bone;
-	CBaseEntity* entity;
+	CBaseEntity	*entity;
 	int				hitbox;
 
 	CGameTrace() { }
-	CGameTrace(const CGameTrace& othr);
+	CGameTrace(const CGameTrace &othr);
 };
 
-using CBaseHandle = unsigned long;
+// basic rectangle struct used for drawing
+typedef struct wrect_s
+{
+	int	left; //[0]
+	int right; //[1]
+	int top; //[2]
+	int bottom; //[3]
+} wrect_t;
 
-class IHandleEntity
+
+class CHudTexture
 {
 public:
-	virtual ~IHandleEntity() {}
-	virtual void SetRefEHandle(const CBaseHandle& handle) = 0;
-	virtual const CBaseHandle& GetRefEHandle() const = 0;
-};
+	CHudTexture();
+	CHudTexture& operator =(const CHudTexture& src);
+	virtual ~CHudTexture();
 
-struct CHudTexture;
+	int Width() const
+	{
+		return rc.right - rc.left;
+	}
+
+	int Height() const
+	{
+		return rc.bottom - rc.top;
+	}
+
+	// causes the font manager to generate the glyph, prevents run time hitches on platforms that have slow font managers
+	void Precache(void);
+
+	// returns width & height of icon with scale applied (scale is ignored if font is used to render)
+	int EffectiveWidth(float flScale) const;
+	int EffectiveHeight(float flScale) const;
+
+	void DrawSelf(int x, int y, const Color_t& clr) const;
+	void DrawSelf(int x, int y, int w, int h, const Color_t& clr) const;
+	void DrawSelfCropped(int x, int y, int cropx, int cropy, int cropw, int croph, Color_t clr) const;
+	// new version to scale the texture over a finalWidth and finalHeight passed in
+	void DrawSelfCropped(int x, int y, int cropx, int cropy, int cropw, int croph, int finalWidth, int finalHeight, Color_t clr) const;
+
+	char		szShortName[64];
+	char		szTextureFile[64];
+
+	bool		bRenderUsingFont;
+	bool		bPrecached;
+	char		cCharacterInFont;
+	unsigned long		hFont;
+
+	// vgui texture Id assigned to this item
+	int			textureId;
+	// s0, t0, s1, t1
+	float		texCoords[4];
+
+	// Original bounds
+	wrect_t		rc;
+};
 
 class CFileWeaponInfo
 {
@@ -324,7 +379,7 @@ public:
 	CFileWeaponInfo();
 
 	// Each game can override this to get whatever values it wants from the script.
-	virtual void Parse(void* pKeyValuesData, const char* szWeaponName);
+	virtual void Parse(void *pKeyValuesData, const char *szWeaponName);
 
 
 public:
@@ -368,15 +423,15 @@ public:
 // CLIENT DLL
 	// Sprite data, read from the data file
 	int						iSpriteCount;
-	CHudTexture* iconActive;
-	CHudTexture* iconInactive;
-	CHudTexture* iconAmmo;
-	CHudTexture* iconAmmo2;
-	CHudTexture* iconCrosshair;
-	CHudTexture* iconAutoaim;
-	CHudTexture* iconZoomedCrosshair;
-	CHudTexture* iconZoomedAutoaim;
-	CHudTexture* iconSmall;
+	CHudTexture *iconActive;
+	CHudTexture *iconInactive;
+	CHudTexture *iconAmmo;
+	CHudTexture *iconAmmo2;
+	CHudTexture *iconCrosshair;
+	CHudTexture *iconAutoaim;
+	CHudTexture *iconZoomedCrosshair;
+	CHudTexture *iconZoomedAutoaim;
+	CHudTexture *iconSmall;
 
 	// TF2 specific
 	bool					bShowUsageHint;							// if true, then when you receive the weapon, show a hint about it
@@ -434,6 +489,7 @@ public:
 	virtual void Parse(void* pKeyValuesData, const char* szWeaponName);
 
 	WeaponData_t const& GetWeaponData(int iWeapon) const { return m_WeaponData[iWeapon]; }
+
 
 public:
 
@@ -494,8 +550,8 @@ public:
 	virtual bool			InMaterialPage(void) = 0;
 	virtual	void			GetMaterialOffset(float* pOffset) = 0;
 	virtual void			GetMaterialScale(float* pScale) = 0;
-	virtual IMaterial* GetMaterialPage(void) = 0;
-	virtual IMaterialVar* FindVar(const char* varName, bool* found, bool complain = true) = 0;
+	virtual IMaterial*      GetMaterialPage(void) = 0;
+	virtual IMaterialVar*   FindVar(const char* varName, bool* found, bool complain = true) = 0;
 	virtual void			IncrementReferenceCount(void) = 0;
 	virtual void			DecrementReferenceCount(void) = 0;
 	virtual int 			GetEnumerationID(void) const = 0;
@@ -525,186 +581,72 @@ public:
 	virtual bool			NeedsLightmapBlendAlpha(void) = 0;
 	virtual bool			NeedsSoftwareLighting(void) = 0;
 	virtual int				ShaderParamCount() const = 0;
-	virtual IMaterialVar** GetShaderParams(void) = 0;
+	virtual IMaterialVar**  GetShaderParams(void) = 0;
 	virtual bool			IsErrorMaterial() const = 0;
 	virtual void			SetUseFixedFunctionBakedLighting(bool bEnable) = 0;
 	virtual float			GetAlphaModulation() = 0;
 	virtual void			GetColorModulation(float* r, float* g, float* b) = 0;
 	virtual MorphFormat_t	GetMorphFormat() const = 0;
-	virtual IMaterialVar* FindVarFast(char const* pVarName, unsigned int* pToken) = 0;
-	virtual void			SetShaderAndParams(void* pKeyValues) = 0;
-	virtual const char* GetShaderName() const = 0;
+	virtual IMaterialVar*   FindVarFast(char const* pVarName, unsigned int* pToken) = 0;
+	virtual void			SetShaderAndParams(void * pKeyValues) = 0;
+	virtual const char*     GetShaderName() const = 0;
 	virtual void			DeleteIfUnreferenced() = 0;
 	virtual bool			IsSpriteCard() = 0;
 	virtual void			CallBindProxy(void* proxyData) = 0;
-	virtual IMaterial* CheckProxyReplacement(void* proxyData) = 0;
+	virtual IMaterial*      CheckProxyReplacement(void* proxyData) = 0;
 	virtual void			RefreshPreservingMaterialVars() = 0;
 	virtual bool			WasReloadedFromWhitelist() = 0;
 	virtual bool			IsPrecached() const = 0;
 };
 
-abstract_class IMaterialInternal : IMaterial
-{
-public:
-	// class factory methods
-	static IMaterialInternal* CreateMaterial(char const* pMaterialName, const char* pTextureGroupName, void* pKeyValues = NULL);
-	static void DestroyMaterial(IMaterialInternal* pMaterial);
-
-	// If supplied, pKeyValues and pPatchKeyValues should come from LoadVMTFile()
-	static IMaterialInternal* CreateMaterialSubRect(char const* pMaterialName, const char* pTextureGroupName,
-													void* pKeyValues = NULL, void* pPatchKeyValues = NULL, bool bAssumeCreateFromFile = false);
-	static void DestroyMaterialSubRect(void* pMaterial);
-
-	// refcount
-	virtual int		GetReferenceCount() const = 0;
-
-	// enumeration id
-	virtual void	SetEnumerationID(int id) = 0;
-
-	// White lightmap methods
-	virtual void	SetNeedsWhiteLightmap(bool val) = 0;
-	virtual bool	GetNeedsWhiteLightmap() const = 0;
-
-	// load/unload 
-	virtual void	Uncache(bool bPreserveVars = false) = 0;
-	virtual void	Precache() = 0;
-	// If supplied, pKeyValues and pPatchKeyValues should come from LoadVMTFile()
-	virtual bool	PrecacheVars(void* pKeyValues = NULL, void* pPatchKeyValues = NULL, CUtlVector<void>* pIncludes = NULL, int nFindContext = NULL) = 0;
-
-	// reload all textures used by this materals
-	virtual void	ReloadTextures() = 0;
-
-	// lightmap pages associated with this material
-	virtual void	SetMinLightmapPageID(int pageID) = 0;
-	virtual void	SetMaxLightmapPageID(int pageID) = 0;;
-	virtual int		GetMinLightmapPageID() const = 0;
-	virtual int		GetMaxLightmapPageID() const = 0;
-
-	virtual void* GetShader() const = 0;
-
-	// Can we use it?
-	virtual bool	IsPrecached() const = 0;
-	virtual bool	IsPrecachedVars() const = 0;
-
-	// main draw method
-	virtual void	DrawMesh(void* vertexCompression) = 0;
-
-	// Gets the vertex format
-	virtual VertexFormat_t GetVertexFormat() const = 0;
-	virtual VertexFormat_t GetVertexUsage() const = 0;
-
-	// Performs a debug trace on this material
-	virtual bool PerformDebugTrace() const = 0;
-
-	// Can we override this material in debug?
-	virtual bool NoDebugOverride() const = 0;
-
-	// Should we draw?
-	virtual void ToggleSuppression() = 0;
-
-	// Are we suppressed?
-	virtual bool IsSuppressed() const = 0;
-
-	// Should we debug?
-	virtual void ToggleDebugTrace() = 0;
-
-	// Do we use fog?
-	virtual bool UseFog() const = 0;
-
-	// Adds a material variable to the material
-	virtual void AddMaterialVar(IMaterialVar* pMaterialVar) = 0;
-
-	// Gets the renderstate
-	virtual void* GetRenderState() = 0;
-
-	// Was this manually created (not read from a file?)
-	virtual bool IsManuallyCreated() const = 0;
-
-	virtual bool NeedsFixedFunctionFlashlight() const = 0;
-
-	virtual bool IsUsingVertexID() const = 0;
-
-	// Identifies a material mounted through the preload path
-	virtual void MarkAsPreloaded(bool bSet) = 0;
-	virtual bool IsPreloaded() const = 0;
-
-	// Conditonally increments the refcount
-	virtual void ArtificialAddRef(void) = 0;
-	virtual void ArtificialRelease(void) = 0;
-
-	virtual void			ReportVarChanged(IMaterialVar* pVar) = 0;
-	virtual uint32			GetChangeID() const = 0;
-
-	virtual bool			IsTranslucentInternal(float fAlphaModulation) const = 0;
-
-	//Is this the queue friendly or realtime version of the material?
-	virtual bool IsRealTimeVersion(void) const = 0;
-
-	virtual void ClearContextData(void)
-	{
-	}
-
-	//easy swapping between the queue friendly and realtime versions of the material
-	virtual IMaterialInternal* GetRealTimeVersion(void) = 0;
-	virtual IMaterialInternal* GetQueueFriendlyVersion(void) = 0;
-
-	virtual void PrecacheMappingDimensions(void) = 0;
-	virtual void FindRepresentativeTexture(void) = 0;
-
-	// These are used when a new whitelist is passed in. First materials to be reloaded are flagged, then they are reloaded.
-	virtual void DecideShouldReloadFromWhitelist(void* pFileList) = 0;
-	virtual void ReloadFromWhitelistIfMarked() = 0;
-};
-
-
 class IMaterialVar
 {
 public:
-	virtual ITexture* GetTextureValue(void) = 0;
+	virtual ITexture *GetTextureValue(void) = 0;
 
-	virtual char const* GetName(void) const = 0;
+	virtual char const *GetName(void) const = 0;
 	virtual MaterialVarSym_t	GetNameAsSymbol() const = 0;
 
 	virtual void			SetFloatValue(float val) = 0;
 
 	virtual void			SetIntValue(int val) = 0;
 
-	virtual void			SetStringValue(char const* val) = 0;
-	virtual char const* GetStringValue(void) const = 0;
+	virtual void			SetStringValue(char const *val) = 0;
+	virtual char const *GetStringValue(void) const = 0;
 
 	// Use FourCC values to pass app-defined data structures between
 	// the proxy and the shader. The shader should ignore the data if
 	// its FourCC type not correct.	
-	virtual void			SetFourCCValue(void* type, void* pData) = 0;
-	virtual void			GetFourCCValue(void* type, void** ppData) = 0;
+	virtual void			SetFourCCValue(void *type, void *pData) = 0;
+	virtual void			GetFourCCValue(void *type, void **ppData) = 0;
 
 	// Vec (dim 2-4)
-	virtual void			SetVecValue(float const* val, int numcomps) = 0;
+	virtual void			SetVecValue(float const *val, int numcomps) = 0;
 	virtual void			SetVecValue(float x, float y) = 0;
 	virtual void			SetVecValue(float x, float y, float z) = 0;
 	virtual void			SetVecValue(float x, float y, float z, float w) = 0;
-	virtual void			GetLinearVecValue(float* val, int numcomps) const = 0;
+	virtual void			GetLinearVecValue(float *val, int numcomps) const = 0;
 
 	// revisit: is this a good interface for textures?
-	virtual void			SetTextureValue(ITexture*) = 0;
+	virtual void			SetTextureValue(ITexture *) = 0;
 
-	virtual IMaterial* GetMaterialValue(void) = 0;
-	virtual void			SetMaterialValue(IMaterial*) = 0;
+	virtual IMaterial *GetMaterialValue(void) = 0;
+	virtual void			SetMaterialValue(IMaterial *) = 0;
 
 	virtual bool			IsDefined() const = 0;
 	virtual void			SetUndefined() = 0;
 
 	// Matrix
-	virtual void			SetMatrixValue(VMatrix const& matrix) = 0;
-	virtual const VMatrix& GetMatrixValue() = 0;
+	virtual void			SetMatrixValue(VMatrix const &matrix) = 0;
+	virtual const VMatrix &GetMatrixValue() = 0;
 	virtual bool			MatrixIsIdentity() const = 0;
 
 	// Copy....
-	virtual void			CopyFrom(IMaterialVar* pMaterialVar) = 0;
+	virtual void			CopyFrom(IMaterialVar *pMaterialVar) = 0;
 
-	virtual void			SetValueAutodetectType(char const* val) = 0;
+	virtual void			SetValueAutodetectType(char const *val) = 0;
 
-	virtual IMaterial* GetOwningMaterial() = 0;
+	virtual IMaterial *GetOwningMaterial() = 0;
 
 	//set just 1 component
 	virtual void			SetVecComponentValue(float fVal, int nComponent) = 0;
@@ -712,71 +654,9 @@ public:
 protected:
 	virtual int				GetIntValueInternal(void) const = 0;
 	virtual float			GetFloatValueInternal(void) const = 0;
-	virtual float const* GetVecValueInternal() const = 0;
-	virtual void			GetVecValueInternal(float* val, int numcomps) const = 0;
+	virtual float const *GetVecValueInternal() const = 0;
+	virtual void			GetVecValueInternal(float *val, int numcomps) const = 0;
 	virtual int				VectorSizeInternal() const = 0;
-};
-
-enum types_t
-{
-	TYPE_NONE = 0,
-	TYPE_STRING,
-	TYPE_INT,
-	TYPE_FLOAT,
-	TYPE_PTR,
-	TYPE_WSTRING,
-	TYPE_COLOR,
-	TYPE_UINT64,
-	TYPE_NUMTYPES,
-};
-
-class KeyValues
-{
-public:
-	int m_iKeyName;
-	char* m_sValue;
-	wchar_t* m_wsValue;
-
-	union {
-		int m_iValue;
-		float m_flValue;
-		void* m_pValue;
-		unsigned char m_Color[4];
-	};
-
-	char m_iDataType;
-	char m_bHasEscapeSequences;
-	char m_bEvaluateConditionals;
-	char unused[1];
-
-	KeyValues* m_pPeer;
-	KeyValues* m_pSub;
-	KeyValues* m_pChain;
-
-	void Initialize(char* name);
-
-	KeyValues(const char* name);
-
-	KeyValues* FindKey(const char* keyName, bool bCreate = false);
-
-	int GetInt(const char* keyName, int defaultValue = 0);
-	uint64_t GetUint64(const char* keyName, uint64_t defaultValue = 0);
-	float GetFloat(const char* keyName, float defaultValue = 0.0f);
-	const char* GetString(const char* keyName, const char* defaultValue = "");
-	const wchar_t* GetWString(const char* keyName, const wchar_t* defaultValue = L"");
-	void* GetPtr(const char* keyName, void* defaultValue = (void*)0);
-	bool GetBool(const char* keyName, bool defaultValue = false);
-	Color_t GetColor(const char* keyName);
-	bool IsEmpty(const char* keyName);
-
-	void SetWString(const char* keyName, const wchar_t* value);
-	void SetString(const char* keyName, const char* value);
-	void SetInt(const char* keyName, int value);
-	void SetUint64(const char* keyName, uint64_t value);
-	void SetFloat(const char* keyName, float value);
-	void SetPtr(const char* keyName, void* value);
-	void SetColor(const char* keyName, Color_t value);
-	void SetBool(const char* keyName, bool value) { SetInt(keyName, value ? 1 : 0); }
 };
 
 enum ParticleAttachment_t
@@ -834,33 +714,33 @@ public:
 class ICollideable
 {
 public:
-	virtual void* GetEntityHandle() = 0;
-	virtual const Vec3& OBBMinsPreScaled() const = 0;
-	virtual const Vec3& OBBMaxsPreScaled() const = 0;
-	virtual const Vec3& OBBMins() const = 0;
-	virtual const Vec3& OBBMaxs() const = 0;
-	virtual void			WorldSpaceTriggerBounds(Vec3* pVecWorldMins, Vec3* pVecWorldMaxs) const = 0;
-	virtual bool			TestCollision(const Ray_t& ray, unsigned int fContentsMask, CGameTrace& tr) = 0;
-	virtual bool			TestHitboxes(const Ray_t& ray, unsigned int fContentsMask, CGameTrace& tr) = 0;
+	virtual void			*GetEntityHandle() = 0;
+	virtual const Vec3		&OBBMinsPreScaled() const = 0;
+	virtual const Vec3		&OBBMaxsPreScaled() const = 0;
+	virtual const Vec3		&OBBMins() const = 0;
+	virtual const Vec3		&OBBMaxs() const = 0;
+	virtual void			WorldSpaceTriggerBounds(Vec3 *pVecWorldMins, Vec3 *pVecWorldMaxs) const = 0;
+	virtual bool			TestCollision(const Ray_t &ray, unsigned int fContentsMask, CGameTrace &tr) = 0;
+	virtual bool			TestHitboxes(const Ray_t &ray, unsigned int fContentsMask, CGameTrace &tr) = 0;
 	virtual int				GetCollisionModelIndex() = 0;
-	virtual const model_t* GetCollisionModel() = 0;
-	virtual const Vec3& GetCollisionOrigin() const = 0;
-	virtual const Vec3& GetCollisionAngles() const = 0;
-	virtual const matrix3x4& CollisionToWorldTransform() const = 0;
+	virtual const model_t	*GetCollisionModel() = 0;
+	virtual const Vec3		&GetCollisionOrigin() const = 0;
+	virtual const Vec3		&GetCollisionAngles() const = 0;
+	virtual const matrix3x4 &CollisionToWorldTransform() const = 0;
 	virtual SolidType_t		GetSolid() const = 0;
 	virtual int				GetSolidFlags() const = 0;
-	virtual void* GetIClientUnknown() = 0;
+	virtual void			*GetIClientUnknown() = 0;
 	virtual int				GetCollisionGroup() const = 0;
-	virtual void			WorldSpaceSurroundingBounds(Vec3* pVecMins, Vec3* pVecMaxs) = 0;
+	virtual void			WorldSpaceSurroundingBounds(Vec3 *pVecMins, Vec3 *pVecMaxs) = 0;
 	virtual bool			ShouldTouchTrigger(int triggerSolidFlags) const = 0;
-	virtual const matrix3x4* GetRootParentToWorldTransform() const = 0;
+	virtual const matrix3x4 *GetRootParentToWorldTransform() const = 0;
 };
 
 class CCollisionProperty : public ICollideable
 {
 public:
-	__inline void SetCollisionBounds(const Vec3& mins, const Vec3& maxs) {
-		using fn = void(__thiscall*)(CCollisionProperty*, const Vec3&, const Vec3&);
+	__inline void SetCollisionBounds(const Vec3 &mins, const Vec3 &maxs) {
+		using fn = void(__thiscall *)(CCollisionProperty *, const Vec3 &, const Vec3 &);
 		static fn FN = reinterpret_cast<fn>(g_Pattern.Find(_(L"client.dll"), _(L"55 8B EC 83 EC 28 53 8B 5D 08 56 8B 75 0C 57 8B 03")));
 		FN(this, mins, maxs);
 	}

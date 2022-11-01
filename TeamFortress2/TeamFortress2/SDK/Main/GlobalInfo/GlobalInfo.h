@@ -67,7 +67,7 @@ struct DTnew {
 	
 	//bool isWaiting = false;
 	//int DesiredTicks = 0;
-}
+};
 
 inline GlobalInfo_t g_GlobalInfo;
 

@@ -234,9 +234,9 @@ namespace Utils
 		return true;
 	}
 
-	__inline bool W2S(const Vec3& vOrigin, Vec3& m_vScreen)
+	__inline bool W2S(const Vec3 &vOrigin, Vec3 &m_vScreen)
 	{
-		const matrix3x4& worldToScreen = g_GlobalInfo.m_WorldToProjection.As3x4();
+		const matrix3x4 &worldToScreen = g_GlobalInfo.m_WorldToProjection.As3x4();
 
 		float w = worldToScreen[3][0] * vOrigin[0] + worldToScreen[3][1] * vOrigin[1] + worldToScreen[3][2] * vOrigin[2] + worldToScreen[3][3];
 		m_vScreen.z = 0;
