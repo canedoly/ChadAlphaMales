@@ -277,7 +277,7 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		if (const auto& pLocal = g_EntityCache.m_pLocal) {
 			if (const auto& pWeapon = g_EntityCache.m_pLocalWeapon) {
 				if (!g_GlobalInfo.m_bAttacking &&
-					!DT.ShouldShift &&
+					!DT.shouldShift &&
 					pLocal->IsAlive()) {
 					*pSendPacket = (g_GlobalInfo.fakelagTicks >= Vars::Misc::CL_Move::FakelagValue.m_Var);
 					if (*pSendPacket) {
