@@ -4,11 +4,11 @@
 
 #include "../../Features/Misc/Misc.h"
 
-static auto oClMove = Func.Original<fn>();
-const auto& pLocal = g_EntityCache.m_pLocal;
 
 void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFinalTick)
 {
+	static auto oClMove = Func.Original<fn>();
+	const auto& pLocal = g_EntityCache.m_pLocal;
 	// this is being worked on
 	// there are stuff in clientmodehook i need to change
 	// i also plan to make this way more customizable
