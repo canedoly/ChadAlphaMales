@@ -56,7 +56,6 @@ public:
     void EdgeJump(CUserCmd* pCmd, const int nOldFlags);
 	void BypassPure();
 	void AutoRocketJump(CUserCmd *pCmd);
-    void ChangeName(std::string name);
 };
 
 inline CMisc g_Misc;

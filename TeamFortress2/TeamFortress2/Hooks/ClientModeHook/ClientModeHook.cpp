@@ -112,7 +112,7 @@ void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal) {
 	static Vec3 vStartVel = {};
 	static int nShiftTick = 0;
 	if (pLocal && pLocal->IsAlive()) {
-		if (g_GlobalInfo.m_bShouldShift)
+		if (DT.shouldShift)
 		{
 			if (vStartOrigin.IsZero()) {
 				vStartOrigin = pLocal->GetVecOrigin();

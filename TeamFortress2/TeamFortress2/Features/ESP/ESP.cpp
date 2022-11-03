@@ -331,7 +331,7 @@ void CESP::DrawPaths()
 		if (!aimTarget) {
 			return;
 		}
-		if (EWeaponType::PROJECTILE)
+		if (g_GlobalInfo.m_WeaponType == EWeaponType::PROJECTILE)
 		{
 			Vector velocity = aimTarget->GetVelocity() / 10, predPos[101];
 			int flags = aimTarget->GetFlags();

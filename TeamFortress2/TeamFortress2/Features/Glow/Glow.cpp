@@ -356,12 +356,12 @@ void CGlowEffect::Render()
 			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 0, 0, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
 			if (Vars::Glow::Main::Wireframe.m_Var)
 			{
-			const float flScale = (Vars::Glow::Main::Scale.m_Var * 0.05f);
-			if (Vars::Glow::Main::Scale.m_Var == 1) { flScale = 0.0f; }
-			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, -1, -1, w, h, +flScale, +flScale, w - 1, h - 1, w, h);
-			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, -1, 1, w, h, -flScale, -flScale, w - 1, h + 1, w, h);
-			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 1, -1, w, h, -flScale, -flScale, w - 1, h + 1, w, h);
-			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 1, 1, w, h, +flScale, +flScale, w - 1, h - 1, w, h);
+			// const float flScale = (Vars::Glow::Main::Scale.m_Var * 0.05f);
+			// if (Vars::Glow::Main::Scale.m_Var == 1) { flScale = 0.0f; }
+			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, -1, -1, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
+			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, -1, 1, w, h, 0.0f, 0.0f, w - 1, h + 1, w, h);
+			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 1, -1, w, h, 0.0f, 0.0f, w - 1, h + 1, w, h);
+			pRenderContext->DrawScreenSpaceRectangle(m_pMatHaloAddToScreen, 1, 1, w, h, 0.0f, 0.0f, w - 1, h - 1, w, h);
 			}
 			StencilStateDisable.SetStencilState(pRenderContext);
 
