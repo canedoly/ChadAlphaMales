@@ -107,12 +107,12 @@ inline void WalkTo(CUserCmd* pCmd, CBaseEntity* pLocal, Vec3& a, Vec3& b, float 
 	pCmd->upmove = result.z * scale;
 }
 
-void FastStop(CUserCmd* pCmd, CBaseEntity* pLocal) {
+void FastStop(CBaseEntity* pLocal, CUserCmd* pCmd) {
 	static Vec3 vStartOrigin = {};
 	static Vec3 vStartVel = {};
 	static int nShiftTick = 0;
 	if (pLocal && pLocal->IsAlive()) {
-		if (DT.shouldShift)
+		if (DT.shouldStop)
 		{
 			if (vStartOrigin.IsZero()) {
 				vStartOrigin = pLocal->GetVecOrigin();
@@ -159,12 +159,6 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		}
 	}
 
-	if (g_GlobalInfo.ForceSendPacket)
-	{
-		*pSendPacket = true;
-		g_GlobalInfo.ForceSendPacket = false;
-	} // if we are trying to force update do this lol
-
 	if (g_PlayerArrows.upAlpha) {
 		g_PlayerArrows.alpha = std::min(255, (g_PlayerArrows.alpha + 5));
 		if (g_PlayerArrows.alpha == 255) {
@@ -188,6 +182,12 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 		g_GlobalInfo.lastChlTick = pCmd->tick_count;
 	}
 
+	if (g_GlobalInfo.ForceSendPacket)
+	{
+		*pSendPacket = true;
+		g_GlobalInfo.ForceSendPacket = false;
+	} // if we are trying to force update do this lol
+
 	CBaseEntity* you;
 	if (!g_Interfaces.EntityList->GetClientEntity(g_Interfaces.Engine->GetLocalPlayer())->ToPlayer(you) || you->GetLifeState() != LIFE_ALIVE)
 		return OriginalFn(g_Interfaces.ClientMode, input_sample_frametime, pCmd);
@@ -202,48 +202,11 @@ bool __stdcall ClientModeHook::CreateMove::Hook(float input_sample_frametime, CU
 	float fOldSide = pCmd->sidemove;
 	float fOldForward = pCmd->forwardmove;
 
-	// todo:
-	// - "recode" dt (95% done, some fail safes)
-	
-
-	// completed
-	// - add improved auto bunnyhop (done)
-	// - add ability to teleport (done)
-	// - add 2 methods of warp - plain/boost (done)
-
 	// planned
 	// - add glow thickness (not yet)
 	// - clean up the code (no yet)
 	// - add keyhelper from fedoraware (not yet)
-	// - add 2 methods of antiwarp - fed/cam (everything except antiwarp)
-
-
-
-
-	// unused code
-	// auto AntiWarp = [](CUserCmd* cmd) -> void
-	// {
-	// 	int shiftcheck = DT.currentTicks;
-	// 	auto pLocal = GLOCAL;
-
-	// 	if (shiftcheck < 19)
-	// 	{
-	// 		if (shiftcheck < 6)
-	// 		{
-	// 			// should be -1 btw
-	// 			cmd->forwardmove *= -1;
-	// 			cmd->sidemove *= -1;
-	// 		}
-	// 		else
-	// 		{
-	// 			cmd->forwardmove = 0;
-	// 			cmd->sidemove = 0;
-	// 		}
-	// 	}
-	// 	else {
-	// 		DT.shouldStop = false;
-	// 	}
-	// };
+	// - add 2 methods of antiwarp - fed/cam
 
 	g_Visuals.FreecamCM(pCmd);
 

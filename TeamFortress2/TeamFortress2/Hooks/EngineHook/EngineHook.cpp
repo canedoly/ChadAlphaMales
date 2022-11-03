@@ -81,7 +81,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 
 	if (Vars::Misc::CL_Move::NotInAir.m_Var)
 	{
-		if (!pLocal->IsOnGround());	// the player isn't on ground, and the var is enabled. so we shouldn't use dt
+		if (!pLocal->IsOnGround())	// the player isn't on ground, and the var is enabled. so we shouldn't use dt
 		{
 			DT.shouldShift = false;
 		}

@@ -43,17 +43,6 @@ struct GlobalInfo_t
 
 #define DT_WAIT_CALLS 26
 
-// struct DoubletapInfo {
-// 	bool Shifting = 		false;
-// 	bool Recharging = 		false;
-// 	bool FastStop = 		false;
-// 	int Charged = 			0;
-// 	int ChargedReverse = 	20;
-// 	//int ToShift = 		20;
-// 	int ToWait = 			0;
-// 	BYTE barAlpha = 		255;
-// };
-
 struct DoubletapInfo {
 	// todo change the names of this
 	// i've added some stuff but i doubt they will be used
@@ -64,9 +53,6 @@ struct DoubletapInfo {
 	int WaitTicks = 0;
 	int currentTicks = 0;
 	BYTE barAlpha = 255;
-	
-	//bool isWaiting = false;
-	//int DesiredTicks = 0;
 };
 
 inline GlobalInfo_t g_GlobalInfo;
