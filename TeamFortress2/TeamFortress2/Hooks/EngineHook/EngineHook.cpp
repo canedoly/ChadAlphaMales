@@ -4,7 +4,7 @@
 
 #include "../../Features/Misc/Misc.h"
 
-static auto oClMove = oClMove
+static auto oClMove = Func.Original<fn>();
 const auto& pLocal = g_EntityCache.m_pLocal;
 
 void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFinalTick)
@@ -81,7 +81,7 @@ void __cdecl EngineHook::CL_Move::Hook(float accumulated_extra_samples, bool bFi
 
 	if (Vars::Misc::CL_Move::NotInAir.m_Var)
 	{
-		if (!pLocal->OnSolid());	// the player isn't on ground, and the var is enabled. so we shouldn't use dt
+		if (!pLocal->IsOnGround());	// the player isn't on ground, and the var is enabled. so we shouldn't use dt
 		{
 			DT.shouldShift = false;
 		}

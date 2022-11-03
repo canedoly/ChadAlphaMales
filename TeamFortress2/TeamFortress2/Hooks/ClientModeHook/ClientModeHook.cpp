@@ -28,6 +28,8 @@ bool __stdcall ClientModeHook::ShouldDrawViewModel::Hook()
 		if (pLocal->IsScoped() && Vars::Visuals::RemoveScope.m_Var && Vars::Visuals::RemoveZoom.m_Var && !g_Interfaces.Input->CAM_IsThirdPerson())
 			return true;
 
+		// what is this for?
+		// i'm guessing fake angle chams but idk
 		/*if (g_GlobalInfo.m_bAAActive) {
 			CTFPlayerAnimState* pAnimState = pLocal->GetAnimState();
 

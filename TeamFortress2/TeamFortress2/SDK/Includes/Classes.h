@@ -15,15 +15,6 @@ class CMaterial;
 class MaterialPropertyTypes_t;
 typedef uint64 VertexFormat_t;
 
-using CBaseHandle = unsigned long;
-
-class IHandleEntity
-{
-public:
-	virtual ~IHandleEntity() {}
-	virtual void SetRefEHandle(const CBaseHandle& handle) = 0;
-	virtual const CBaseHandle& GetRefEHandle() const = 0;
-};
 
 class VMatrix {
 private:
