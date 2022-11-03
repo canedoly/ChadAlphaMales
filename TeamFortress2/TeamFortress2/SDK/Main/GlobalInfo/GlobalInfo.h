@@ -43,7 +43,7 @@ struct GlobalInfo_t
 
 #define DT_WAIT_CALLS 26
 
-struct DoubletapInfo {
+struct DTnew {
 	// todo change the names of this
 	// i've added some stuff but i doubt they will be used
 	bool shouldStop = false;
@@ -57,4 +57,4 @@ struct DoubletapInfo {
 
 inline GlobalInfo_t g_GlobalInfo;
 
-inline DoubletapInfo DT;
+inline DTnew DT;
