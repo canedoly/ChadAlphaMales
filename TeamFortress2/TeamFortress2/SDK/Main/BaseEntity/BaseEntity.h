@@ -204,7 +204,7 @@ public: //Everything else, lol.
     }
 
     __inline CTFPlayerAnimState* GetAnimState() {
-        return *reinterpret_cast<CTFPlayerAnimState**>(this + 0x1BF8); //0x6FE previously
+        return *reinterpret_cast<CTFPlayerAnimState**>(this + 0x1D00);
     }
 
     __inline std::array<float, MAXSTUDIOPOSEPARAM> GetPoseParam() {

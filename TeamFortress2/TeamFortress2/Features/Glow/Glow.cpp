@@ -2,6 +2,9 @@
 #include "../Vars.h"
 #include "../Chams/Chams.h"
 
+
+// Add spook's method of stencil, (no performance loss while using chams which also don't have performance loss)
+// the one added to seowned
 void CGlowEffect::DrawModel(CBaseEntity *pEntity, int nFlags, bool bIsDrawingModels)
 {
 	m_bRendering = true;

@@ -41,6 +41,7 @@ UINT64 steamids[] = {
 	76561199086788469,// rico
 	
 };
+// this isn't even used for anything other than storing
 
 using namespace std::chrono; //lol??? 
 

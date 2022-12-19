@@ -17,9 +17,9 @@ void CESP::AAIndicator() {
 	if (const auto& pLocal = g_EntityCache.m_pLocal)
 	{
 		// TODO: color pickers
-		static const auto real_color = Color_t(255, 0, 0, 255);
-		static const auto fake_color = Color_t(0, 0, 255, 255);
-		static const auto lby_color = Color_t(0, 255, 0, 255);	// lby in tf2!?!? NO WAY
+		Color_t real_color = { 255, 0, 0, 255 };
+		Color_t fake_color = { 0, 0, 255, 255 };
+		Color_t lby_color = { 0, 255, 0, 255 };	// lby in tf2!?!? NO WAY
 
 		// TODO: slider
 		constexpr auto distance = 50.f;
@@ -326,6 +326,9 @@ void CESP::DrawPaths()
 	if (!Vars::Aimbot::Projectile::R8Method.m_Var)
 		return;
 
+	if (g_GlobalInfo.m_WeaponType != EWeaponType::PROJECTILE)
+		return;
+
 	if (g_GlobalInfo.m_nCurrentTargetIdx) {
 		CBaseEntity* aimTarget = g_Interfaces.EntityList->GetClientEntity(g_GlobalInfo.m_nCurrentTargetIdx);
 		if (!aimTarget) {
@@ -521,23 +524,29 @@ void CESP::DrawPlayers(CBaseEntity *pLocal)
 
 			switch (Vars::ESP::Players::Box.m_Var) {
 				case 1: {
-					int height = (h + 1); //don't ask me /shrug
+					int height = h + 1; //don't ask me /shrug
+					Color_t DrawColor = Utils::GetEntityDrawColor(Player);;
 
-					g_Draw.OutlinedRect(x, y, w, height, Color_t(DrawColor.r,DrawColor.g,DrawColor.b, m_flEntityAlpha[nIndex]));
+					g_Draw.OutlinedRect(x, y, w, height, DrawColor);
 					if (Vars::ESP::Main::Outline.m_Var == 2)
-						g_Draw.OutlinedRect((x - 1), (y - 1), (w + 2), (height + 2), Colors::OutlineESP);
+					{
+						g_Draw.OutlinedRect(x - 1, y - 1, w + 2, height + 2, Colors::OutlineESP);
+						g_Draw.OutlinedRect(x + 1, y + 1, w - 2, height - 2, Colors::OutlineESP);
+					}
 
 					break;
 				}
 				case 2: {
-					g_Draw.CornerRect(x, y, w, h, 3, 5, Color_t(DrawColor.r, DrawColor.g, DrawColor.b, m_flEntityAlpha[nIndex]));
+					g_Draw.CornerRect(x, y, w, h, 3, 5, DrawColor);
 					if (Vars::ESP::Main::Outline.m_Var == 2)
-						g_Draw.CornerRect((x - 1), (y - 1), (w + 2), (h + 2), 3, 5, Colors::OutlineESP);
+					{
+						g_Draw.CornerRect(x - 1, y - 1, w + 2, h + 2, 3, 5, Colors::OutlineESP);
+					}
 
 					break;
 				}
 				case 3: {
-					Draw3DBox(vTrans, Color_t(DrawColor.r, DrawColor.g, DrawColor.b, m_flEntityAlpha[nIndex]));
+					Draw3DBox(vTrans, DrawColor);
 					break;
 				}
 				default:
