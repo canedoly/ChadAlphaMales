@@ -1,18 +1,12 @@
 # ChadAlphaMales (fixed)
 
-The version is 1.6 (2-4 months before the cheat got its last update)
+If there's a problem with the cheat, please make a github issue and i'll try to fix it.
 
-Just don't use this, until the latest version has been "self-leaked"
-
-until then, hf using a broken version of this cheat (might aswell be worse than the leaked 1.2b version)
-
-If there's a problem with the cheat, please make a github issue and i'll try to fix it
+For DT use 19-20 ticks because of the anti warp.
 
 # Known Issues with this version of CAM
 
-DT is bad, feels like 15-17 ticks and it barely works on heavy (just use fedoraware)
-
-Anti warp is really bad, a scuffed old version pasted from fedoraware
+Anti warp is not the best, but it kinda does the job.
 
 # old readme
 Feel free to add me on discord zphr#0365 or make a new issue if you have any questions
