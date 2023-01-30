@@ -64,7 +64,7 @@ public: //Everything else, lol
 	}
 
 	__inline float GetSwingRange(CBaseEntity* pLocal) {
-		return static_cast<float>(GetVFunc<int(__thiscall*)(CBaseEntity*)>(this, 454)(pLocal));
+		return static_cast<float>(GetVFunc<int(__thiscall*)(CBaseEntity*)>(this, 455)(pLocal));
 	}
 
 	__inline float GetWeaponSpread() {
@@ -85,7 +85,7 @@ public: //Everything else, lol
 		bool bResult = false;
 		if (const auto& pOwner = g_Interfaces.EntityList->GetClientEntityFromHandle(GethOwner())) {
 			const int nOldFov = pOwner->GetFov(); pOwner->SetFov(70);
-			bResult = GetVFunc<bool(__thiscall*)(decltype(this), bool, CBaseEntity*)>(this, 424)(this, bHeadShot, nullptr);
+			bResult = GetVFunc<bool(__thiscall*)(decltype(this), bool, CBaseEntity*)>(this, 425)(this, bHeadShot, nullptr);
 			pOwner->SetFov(nOldFov);
 		} return bResult;
 	}
