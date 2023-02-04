@@ -248,7 +248,7 @@ void CVisuals::RunEventLogs()
 		g_Interfaces.Surface->SetDrawColor(0, 0, 0, log.flAlpha);
 		g_Interfaces.Surface->DrawFilledRectFade(w2 - 5, height - 2, w - 30 + width, height + 15, log.flAlpha, 0, true);
 		g_Draw.Rect(w2, height - 2, 2, 17, Vars::Menu::Colors::WidgetActive);
-		g_Draw.String(FONT_MENU_OUTLINED, width + 5, height, { 255, 255, 255, logclr.a}, ALIGN_DEFAULT, Utils::ConvertUtf8ToWide(log.szText.c_str()).data());
+		g_Draw.String(FONT_MENU_OUTLINED, width + 5, height, { 255, 255, 255, 255}, ALIGN_DEFAULT, Utils::ConvertUtf8ToWide(log.szText.c_str()).data());
 	}
 }
 

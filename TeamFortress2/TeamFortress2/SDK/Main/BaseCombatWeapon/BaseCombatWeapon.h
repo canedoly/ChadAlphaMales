@@ -20,7 +20,7 @@ public: //Netvars
         M_OFFSETGET(Healing, int, 0xC51) //DT_WeaponMedigun -> m_bHealing
 
 public: //Virtuals
-	M_VIRTUALGET(WeaponID, int, this, int(__thiscall*)(void*), 380)
+	M_VIRTUALGET(WeaponID, int, this, int(__thiscall*)(void*), 381)
 	M_VIRTUALGET(Slot, int, this, int(__thiscall*)(void*), 330)
 	M_VIRTUALGET(DamageType, int, this, int(__thiscall*)(void*), 340)	// old one was 378, but comparing to fedoraware, it decreased???
 	M_VIRTUALGET(FinishReload, void, this, void(__thiscall*)(void*), 275)
